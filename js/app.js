@@ -113,6 +113,12 @@ if (e.target.closest("#save-entry")) {
   saveEntryFromModal();
   return;
 }
+   // Temporary: archive on long press brand
+if (e.target.closest(".brand") && e.shiftKey) {
+  ArchiveService.archiveCurrent();
+  render();
+  return;
+}
 }
 
 function openModal() {
