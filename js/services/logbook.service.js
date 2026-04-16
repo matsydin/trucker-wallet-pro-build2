@@ -55,15 +55,15 @@ export const LogbookService = {
     this.renderList();
   },
 
-  renderSummary() {
-    const summaryEl = document.querySelector(".summary-amount");
-    if (!summaryEl) return;
+renderSummary() {
+  const summaryEl = document.querySelector(".summary-amount");
+  if (!summaryEl) return;
 
-    const total = this.getTotal();
-    summaryEl.textContent = `
+  const total = this.getTotal();
+  summaryEl.textContent = `
 $$
 {total.toFixed(2)} CAD`;
-  },
+},
 
   renderList() {
     const listEl = document.querySelector(".logbook-list");
