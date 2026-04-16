@@ -83,7 +83,6 @@ export const LogbookService = {
       <div class="log-row">
         <div class="log-distance">${distance}</div>
         <div class="log-amount">
-          
 $$
 {entry.amount.toFixed(2)}
         </div>
@@ -91,4 +90,3 @@ $$
     </div>
   `;
 }
-};
