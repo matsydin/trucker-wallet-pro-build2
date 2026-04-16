@@ -4,7 +4,7 @@ const KM_TO_MI = 0.621371;
 
 export const LogbookService = {
 
-  addEntry({ distanceKm, date }) {
+addEntry({ distanceKm, date, pickups }) {
 
   const miles = distanceKm * KM_TO_MI;
   const rate = state.settings.ratePerMile;
@@ -14,6 +14,7 @@ export const LogbookService = {
     date: date ? new Date(date).toISOString() : new Date().toISOString(),
     distanceKm,
     distanceMi: miles,
+    pickups: pickups || 0,
     rateSnapshot: rate,
     amount: miles * rate
   };
