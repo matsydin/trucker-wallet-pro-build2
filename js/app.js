@@ -133,18 +133,22 @@ function closeModal() {
 function saveEntryFromModal() {
   const distanceInput = document.getElementById("entry-distance");
   const dateInput = document.getElementById("entry-date");
+  const pickupsInput = document.getElementById("entry-pickups");
 
   const distanceKm = parseFloat(distanceInput.value);
   const date = dateInput.value;
+  const pickups = parseInt(pickupsInput.value) || 0;
 
   if (!distanceKm || distanceKm <= 0) return;
 
   LogbookService.addEntry({
     distanceKm,
-    date
+    date,
+    pickups
   });
 
   distanceInput.value = "";
+  pickupsInput.value = "";
   closeModal();
 }
 /* ===============================
