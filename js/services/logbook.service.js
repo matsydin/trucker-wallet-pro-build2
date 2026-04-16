@@ -6,10 +6,6 @@ const KM_TO_MI = 0.621371;
 
 export const LogbookService = {
 
-  /* ===============================
-     ADD ENTRY
-  =============================== */
-
   addEntry({ distanceKm }) {
 
     const miles = distanceKm * KM_TO_MI;
@@ -35,20 +31,12 @@ export const LogbookService = {
     });
   },
 
-  /* ===============================
-     TOTALS
-  =============================== */
-
   getTotal() {
     return state.logbook.reduce(
       (sum, e) => sum + e.amount,
       0
     );
   },
-
-  /* ===============================
-     RENDER
-  =============================== */
 
   render() {
     this.renderSummary();
@@ -97,6 +85,7 @@ $$
         <div class="log-row">
           <div class="log-distance">${distance}</div>
           <div class="log-amount">
+            
 $$
 {entry.amount.toFixed(2)}
           </div>
