@@ -1,43 +1,17 @@
-(() => {
+// js/app.js
 
-  const STORAGE_KEY = "tw_pro_build2_state";
+import { state, saveState } from "./state.js";
+import { LogbookService } from "./services/logbook.service.js";
 
-  const defaultState = {
-    ui: {
-      theme: "dark",
-      activeTab: "log",
-      displayUnit: "km"
-    }
-  };
+/* ===============================
+   RENDER
+================================ */
 
-  let state = {};
-
-  /* ===============================
-     STORAGE
-  =============================== */
-
-  function loadState() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return structuredClone(defaultState);
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return structuredClone(defaultState);
-    }
-  }
-
-  function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
-
-  /* ===============================
-     RENDER
-  =============================== */
-
-  function render() {
+function renderUI() {
+  // Theme
   document.body.setAttribute("data-theme", state.ui.theme);
 
-  // Tabs active state
+  // Active tab buttons
   document.querySelectorAll(".tab").forEach(tab => {
     tab.classList.toggle(
       "active",
@@ -45,12 +19,12 @@
     );
   });
 
-  // Pages visibility
+  // Page visibility
   document.querySelectorAll(".page").forEach(page => {
     page.hidden = page.dataset.page !== state.ui.activeTab;
   });
 
-  // Unit toggle
+  // Unit segmented toggle
   document.querySelectorAll(".segmented button").forEach(btn => {
     btn.classList.toggle(
       "active",
@@ -59,72 +33,81 @@
   });
 }
 
-  /* ===============================
-     ACTIONS
-  =============================== */
+function render() {
+  renderUI();
+  LogbookService.render();
+}
 
-  function setTheme(theme) {
-    state.ui.theme = theme;
-    saveState();
-    render();
+/* ===============================
+   ACTIONS
+================================ */
+
+function setTab(tab) {
+  if (state.ui.activeTab === tab) return;
+
+  state.ui.activeTab = tab;
+  saveState();
+  render();
+}
+
+function setUnit(unit) {
+  if (state.ui.displayUnit === unit) return;
+
+  state.ui.displayUnit = unit;
+  saveState();
+  render();
+}
+
+function toggleTheme() {
+  state.ui.theme =
+    state.ui.theme === "dark" ? "light" : "dark";
+
+  saveState();
+  render();
+}
+
+/* ===============================
+   EVENTS (Delegation)
+================================ */
+
+function handleClick(e) {
+
+  // Tabs
+  const tab = e.target.closest(".tab");
+  if (tab) {
+    setTab(tab.dataset.tab);
+    return;
   }
 
-  function toggleTheme() {
-    const newTheme =
-      state.ui.theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
+  // KM / MI toggle
+  const unitBtn = e.target.closest("[data-unit]");
+  if (unitBtn) {
+    setUnit(unitBtn.dataset.unit);
+    return;
   }
 
-  function setTab(tab) {
-    state.ui.activeTab = tab;
-    saveState();
-    render();
+  // Brand (temporary theme toggle)
+  const brand = e.target.closest(".brand");
+  if (brand) {
+    toggleTheme();
+    return;
   }
 
-  function setUnit(unit) {
-    state.ui.displayUnit = unit;
-    saveState();
-    render();
+  // FAB (temporary mock entry)
+  const fab = e.target.closest(".fab");
+  if (fab) {
+    LogbookService.addMockEntry();
+    return;
   }
+}
 
-  /* ===============================
-     EVENTS (Delegation)
-  =============================== */
+/* ===============================
+   INIT
+================================ */
 
-  function handleClick(e) {
+function init() {
+  document.addEventListener("click", handleClick);
+  render();
+}
 
-    // Tabs
-    const tab = e.target.closest(".tab");
-    if (tab) {
-      setTab(tab.dataset.tab);
-      return;
-    }
-
-    // Unit toggle
-    const unitBtn = e.target.closest("[data-unit]");
-    if (unitBtn) {
-      setUnit(unitBtn.dataset.unit);
-      return;
-    }
-
-    // Temporary: double tap brand toggles theme
-    const brand = e.target.closest(".brand");
-    if (brand) {
-      toggleTheme();
-      return;
-    }
-  }
-
-  /* ===============================
-     INIT
-  =============================== */
-
-  function init() {
-    state = loadState();
-    document.addEventListener("click", handleClick);
-    render();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
-
-})();
+document.addEventListener("DOMContentLoaded", init);
