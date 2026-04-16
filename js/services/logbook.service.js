@@ -1,5 +1,5 @@
 // js/services/logbook.service.js
-
+//V.1.2
 import { state, saveState } from "../state.js";
 
 const KM_TO_MI = 0.621371;
