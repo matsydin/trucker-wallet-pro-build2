@@ -1,5 +1,3 @@
-// js/services/logbook.service.js
-//V.1.3
 import { state, saveState } from "../state.js";
 
 const KM_TO_MI = 0.621371;
@@ -7,7 +5,6 @@ const KM_TO_MI = 0.621371;
 export const LogbookService = {
 
   addEntry({ distanceKm }) {
-
     const miles = distanceKm * KM_TO_MI;
     const rate = state.settings.ratePerMile;
 
@@ -32,10 +29,7 @@ export const LogbookService = {
   },
 
   getTotal() {
-    return state.logbook.reduce(
-      (sum, e) => sum + e.amount,
-      0
-    );
+    return state.logbook.reduce((sum, e) => sum + e.amount, 0);
   },
 
   render() {
@@ -44,12 +38,12 @@ export const LogbookService = {
   },
 
   renderSummary() {
-  const summaryEl = document.querySelector(".summary-amount");
-  if (!summaryEl) return;
+    const summaryEl = document.querySelector(".summary-amount");
+    if (!summaryEl) return;
 
-  const total = this.getTotal();
-  summaryEl.textContent = "$" + total.toFixed(2) + " CAD";
-},
+    const total = this.getTotal();
+    summaryEl.textContent = "$" + total.toFixed(2) + " CAD";
+  },
 
   renderList() {
     const listEl = document.querySelector(".logbook-list");
@@ -70,24 +64,23 @@ export const LogbookService = {
   },
 
   renderItem(entry) {
+    const unit = state.ui.displayUnit;
 
-  const unit = state.ui.displayUnit;
+    const distance =
+      unit === "km"
+        ? entry.distanceKm.toFixed(0) + " KM"
+        : entry.distanceMi.toFixed(0) + " MI";
 
-  const distance =
-    unit === "km"
-      ? entry.distanceKm.toFixed(0) + " KM"
-      : entry.distanceMi.toFixed(0) + " MI";
-
-  return `
-    <div class="card log-item" data-id="${entry.id}">
-      <div class="log-row">
-        <div class="log-distance">${distance}</div>
-        <div class="log-amount">
-$$
-{entry.amount.toFixed(2)}
+    return `
+      <div class="card log-item" data-id="${entry.id}">
+        <div class="log-row">
+          <div class="log-distance">${distance}</div>
+          <div class="log-amount">
+            $${entry.amount.toFixed(2)}
+          </div>
         </div>
       </div>
-    </div>
-  `;
-}
+    `;
+  }
+
 };
