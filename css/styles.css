@@ -1,1 +1,190 @@
+/* =========================================
+   TRUCKER WALLET PRO — BUILD 2
+   iPhone 14 Pro Max Optimized
+========================================= */
 
+:root {
+  --radius: 18px;
+  --transition: 0.25s ease;
+  --safe-bottom: env(safe-area-inset-bottom);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== DARK (PRIMARY) ===== */
+
+[data-theme="dark"] {
+  --bg: #0B1220;
+  --card: #121A2B;
+  --card-elev: #162038;
+  --accent: #D4AF37;
+  --accent-soft: rgba(212,175,55,0.25);
+  --text: #F5F7FA;
+  --text-secondary: #9BA4B5;
+  --danger: #ff453a;
+}
+
+/* ===== LIGHT ===== */
+
+[data-theme="light"] {
+  --bg: #F2F4F8;
+  --card: #FFFFFF;
+  --card-elev: #FFFFFF;
+  --accent: #1E3A8A;
+  --accent-soft: rgba(30,58,138,0.15);
+  --text: #1C1C1E;
+  --text-secondary: #6B7280;
+  --danger: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition: background var(--transition);
+}
+
+/* ===== HEADER ===== */
+
+.header {
+  position: sticky;
+  top: 0;
+  padding: 16px 20px 10px;
+  background: var(--bg);
+  z-index: 1000;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* ===== SEGMENTED ===== */
+
+.segmented {
+  display: flex;
+  background: var(--card-elev);
+  border-radius: 12px;
+  padding: 4px;
+  margin-top: 10px;
+}
+
+.segmented button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 0;
+  border-radius: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.segmented button.active {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ===== MAIN ===== */
+
+.main {
+  padding: 10px 16px 120px;
+}
+
+/* ===== CARDS ===== */
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  transition: var(--transition);
+}
+
+/* Summary */
+
+.summary-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.summary-amount {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Entry */
+
+.entry-date {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.entry-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.entry-amount {
+  font-weight: 700;
+  margin-top: 6px;
+  color: var(--accent);
+}
+
+/* ===== FAB ===== */
+
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: calc(90px + var(--safe-bottom));
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #000;
+  font-size: 28px;
+  font-weight: bold;
+  box-shadow: 0 8px 20px var(--accent-soft);
+}
+
+/* ===== TAB BAR ===== */
+
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: var(--card);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 calc(10px + var(--safe-bottom));
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.tab.active {
+  color: var(--accent);
+  font-weight: 600;
+}
