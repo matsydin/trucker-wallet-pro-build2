@@ -144,7 +144,8 @@ function saveEntryFromModal() {
   LogbookService.addEntry({
     distanceKm,
     date,
-    pickups
+    loads: pickups,
+  waitingHours: 0
   });
 
   distanceInput.value = "";
