@@ -183,11 +183,13 @@ body {
 
 .tabbar-inner {
   display: flex;
+  width: 100%;              /* ✅ ГОЛОВНЕ */
+  max-width: 600px;         /* ✅ красиво на великих екранах */
+  
   background: var(--card-elev);
   border-radius: 16px;
   padding: 6px;
 }
-
 .tab {
   flex: 1;
 
