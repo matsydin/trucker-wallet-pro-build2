@@ -37,6 +37,7 @@ function renderUI() {
 function render() {
   renderUI();
   LogbookService.render();
+  ArchiveService.render();
 }
 
 /* ===============================
