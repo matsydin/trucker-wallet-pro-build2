@@ -171,10 +171,17 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: var(--card);
+
+  padding: 12px 16px calc(12px + var(--safe-bottom));
+
+  background: var(--bg);
+}
+
+.tabbar-inner {
   display: flex;
-  justify-content: space-around;
-  padding: 10px 0 calc(10px + var(--safe-bottom));
+  background: var(--card-elev);
+  border-radius: 16px;
+  padding: 6px;
 }
 
 .tab {
@@ -187,18 +194,17 @@ body {
   -webkit-appearance: none;
   appearance: none;
 
-  text-align: center;
+  padding: 10px 0;
+  border-radius: 12px;
+
   font-size: 13px;
-  padding: 12px 0;
+  font-weight: 600;
 
   color: var(--text-secondary);
   transition: var(--transition);
-
-  cursor: pointer;
 }
 
 .tab.active {
-  color: var(--accent);
-  font-weight: 600;
-  background: var(--card-elev);
+  background: var(--accent);
+  color: #000;
 }
