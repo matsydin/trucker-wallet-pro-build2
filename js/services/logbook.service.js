@@ -4,23 +4,24 @@ const KM_TO_MI = 0.621371;
 
 export const LogbookService = {
 
-  addEntry({ distanceKm }) {
-    const miles = distanceKm * KM_TO_MI;
-    const rate = state.settings.ratePerMile;
+  addEntry({ distanceKm, date }) {
 
-    const entry = {
-      id: crypto.randomUUID(),
-      date: new Date().toISOString(),
-      distanceKm,
-      distanceMi: miles,
-      rateSnapshot: rate,
-      amount: miles * rate
-    };
+  const miles = distanceKm * KM_TO_MI;
+  const rate = state.settings.ratePerMile;
 
-    state.logbook.push(entry);
-    saveState();
-    this.render();
-  },
+  const entry = {
+    id: crypto.randomUUID(),
+    date: date ? new Date(date).toISOString() : new Date().toISOString(),
+    distanceKm,
+    distanceMi: miles,
+    rateSnapshot: rate,
+    amount: miles * rate
+  };
+
+  state.logbook.push(entry);
+  saveState();
+  this.render();
+},
 
   addMockEntry() {
     this.addEntry({
