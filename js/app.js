@@ -93,12 +93,12 @@ function handleClick(e) {
     return;
   }
 
-  // FAB (temporary mock entry)
-  const fab = e.target.closest(".fab");
-  if (fab) {
-    LogbookService.addMockEntry();
-    return;
-  }
+ // FAB
+const fab = e.target.closest(".fab");
+if (fab) {
+  openModal();
+  return;
+}
 }
 
 /* ===============================
