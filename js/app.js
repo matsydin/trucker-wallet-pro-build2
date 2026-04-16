@@ -158,6 +158,10 @@ function saveEntryFromModal() {
 
 function init() {
   document.addEventListener("click", handleClick);
+
+  // ✅ Recalculate totals on app start
+  LogbookService.calculateTotals();
+
   render();
 }
 
