@@ -35,24 +35,29 @@
   =============================== */
 
   function render() {
-    document.body.setAttribute("data-theme", state.ui.theme);
+  document.body.setAttribute("data-theme", state.ui.theme);
 
-    // Tabs
-    document.querySelectorAll(".tab").forEach(tab => {
-      tab.classList.toggle(
-        "active",
-        tab.dataset.tab === state.ui.activeTab
-      );
-    });
+  // Tabs active state
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.toggle(
+      "active",
+      tab.dataset.tab === state.ui.activeTab
+    );
+  });
 
-    // Unit toggle
-    document.querySelectorAll(".segmented button").forEach(btn => {
-      btn.classList.toggle(
-        "active",
-        btn.dataset.unit === state.ui.displayUnit
-      );
-    });
-  }
+  // Pages visibility
+  document.querySelectorAll(".page").forEach(page => {
+    page.hidden = page.dataset.page !== state.ui.activeTab;
+  });
+
+  // Unit toggle
+  document.querySelectorAll(".segmented button").forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.unit === state.ui.displayUnit
+    );
+  });
+}
 
   /* ===============================
      ACTIONS
