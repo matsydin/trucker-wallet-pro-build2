@@ -66,23 +66,37 @@ addEntry({ distanceKm, date, pickups }) {
   },
 
   renderItem(entry) {
-    const unit = state.ui.displayUnit;
 
-    const distance =
-      unit === "km"
-        ? entry.distanceKm.toFixed(0) + " KM"
-        : entry.distanceMi.toFixed(0) + " MI";
+  const unit = state.ui.displayUnit;
 
-    return `
-      <div class="card log-item" data-id="${entry.id}">
-        <div class="log-row">
-          <div class="log-distance">${distance}</div>
-          <div class="log-amount">
-            $${entry.amount.toFixed(2)}
+  const distance =
+    unit === "km"
+      ? entry.distanceKm.toFixed(0) + " KM"
+      : entry.distanceMi.toFixed(0) + " MI";
+
+  const date = new Date(entry.date).toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit"
+  });
+
+  const pickups = entry.pickups ? ` • ${entry.pickups} PU` : "";
+
+  return `
+    <div class="card log-item" data-id="${entry.id}">
+      <div class="log-row">
+        <div>
+          <div class="log-date">${date}</div>
+          <div class="log-distance">
+            ${distance}${pickups}
           </div>
         </div>
+        <div class="log-amount">
+          $${entry.amount.toFixed(2)}
+        </div>
       </div>
-    `;
-  }
+    </div>
+  `;
+}
 
 };
