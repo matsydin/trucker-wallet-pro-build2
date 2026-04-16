@@ -99,8 +99,54 @@ if (fab) {
   openModal();
   return;
 }
+   // Close modal
+if (e.target.closest(".modal-close") ||
+    e.target.closest(".modal-backdrop")) {
+  closeModal();
+  return;
 }
 
+// Save entry
+if (e.target.closest("#save-entry")) {
+  saveEntryFromModal();
+  return;
+}
+}
+
+function openModal() {
+  const modal = document.querySelector(".modal");
+  if (!modal) return;
+
+  modal.hidden = false;
+
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("entry-date").value = today;
+}
+
+function closeModal() {
+  const modal = document.querySelector(".modal");
+  if (!modal) return;
+
+  modal.hidden = true;
+}
+
+function saveEntryFromModal() {
+  const distanceInput = document.getElementById("entry-distance");
+  const dateInput = document.getElementById("entry-date");
+
+  const distanceKm = parseFloat(distanceInput.value);
+  const date = dateInput.value;
+
+  if (!distanceKm || distanceKm <= 0) return;
+
+  LogbookService.addEntry({
+    distanceKm,
+    date
+  });
+
+  distanceInput.value = "";
+  closeModal();
+}
 /* ===============================
    INIT
 ================================ */
