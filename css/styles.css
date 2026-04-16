@@ -179,9 +179,13 @@ body {
 
 .tab {
   flex: 1;
+  background: transparent;
+  border: none;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
+  padding: 10px 0;
   color: var(--text-secondary);
+  transition: var(--transition);
 }
 
 .tab.active {
