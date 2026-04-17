@@ -2,6 +2,19 @@
 
 import { LogbookService } from "../services/logbook.service.js";
 import { renderLogScreen } from "./renderer.js";
+import { ArchiveService } from "../services/archive.service.js";
+import { render } from "../app.js";
+
+export function initEvents() {
+  const finishBtn = document.getElementById("finish-week-btn");
+
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      ArchiveService.archiveCurrent();
+      render();
+    });
+  }
+}
 
 export function initEvents() {
 
