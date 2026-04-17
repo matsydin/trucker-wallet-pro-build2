@@ -13,14 +13,18 @@ const defaultState = {
     displayUnit: "km",
     inputUnit: "km",
     language: "EN",
+
     archiveDetailId: null,
+
     customerSearch: "",
     trailerSearch: "",
     dataTab: "customers",
+
     modal: {
       type: null,
       mode: null,
-      entityId: null
+      entityId: null,
+      parentId: null
     }
   },
 
@@ -59,7 +63,6 @@ function loadState() {
   try {
     const parsed = JSON.parse(raw);
 
-    // 🔁 MIGRATION from old structure
     if (parsed.logbook && !parsed.current) {
       return migrateFromV1(parsed);
     }
@@ -114,10 +117,7 @@ function deepMerge(target, source) {
       typeof source[key] === "object" &&
       !Array.isArray(source[key])
     ) {
-      target[key] = deepMerge(
-        target[key] || {},
-        source[key]
-      );
+      target[key] = deepMerge(target[key] || {}, source[key]);
     } else {
       target[key] = source[key];
     }
