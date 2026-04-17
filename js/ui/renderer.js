@@ -13,7 +13,7 @@ export function renderLogScreen(state) {
   const totalGross = state.totals?.gross ?? 0;
   totalEl.textContent = `
 $$
-{Number(totalGross).toFixed(2)} CAD`;
+{Number(totalAmount).toFixed(2)} ${state.settings.currency}`;
 
   const entries = state.entries || [];
 
