@@ -151,16 +151,18 @@ function saveEntryFromModal() {
   if (!distanceKm || distanceKm <= 0) return;
 
   LogbookService.addEntry({
-    kilometers,
-    date,
+    kilometers: distanceKm,   // ✅ ПРАВИЛЬНА ЗМІННА
+    date: date,
     loads: pickups,
-  waitingHours: 0
+    waitingHours: 0
   });
 
   distanceInput.value = "";
   pickupsInput.value = "";
+
   closeModal();
-  render();
+
+  render();   // ✅ одразу оновлюємо UI
 }
 /* ===============================
    INIT
