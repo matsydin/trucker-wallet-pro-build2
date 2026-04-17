@@ -136,10 +136,18 @@ function handleClick(e) {
   }
 
   const actionBtn = target.closest("[data-action]");
-  if (!actionBtn) return;
+if (!actionBtn) return;
 
-  const action = actionBtn.dataset.action;
-  const id = actionBtn.dataset.id;
+const action = actionBtn.dataset.action;
+const id = actionBtn.dataset.id;
+
+// ✅ Data tab switch
+if (action === "set-data-tab") {
+  state.ui.dataTab = actionBtn.dataset.tab;
+  saveState();
+  render();
+  return;
+}
 
   /* ===== ARCHIVE ===== */
 
