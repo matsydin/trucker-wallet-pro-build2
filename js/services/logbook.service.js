@@ -99,10 +99,9 @@ export const LogbookService = {
     const currency = state.settings.currency;
 
     summaryEl.textContent =
-      `
+  `
 $$
 {total.toFixed(2)} ${currency}`;
-  },
 
   renderList() {
 
