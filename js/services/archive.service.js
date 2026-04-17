@@ -73,17 +73,23 @@ function recalculateArchiveTotals(periodId) {
 
   let kilometers = 0;
   let miles = 0;
+  let loads = 0;
+  let waitingHours = 0;
   let amount = 0;
 
   period.entries.forEach(entry => {
     kilometers += Number(entry.kilometers || 0);
     miles += Number(entry.miles || 0);
+    loads += Number(entry.loads || 0);              // ✅ ДОДАНО
+    waitingHours += Number(entry.waitingHours || 0); // ✅ ДОДАНО
     amount += Number(entry.amount || 0);
   });
 
   period.totals = {
     kilometers: +kilometers.toFixed(1),
     miles: +miles.toFixed(1),
+    loads: +loads.toFixed(0),              // ✅ ДОДАНО
+    waitingHours: +waitingHours.toFixed(1),// ✅ ДОДАНО
     amount: +amount.toFixed(2)
   };
 
