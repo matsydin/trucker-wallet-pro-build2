@@ -102,7 +102,7 @@ export const LogbookService = {
   `
 $$
 {total.toFixed(2)} ${currency}`;
-
+  };
   renderList() {
 `
     const listEl = document.querySelector(".logbook-list");
@@ -117,6 +117,7 @@ $$
         </div>
       `;
       return;
+    };
     }
 
     listEl.innerHTML = entries
@@ -159,7 +160,7 @@ $$
           </div>
           <div class="log-amount">
 $$
-{entry.amount.toFixed(2)}
+{entry.amount.toFixed(2)}              
 </div>
         </div>
       </div>
