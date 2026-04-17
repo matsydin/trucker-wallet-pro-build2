@@ -145,7 +145,56 @@ export function renderArchiveScreen(state) {
 
     return;
   }
+/* ======================================
+   RENDER FLEET
+====================================== */
+   export function renderFleet(state) {
+  const container = document.getElementById("data-content");
+  if (!container) return;
 
+  const trailers = state.trailers;
+
+  let html = `
+    <div class="screen-header">
+      <h3>Fleet</h3>
+      <button class="primary-btn"
+              data-action="open-add-trailer">
+        + Add
+      </button>
+    </div>
+  `;
+
+  if (!trailers.length) {
+    html += `<div class="empty-state">No trailers yet</div>`;
+  } else {
+    html += `<div class="card-list">`;
+
+    trailers.forEach(t => {
+      html += `
+        <div class="card">
+          <div class="card-header">
+            <h3>#${t.unitNumber}</h3>
+            <div>
+              <button data-action="edit-trailer"
+                      data-id="${t.id}">Edit</button>
+              <button data-action="delete-trailer"
+                      data-id="${t.id}">Delete</button>
+            </div>
+          </div>
+
+          ${t.plate ? `<p>Plate: ${t.plate}</p>` : ""}
+          ${t.maxLoad ? `<p>Max Load: ${t.maxLoad}</p>` : ""}
+          ${t.psi ? `<p>PSI: ${t.psi}</p>` : ""}
+          ${t.notes ? `<p class="muted">${t.notes}</p>` : ""}
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
   // ===============================
   // LIST VIEW
   // ===============================
