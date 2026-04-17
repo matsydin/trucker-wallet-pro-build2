@@ -37,7 +37,6 @@ function renderUI() {
 function render() {
   renderUI();
   renderLogScreen();      // ✅ тепер рендер через renderer.js
-  ArchiveService.render(); // поки що залишаємо
 }
 
 /* ===============================
