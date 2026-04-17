@@ -8,16 +8,21 @@ const STORAGE_KEY = "tw_pro_build2_state";
 
 const defaultState = {
   ui: {
-  theme: "dark",
-  activeTab: "log",
-  displayUnit: "km",
-  inputUnit: "km",
-  language: "EN",
-  archiveDetailId: null,
-  customerSearch: "",
-  trailerSearch: "",      // ✅ NEW
-  dataTab: "customers"    // ✅ NEW
-},
+    theme: "dark",
+    activeTab: "log",
+    displayUnit: "km",
+    inputUnit: "km",
+    language: "EN",
+    archiveDetailId: null,
+    customerSearch: "",
+    trailerSearch: "",
+    dataTab: "customers",
+    modal: {
+      type: null,
+      mode: null,
+      entityId: null
+    }
+  },
 
   settings: {
     driverName: "",
