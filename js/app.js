@@ -498,6 +498,16 @@ document.addEventListener("input", function(e) {
     render();
     return;
   }
+
+  if (e.target.id === "customer-24h") {
+    toggleCustomerHoursVisibility();
+    return;
+  }
+
+  if (e.target.id === "trailer-plate") {
+    normalizeTrailerPlateLive();
+    return;
+  }
 });
 
 /* ===============================
