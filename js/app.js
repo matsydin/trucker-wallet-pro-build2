@@ -56,7 +56,7 @@ if (segmented) {
   }
 
   if (state.ui.activeTab === "data") {
-    renderCustomers(state);
+    renderDataScreen(state);
     return;
   }
 }
