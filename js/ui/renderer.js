@@ -11,11 +11,10 @@ function renderSummary() {
   const amountEl = document.querySelector(".summary-amount");
   if (!amountEl) return;
 
-  const totals = state.current.totals;
-  const currency = state.settings.currency;
+  const amount = state.current?.totals?.amount ?? 0;
+  const currency = state.settings?.currency ?? "CAD";
 
-  amountEl.textContent =
-    `${currency} ${totals.amount.toFixed(2)}`;
+  amountEl.textContent = `${currency} ${amount.toFixed(2)}`;
 }
 
 function renderEntries() {
@@ -26,14 +25,18 @@ function renderEntries() {
 
   state.current.entries.forEach(entry => {
 
+    const kilometers = entry.kilometers ?? 0;
+    const amount = entry.amount ?? 0;
+    const date = entry.date ?? "—";
+
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
       <div class="entry-row">
-        <div><strong>${entry.date}</strong></div>
-        <div>${entry.kilometers} km</div>
-        <div>${state.settings.currency} ${entry.amount.toFixed(2)}</div>
+        <div><strong>${date}</strong></div>
+        <div>${kilometers} km</div>
+        <div>${state.settings.currency} ${amount.toFixed(2)}</div>
       </div>
 
       <div class="entry-actions">
