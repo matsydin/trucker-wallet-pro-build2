@@ -1,11 +1,20 @@
-import { renderLogScreen, renderArchiveScreen, renderCustomers } from "./ui/renderer.js";
+// js/app.js
+
+import {
+  renderLogScreen,
+  renderArchiveScreen,
+  renderCustomers,
+  renderDataScreen
+} from "./ui/renderer.js";
+
 import { state, saveState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
 import { CustomerService } from "./services/customer.service.js";
-import { renderDataScreen } from "./ui/renderer.js";
+import { TrailerService } from "./services/trailer.service.js";
 
 let editingCustomerId = null;
+let editingTrailerId = null;
 
 /* ===============================
    RENDER APP STATE
@@ -31,20 +40,19 @@ function render() {
       btn.dataset.unit === state.ui.displayUnit
     );
   });
-// ✅ FAB тільки на Log
-const fab = document.querySelector(".fab");
-if (fab) {
-  fab.style.display =
-    state.ui.activeTab === "log" ? "flex" : "none";
-}
 
-// ✅ KM/MI toggle тільки на Log
-const segmented = document.querySelector(".segmented");
-if (segmented) {
-  segmented.style.display =
-    state.ui.activeTab === "log" ? "flex" : "none";
-}
-   
+  const fab = document.querySelector(".fab");
+  if (fab) {
+    fab.style.display =
+      state.ui.activeTab === "log" ? "flex" : "none";
+  }
+
+  const segmented = document.querySelector(".segmented");
+  if (segmented) {
+    segmented.style.display =
+      state.ui.activeTab === "log" ? "flex" : "none";
+  }
+
   if (state.ui.activeTab === "log") {
     renderLogScreen(state);
     return;
@@ -111,7 +119,6 @@ function handleClick(e) {
     return;
   }
 
-  // ✅ FAB тільки на Log
   if (target.closest(".fab") && state.ui.activeTab === "log") {
     openModal();
     return;
@@ -136,18 +143,17 @@ function handleClick(e) {
   }
 
   const actionBtn = target.closest("[data-action]");
-if (!actionBtn) return;
+  if (!actionBtn) return;
 
-const action = actionBtn.dataset.action;
-const id = actionBtn.dataset.id;
+  const action = actionBtn.dataset.action;
+  const id = actionBtn.dataset.id;
 
-// ✅ Data tab switch
-if (action === "set-data-tab") {
-  state.ui.dataTab = actionBtn.dataset.tab;
-  saveState();
-  render();
-  return;
-}
+  if (action === "set-data-tab") {
+    state.ui.dataTab = actionBtn.dataset.tab;
+    saveState();
+    render();
+    return;
+  }
 
   /* ===== ARCHIVE ===== */
 
@@ -223,7 +229,71 @@ if (action === "set-data-tab") {
     render();
     return;
   }
+
+  /* ===== FLEET ===== */
+
+  if (action === "open-add-trailer") {
+    editingTrailerId = null;
+    openTrailerModal();
+    return;
+  }
+
+  if (action === "edit-trailer") {
+    editingTrailerId = id;
+    openTrailerModal(id);
+    return;
+  }
+
+  if (action === "delete-trailer") {
+    if (confirm("Delete this trailer?")) {
+      TrailerService.delete(id);
+      render();
+    }
+    return;
+  }
+
+  if (action === "close-trailer-modal") {
+    closeTrailerModal();
+    return;
+  }
+
+  if (action === "save-trailer") {
+    const unitNumber = document.getElementById("trailer-unit-number").value.trim();
+    const plate = document.getElementById("trailer-plate").value.trim();
+    const maxLoad = document.getElementById("trailer-max-load").value.trim();
+    const psi = document.getElementById("trailer-psi").value.trim();
+    const notes = document.getElementById("trailer-notes").value.trim();
+    const errorEl = document.getElementById("trailer-modal-error");
+
+    const resultData = {
+      unitNumber,
+      plate,
+      maxLoad,
+      psi,
+      notes
+    };
+
+    const result = editingTrailerId
+      ? TrailerService.edit(editingTrailerId, resultData)
+      : TrailerService.add(resultData);
+
+    if (!result.ok) {
+      if (errorEl) {
+        errorEl.textContent = result.errors.general || "Invalid data.";
+      }
+      return;
+    }
+
+    if (errorEl) {
+      errorEl.textContent = "";
+    }
+
+    closeTrailerModal();
+    render();
+    return;
+  }
 }
+
 /* ===============================
    CUSTOMER MODAL
 ================================ */
@@ -240,7 +310,6 @@ function openCustomerModal(id = null) {
   const notes = document.getElementById("customer-notes");
   const title = document.getElementById("customer-modal-title");
 
-  // ✅ якщо щось не знайдено — зупиняємо
   if (!name || !address || !is24h || !open || !close || !notes || !title) {
     console.error("Customer modal elements not found in DOM");
     return;
@@ -278,11 +347,63 @@ function closeCustomerModal() {
 }
 
 /* ===============================
+   TRAILER MODAL
+================================ */
+
+function openTrailerModal(id = null) {
+  const modal = document.getElementById("trailer-modal");
+  if (!modal) return;
+
+  const title = document.getElementById("trailer-modal-title");
+  const unitNumber = document.getElementById("trailer-unit-number");
+  const plate = document.getElementById("trailer-plate");
+  const maxLoad = document.getElementById("trailer-max-load");
+  const psi = document.getElementById("trailer-psi");
+  const notes = document.getElementById("trailer-notes");
+  const errorEl = document.getElementById("trailer-modal-error");
+
+  if (!title || !unitNumber || !plate || !maxLoad || !psi || !notes || !errorEl) {
+    console.error("Trailer modal elements not found in DOM");
+    return;
+  }
+
+  errorEl.textContent = "";
+
+  if (id) {
+    const t = state.trailers.find(t => t.id === id);
+    if (!t) return;
+
+    title.textContent = "Edit Trailer";
+    unitNumber.value = t.unitNumber || "";
+    plate.value = t.plate || "";
+    maxLoad.value = t.maxLoad || "";
+    psi.value = t.psi || "";
+    notes.value = t.notes || "";
+  } else {
+    title.textContent = "Add Trailer";
+    unitNumber.value = "";
+    plate.value = "";
+    maxLoad.value = "";
+    psi.value = "";
+    notes.value = "";
+  }
+
+  modal.hidden = false;
+}
+
+function closeTrailerModal() {
+  const modal = document.getElementById("trailer-modal");
+  if (!modal) return;
+
+  modal.hidden = true;
+}
+
+/* ===============================
    ENTRY MODAL
 ================================ */
 
 function openModal() {
-  const modal = document.querySelector(".modal:not(#customer-modal)");
+  const modal = document.querySelector(".modal:not(#customer-modal):not(#trailer-modal)");
   if (!modal) return;
 
   modal.hidden = false;
@@ -292,7 +413,7 @@ function openModal() {
 }
 
 function closeModal() {
-  const modal = document.querySelector(".modal:not(#customer-modal)");
+  const modal = document.querySelector(".modal:not(#customer-modal):not(#trailer-modal)");
   if (!modal) return;
 
   modal.hidden = true;
@@ -331,6 +452,13 @@ document.addEventListener("input", function(e) {
   if (e.target.dataset.action === "customer-search") {
     CustomerService.setSearch(e.target.value);
     render();
+    return;
+  }
+
+  if (e.target.dataset.action === "trailer-search") {
+    TrailerService.setSearch(e.target.value);
+    render();
+    return;
   }
 });
 
