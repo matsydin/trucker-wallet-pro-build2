@@ -130,7 +130,9 @@ function handleClick(e) {
     render();
     return;
   }
-
+   if (action === "customer-search") {
+  return;
+}
   const openArchive = target.closest('[data-action="open-archive"]');
   if (openArchive) {
     state.ui.archiveDetailId = openArchive.dataset.id;
