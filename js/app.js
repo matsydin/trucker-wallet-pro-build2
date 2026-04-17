@@ -128,7 +128,20 @@ function handleClick(e) {
     saveEntryFromModal();
     return;
   }
+  
+  if (target.closest(".modal:not(#customer-modal):not(#trailer-modal) .modal-close")) {
+    closeModal();
+    return;
+  }
 
+  if (target.classList.contains("modal-backdrop")) {
+    const entryModal = target.closest('.modal:not(#customer-modal):not(#trailer-modal)');
+    if (entryModal) {
+      closeModal();
+      return;
+    }
+  }
+  
   if (target.closest("#finish-week-btn")) {
     ArchiveService.archiveCurrent();
     render();
