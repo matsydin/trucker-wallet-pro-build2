@@ -25,7 +25,15 @@ function renderEntries() {
 
   state.current.entries.forEach(entry => {
 
-    const kilometers = entry.kilometers ?? 0;
+    
+    const unit = state.ui.displayUnit;
+
+const distance =
+  unit === "mi"
+    ? entry.miles ?? 0
+    : entry.kilometers ?? 0;
+
+const unitLabel = unit === "mi" ? "mi" : "km";
     const amount = entry.amount ?? 0;
     const date = entry.date ?? "—";
 
@@ -35,7 +43,14 @@ function renderEntries() {
     card.innerHTML = `
       <div class="entry-row">
         <div><strong>${date}</strong></div>
-        <div>${kilometers} km</div>
+        const unit = state.ui.displayUnit;
+const distance =
+  unit === "mi"
+    ? entry.miles ?? 0
+    : entry.kilometers ?? 0;
+
+const unitLabel = unit === "mi" ? "mi" : "km";
+
         <div>${state.settings.currency} ${amount.toFixed(2)}</div>
       </div>
 
