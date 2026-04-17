@@ -1,112 +1,102 @@
-// js/services/archive.service.js
-
 import { state, saveState } from "../state.js";
-import { LogbookService } from "./logbook.service.js";
 
-export const ArchiveService = {
+function archiveCurrent() {
+  const entries = state.current.entries;
 
-  /* ======================================
-     ARCHIVE CURRENT PERIOD
-  ====================================== */
+  if (!entries || entries.length === 0) return;
 
-  archiveCurrent() {
+  const periodData = generatePeriodData(entries);
 
-    const entries = state.current.entries;
+  const archiveItem = {
+    id: crypto.randomUUID(),
 
-    if (!entries.length) return;
+    periodLabel: periodData.label,
+    periodStart: periodData.start,
+    periodEnd: periodData.end,
 
-    const firstDate = new Date(entries[0].date);
-    const lastDate = new Date(
-      entries[entries.length - 1].date
-    );
+    createdAt: new Date().toISOString(),
 
-    const periodLabel = this.buildPeriodLabel(
-      firstDate,
-      lastDate
-    );
+    entries: structuredClone(entries),
 
-    const snapshot = {
-      id: crypto.randomUUID(),
-      periodLabel,
-      createdAt: new Date().toISOString(),
+    totals: structuredClone(state.current.totals)
+  };
 
-      entries: structuredClone(entries),
+  // Додаємо новий період на початок
+  state.archive.unshift(archiveItem);
 
-      totals: structuredClone(state.current.totals)
-    };
+  // Сортування по кінцевій даті (новіші зверху)
+  state.archive.sort(
+    (a, b) => new Date(b.periodEnd) - new Date(a.periodEnd)
+  );
 
-    state.archive.push(snapshot);
+  // Очищаємо current
+  state.current.entries = [];
+  state.current.totals = {
+    kilometers: 0,
+    miles: 0,
+    amount: 0
+  };
 
-    // ✅ Clear current
-    state.current.entries = [];
-    state.current.totals = {
-      kilometers: 0,
-      miles: 0,
-      amount: 0
-    };
+  saveState();
+}
 
-    saveState();
-  },
+function deleteArchive(id) {
+  state.archive = state.archive.filter(a => a.id !== id);
+  saveState();
+}
 
-  /* ======================================
-     PERIOD LABEL
-  ====================================== */
+function getById(id) {
+  return state.archive.find(a => a.id === id);
+}
 
-  buildPeriodLabel(start, end) {
+function generatePeriodData(entries) {
+  const dates = entries.map(e => new Date(e.date));
 
-    const format = (d) =>
-      d.toLocaleDateString("en-CA", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit"
-      });
+  const minDate = new Date(Math.min(...dates));
+  const maxDate = new Date(Math.max(...dates));
 
-    return `${format(start)} - ${format(end)}`;
-  },
+  return {
+    start: formatISO(minDate),
+    end: formatISO(maxDate),
+    label: formatLabel(minDate, maxDate)
+  };
+}
 
-  /* ======================================
-     RENDER ARCHIVE LIST
-  ====================================== */
+function formatISO(date) {
+  return date.toISOString().split("T")[0];
+}
 
-  render() {
+function formatLabel(start, end) {
+  const sameDay =
+    start.toDateString() === end.toDateString();
 
-    const container = document.querySelector(
-      '[data-page="archive"]'
-    );
+  const sameMonth =
+    start.getMonth() === end.getMonth() &&
+    start.getFullYear() === end.getFullYear();
 
-    if (!container) return;
+  const sameYear =
+    start.getFullYear() === end.getFullYear();
 
-    if (!state.archive.length) {
-      container.innerHTML = `
-        <div class="card">
-          No archived periods yet
-        </div>
-      `;
-      return;
-    }
+  const monthShort = d =>
+    d.toLocaleString("en-US", { month: "short" });
 
-    container.innerHTML = state.archive
-      .map(period => this.renderItem(period))
-      .join("");
-  },
-
-  renderItem(period) {
-
-    const currency = state.settings.currency;
-
-    return `
-      <div class="card archive-item" data-id="${period.id}">
-        <div class="archive-title">
-          ${period.periodLabel}
-        </div>
-        <div class="archive-meta">
-          ${period.entries.length} entries
-        </div>
-        <div class="archive-amount">
-          $${period.totals.amount.toFixed(2)} ${currency}
-        </div>
-      </div>
-    `;
+  if (sameDay) {
+    return `${monthShort(start)} ${start.getDate()} ${start.getFullYear()}`;
   }
 
+  if (sameMonth) {
+    return `${monthShort(start)} ${start.getDate()} – ${end.getDate()} ${start.getFullYear()}`;
+  }
+
+  if (sameYear) {
+    return `${monthShort(start)} ${start.getDate()} – ${monthShort(end)} ${end.getDate()} ${start.getFullYear()}`;
+  }
+
+  return `${monthShort(start)} ${start.getDate()} ${start.getFullYear()} – ${monthShort(end)} ${end.getDate()} ${end.getFullYear()}`;
+}
+
+export const ArchiveService = {
+  archiveCurrent,
+  deleteArchive,
+  getById
 };
