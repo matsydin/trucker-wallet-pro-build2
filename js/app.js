@@ -24,6 +24,14 @@ function render() {
     );
   });
 
+  // ✅ KM / MI toggle
+  document.querySelectorAll("[data-unit]").forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.unit === state.ui.displayUnit
+    );
+  });
+
   if (state.ui.activeTab === "archive") {
     renderArchiveScreen(state);
   } else {
