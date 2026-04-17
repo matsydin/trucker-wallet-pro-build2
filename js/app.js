@@ -3,7 +3,6 @@
 import {
   renderLogScreen,
   renderArchiveScreen,
-  renderCustomers,
   renderDataScreen
 } from "./ui/renderer.js";
 
@@ -15,6 +14,9 @@ import { TrailerService } from "./services/trailer.service.js";
 
 let editingCustomerId = null;
 let editingTrailerId = null;
+let editingEntryId = null;
+let editingArchivePeriodId = null;
+let editingArchiveEntryId = null;
 
 /* ===============================
    RENDER APP STATE
@@ -22,6 +24,7 @@ let editingTrailerId = null;
 
 function render() {
   document.body.setAttribute("data-theme", state.ui.theme);
+
   const pageTitle = document.querySelector(".page-title");
   if (pageTitle) {
     const titles = {
@@ -30,9 +33,9 @@ function render() {
       data: "Data",
       settings: "Settings"
     };
-
     pageTitle.textContent = titles[state.ui.activeTab] || "Trucker Wallet Pro";
   }
+
   document.querySelectorAll(".page").forEach(page => {
     page.hidden = page.dataset.page !== state.ui.activeTab;
   });
@@ -103,6 +106,7 @@ function toggleTheme() {
   saveState();
   render();
 }
+
 function toggleCustomerHoursVisibility() {
   const checkbox = document.getElementById("customer-24h");
   const hours = document.getElementById("customer-hours");
@@ -145,7 +149,8 @@ function handleClick(e) {
   }
 
   if (target.closest(".fab") && state.ui.activeTab === "log") {
-    openModal();
+    editingEntryId = null;
+    openEntryModal();
     return;
   }
 
@@ -153,20 +158,20 @@ function handleClick(e) {
     saveEntryFromModal();
     return;
   }
-  
-  if (target.closest(".modal:not(#customer-modal):not(#trailer-modal) .modal-close")) {
-    closeModal();
+
+  if (target.closest(".modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal) .modal-close")) {
+    closeEntryModal();
     return;
   }
 
   if (target.classList.contains("modal-backdrop")) {
-    const entryModal = target.closest('.modal:not(#customer-modal):not(#trailer-modal)');
+    const entryModal = target.closest('.modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)');
     if (entryModal) {
-      closeModal();
+      closeEntryModal();
       return;
     }
   }
-  
+
   if (target.closest("#finish-week-btn")) {
     ArchiveService.archiveCurrent();
     render();
@@ -185,11 +190,20 @@ function handleClick(e) {
 
   const action = actionBtn.dataset.action;
   const id = actionBtn.dataset.id;
+  const periodId = actionBtn.dataset.periodId;
 
   if (action === "set-data-tab") {
     state.ui.dataTab = actionBtn.dataset.tab;
     saveState();
     render();
+    return;
+  }
+
+  /* ===== LOG ===== */
+
+  if (action === "edit-log-entry") {
+    editingEntryId = id;
+    openEntryModal(id);
     return;
   }
 
@@ -214,6 +228,32 @@ function handleClick(e) {
       ArchiveService.deleteArchive(id);
       render();
     }
+    return;
+  }
+
+  if (action === "edit-archive-entry") {
+    editingArchivePeriodId = periodId;
+    editingArchiveEntryId = id;
+    openArchiveEntryModal(periodId, id);
+    return;
+  }
+
+  if (action === "delete-archive-entry") {
+    if (confirm("Delete this archived entry?")) {
+      ArchiveService.deleteArchivedEntry(periodId, id);
+      closeArchiveEntryModal();
+      render();
+    }
+    return;
+  }
+
+  if (action === "close-archive-entry-modal") {
+    closeArchiveEntryModal();
+    return;
+  }
+
+  if (action === "save-archive-entry") {
+    saveArchiveEntryFromModal();
     return;
   }
 
@@ -373,6 +413,7 @@ function openCustomerModal(id = null) {
     close.value = "";
     notes.value = "";
   }
+
   toggleCustomerHoursVisibility();
   modal.hidden = false;
 }
@@ -437,21 +478,46 @@ function closeTrailerModal() {
 }
 
 /* ===============================
-   ENTRY MODAL
+   ENTRY MODAL (ADD / EDIT LOG)
 ================================ */
 
-function openModal() {
-  const modal = document.querySelector(".modal:not(#customer-modal):not(#trailer-modal)");
+function openEntryModal(id = null) {
+  const modal = document.querySelector(".modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)");
   if (!modal) return;
 
-  modal.hidden = false;
+  const title = document.getElementById("entry-modal-title");
+  const dateInput = document.getElementById("entry-date");
+  const distanceInput = document.getElementById("entry-distance");
+  const pickupsInput = document.getElementById("entry-pickups");
+  const waitingInput = document.getElementById("entry-waiting");
 
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("entry-date").value = today;
+  if (!dateInput || !distanceInput || !pickupsInput || !waitingInput) return;
+
+  if (id) {
+    const entry = state.current.entries.find(e => e.id === id);
+    if (!entry) return;
+
+    if (title) title.textContent = "Edit Entry";
+
+    dateInput.value = entry.date || "";
+    distanceInput.value = entry.kilometers ?? "";
+    pickupsInput.value = entry.loads ?? 0;
+    waitingInput.value = entry.waitingHours ?? 0;
+  } else {
+    if (title) title.textContent = "New Entry";
+
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.value = today;
+    distanceInput.value = "";
+    pickupsInput.value = "";
+    waitingInput.value = "";
+  }
+
+  modal.hidden = false;
 }
 
-function closeModal() {
-  const modal = document.querySelector(".modal:not(#customer-modal):not(#trailer-modal)");
+function closeEntryModal() {
+  const modal = document.querySelector(".modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)");
   if (!modal) return;
 
   modal.hidden = true;
@@ -461,29 +527,108 @@ function saveEntryFromModal() {
   const distanceInput = document.getElementById("entry-distance");
   const dateInput = document.getElementById("entry-date");
   const pickupsInput = document.getElementById("entry-pickups");
+  const waitingInput = document.getElementById("entry-waiting");
 
-  const distanceKm = parseFloat(distanceInput.value);
+  const kilometers = parseFloat(distanceInput.value);
   const date = dateInput.value;
-  const pickups = parseInt(pickupsInput.value) || 0;
+  const loads = parseInt(pickupsInput.value || "0", 10);
+  const waitingHours = parseFloat(waitingInput.value || "0");
 
-  if (!distanceKm || distanceKm <= 0) return;
+  if (!date || !kilometers || kilometers <= 0) return;
 
-  LogbookService.addEntry({
-    kilometers: distanceKm,
-    date: date,
-    loads: pickups,
-    waitingHours: 0
-  });
+  const payload = {
+    kilometers,
+    date,
+    loads,
+    waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours
+  };
+
+  if (editingEntryId) {
+    LogbookService.editEntry(editingEntryId, payload);
+  } else {
+    LogbookService.addEntry(payload);
+  }
 
   distanceInput.value = "";
   pickupsInput.value = "";
+  waitingInput.value = "";
 
-  closeModal();
+  editingEntryId = null;
+  closeEntryModal();
   render();
 }
 
 /* ===============================
-   SEARCH LISTENER
+   ARCHIVE ENTRY MODAL
+================================ */
+
+function openArchiveEntryModal(periodId, entryId) {
+  const modal = document.getElementById("archive-entry-modal");
+  if (!modal) return;
+
+  const period = ArchiveService.getById(periodId);
+  if (!period) return;
+
+  const entry = period.entries.find(e => e.id === entryId);
+  if (!entry) return;
+
+  document.getElementById("archive-entry-date").value = entry.date || "";
+  document.getElementById("archive-entry-distance").value = entry.kilometers ?? "";
+  document.getElementById("archive-entry-pickups").value = entry.loads ?? 0;
+  document.getElementById("archive-entry-waiting").value = entry.waitingHours ?? 0;
+  document.getElementById("archive-entry-rate-mile").value = entry.rateSnapshot?.perMile ?? 0;
+  document.getElementById("archive-entry-rate-drop").value = entry.rateSnapshot?.perDrop ?? 0;
+  document.getElementById("archive-entry-rate-waiting").value = entry.rateSnapshot?.perWaiting ?? 0;
+  document.getElementById("archive-entry-modal-error").textContent = "";
+
+  modal.hidden = false;
+}
+
+function closeArchiveEntryModal() {
+  const modal = document.getElementById("archive-entry-modal");
+  if (!modal) return;
+
+  modal.hidden = true;
+  editingArchivePeriodId = null;
+  editingArchiveEntryId = null;
+}
+
+function saveArchiveEntryFromModal() {
+  const errorEl = document.getElementById("archive-entry-modal-error");
+
+  const payload = {
+    date: document.getElementById("archive-entry-date").value,
+    kilometers: document.getElementById("archive-entry-distance").value,
+    loads: document.getElementById("archive-entry-pickups").value,
+    waitingHours: document.getElementById("archive-entry-waiting").value,
+    perMile: document.getElementById("archive-entry-rate-mile").value,
+    perDrop: document.getElementById("archive-entry-rate-drop").value,
+    perWaiting: document.getElementById("archive-entry-rate-waiting").value
+  };
+
+  const result = ArchiveService.editArchivedEntry(
+    editingArchivePeriodId,
+    editingArchiveEntryId,
+    payload
+  );
+
+  if (!result.ok) {
+    if (errorEl) {
+      errorEl.textContent = result.error || "Invalid archive entry data.";
+    }
+    return;
+  }
+
+  if (errorEl) {
+    errorEl.textContent = "";
+  }
+
+  closeArchiveEntryModal();
+  render();
+}
+
+/* ===============================
+   SEARCH / INPUT LISTENER
 ================================ */
 
 document.addEventListener("input", function(e) {
