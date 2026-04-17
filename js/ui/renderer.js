@@ -1,6 +1,10 @@
 // js/ui/renderer.js
 // FINAL CLEAN VERSION
 
+/* ======================================
+   RENDER LOG SCREEN
+====================================== */
+
 export function renderLogScreen(state) {
   const totalEl = document.querySelector(".summary-amount");
   const listEl = document.querySelector(".logbook-list");
@@ -37,7 +41,9 @@ export function renderLogScreen(state) {
   }).join("");
 }
 
-
+/* ======================================
+   RENDER ARCHIVE SCREEN
+====================================== */
 
 export function renderArchiveScreen(state) {
   const archivePage = document.querySelector('[data-page="archive"]');
@@ -45,64 +51,6 @@ export function renderArchiveScreen(state) {
 
   const archive = state.archive || [];
   const detailId = state.ui.archiveDetailId;
-
-  export function renderCustomers(state) {
-  const container = document.getElementById("app");
-  if (!container) return;
-
-  const customers = state.customers;
-
-  let html = `
-    <div class="screen">
-      <div class="screen-header">
-        <h2>Customers</h2>
-        <button class="primary-btn" data-action="open-add-customer">
-          + Add
-        </button>
-      </div>
-  `;
-
-  if (customers.length === 0) {
-    html += `
-      <div class="empty-state">
-        No customers yet
-      </div>
-    `;
-  } else {
-    html += `<div class="card-list">`;
-
-    customers.forEach(c => {
-      html += `
-        <div class="card">
-          <div class="card-header">
-            <h3>${c.name}</h3>
-            <button data-action="delete-customer" data-id="${c.id}">
-              Delete
-            </button>
-          </div>
-
-          ${c.address ? `<p>${c.address}</p>` : ""}
-
-          ${
-            c.is24h
-              ? `<p>Open 24 Hours</p>`
-              : c.openTime && c.closeTime
-              ? `<p>${c.openTime} - ${c.closeTime}</p>`
-              : ""
-          }
-
-          ${c.notes ? `<p class="muted">${c.notes}</p>` : ""}
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-  }
-
-  html += `</div>`;
-
-  container.innerHTML = html;
-}
 
   // ===============================
   // DETAIL VIEW
@@ -181,4 +129,66 @@ export function renderArchiveScreen(state) {
       '</div>'
     );
   }).join("");
+}
+
+/* ======================================
+   RENDER CUSTOMERS SCREEN
+====================================== */
+
+export function renderCustomers(state) {
+  const container = document.getElementById("app");
+  if (!container) return;
+
+  const customers = state.customers;
+
+  let html = `
+    <div class="screen">
+      <div class="screen-header">
+        <h2>Customers</h2>
+        <button class="primary-btn" data-action="open-add-customer">
+          + Add
+        </button>
+      </div>
+  `;
+
+  if (customers.length === 0) {
+    html += `
+      <div class="empty-state">
+        No customers yet
+      </div>
+    `;
+  } else {
+    html += `<div class="card-list">`;
+
+    customers.forEach(c => {
+      html += `
+        <div class="card">
+          <div class="card-header">
+            <h3>${c.name}</h3>
+            <button data-action="delete-customer" data-id="${c.id}">
+              Delete
+            </button>
+          </div>
+
+          ${c.address ? `<p>${c.address}</p>` : ""}
+
+          ${
+            c.is24h
+              ? `<p>Open 24 Hours</p>`
+              : c.openTime && c.closeTime
+              ? `<p>${c.openTime} - ${c.closeTime}</p>`
+              : ""
+          }
+
+          ${c.notes ? `<p class="muted">${c.notes}</p>` : ""}
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+
+  container.innerHTML = html;
 }
