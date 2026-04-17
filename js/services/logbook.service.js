@@ -104,7 +104,7 @@ $$
 {total.toFixed(2)} ${currency}`;
 
   renderList() {
-
+`
     const listEl = document.querySelector(".logbook-list");
     if (!listEl) return;
 
