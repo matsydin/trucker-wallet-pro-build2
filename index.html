@@ -14,7 +14,7 @@
 <body data-theme="dark">
 
 <!-- ===============================
-     ADD ENTRY MODAL
+     ADD / EDIT ENTRY MODAL
 ================================= -->
 
 <div class="modal" hidden>
@@ -22,7 +22,7 @@
 
   <div class="modal-sheet">
     <div class="modal-header">
-      <div class="modal-title">New Entry</div>
+      <div class="modal-title" id="entry-modal-title">New Entry</div>
       <button class="modal-close" type="button">✕</button>
     </div>
 
@@ -40,6 +40,11 @@
       <div class="form-group">
         <label>Pick-ups</label>
         <input type="number" id="entry-pickups" placeholder="0">
+      </div>
+
+      <div class="form-group">
+        <label>Waiting Hours</label>
+        <input type="number" id="entry-waiting" placeholder="0" step="0.1" min="0">
       </div>
 
       <button class="primary-btn" id="save-entry" type="button">
@@ -94,19 +99,22 @@
           <input id="customer-close" type="time" />
         </div>
       </div>
-<div class="form-group">
-  <label>Notes</label>
-  <textarea id="customer-notes" placeholder="Notes"></textarea>
-</div>
+
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="customer-notes" placeholder="Notes"></textarea>
+      </div>
+
       <button class="primary-btn full-width"
-        data-action="save-customer"
-        type="button">
-  Save Customer
-</button>
+              data-action="save-customer"
+              type="button">
+        Save Customer
+      </button>
 
     </div>
   </div>
 </div>
+
 <!-- ===============================
      TRAILER MODAL
 ================================= -->
@@ -162,6 +170,71 @@
     </div>
   </div>
 </div>
+
+<!-- ===============================
+     ARCHIVE ENTRY MODAL
+================================= -->
+
+<div class="modal" id="archive-entry-modal" hidden>
+  <div class="modal-backdrop" data-action="close-archive-entry-modal"></div>
+
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <div class="modal-title">Edit Archived Entry</div>
+      <button class="modal-close"
+              type="button"
+              data-action="close-archive-entry-modal">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="archive-entry-date">
+      </div>
+
+      <div class="form-group">
+        <label>Distance (KM)</label>
+        <input type="number" id="archive-entry-distance" min="0" step="0.1">
+      </div>
+
+      <div class="form-group">
+        <label>Pick-ups</label>
+        <input type="number" id="archive-entry-pickups" min="0" step="1">
+      </div>
+
+      <div class="form-group">
+        <label>Waiting Hours</label>
+        <input type="number" id="archive-entry-waiting" min="0" step="0.1">
+      </div>
+
+      <div class="form-group">
+        <label>Rate per Mile</label>
+        <input type="number" id="archive-entry-rate-mile" min="0" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label>Rate per Drop</label>
+        <input type="number" id="archive-entry-rate-drop" min="0" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label>Rate per Waiting Hour</label>
+        <input type="number" id="archive-entry-rate-waiting" min="0" step="0.01">
+      </div>
+
+      <div id="archive-entry-modal-error" class="form-error"></div>
+
+      <button class="primary-btn full-width"
+              data-action="save-archive-entry"
+              type="button">
+        Save Changes
+      </button>
+
+    </div>
+  </div>
+</div>
+
 <!-- ===============================
      HEADER
 ================================= -->
@@ -185,7 +258,6 @@
 
 <main class="main">
 
-  <!-- LOG -->
   <section class="page" data-page="log">
     <div class="card">
       <div class="summary-label">Total</div>
@@ -199,13 +271,10 @@
     <div class="logbook-list"></div>
   </section>
 
-  <!-- ARCHIVE -->
   <section class="page" data-page="archive" hidden></section>
 
-  <!-- DATA -->
   <section class="page" data-page="data" hidden></section>
 
-  <!-- SETTINGS -->
   <section class="page" data-page="settings" hidden></section>
 
 </main>
