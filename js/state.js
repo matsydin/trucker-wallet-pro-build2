@@ -13,7 +13,8 @@ const defaultState = {
   displayUnit: "km",
   inputUnit: "km",
   language: "EN",
-  archiveDetailId: null
+  archiveDetailId: null,
+  customerSearch: "" // ✅ NEW
 },
 
   settings: {
