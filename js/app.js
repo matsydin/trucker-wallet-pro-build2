@@ -22,7 +22,17 @@ let editingTrailerId = null;
 
 function render() {
   document.body.setAttribute("data-theme", state.ui.theme);
+  const pageTitle = document.querySelector(".page-title");
+  if (pageTitle) {
+    const titles = {
+      log: "Logbook",
+      archive: "Archive",
+      data: "Data",
+      settings: "Settings"
+    };
 
+    pageTitle.textContent = titles[state.ui.activeTab] || "Trucker Wallet Pro";
+  }
   document.querySelectorAll(".page").forEach(page => {
     page.hidden = page.dataset.page !== state.ui.activeTab;
   });
@@ -92,6 +102,21 @@ function toggleTheme() {
     state.ui.theme === "dark" ? "light" : "dark";
   saveState();
   render();
+}
+function toggleCustomerHoursVisibility() {
+  const checkbox = document.getElementById("customer-24h");
+  const hours = document.getElementById("customer-hours");
+
+  if (!checkbox || !hours) return;
+
+  hours.style.display = checkbox.checked ? "none" : "block";
+}
+
+function normalizeTrailerPlateLive() {
+  const plate = document.getElementById("trailer-plate");
+  if (!plate) return;
+
+  plate.value = plate.value.toUpperCase();
 }
 
 /* ===============================
@@ -348,7 +373,7 @@ function openCustomerModal(id = null) {
     close.value = "";
     notes.value = "";
   }
-
+  toggleCustomerHoursVisibility();
   modal.hidden = false;
 }
 
