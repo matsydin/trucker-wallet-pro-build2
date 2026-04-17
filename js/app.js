@@ -97,21 +97,20 @@ function handleClick(e) {
     return;
   }
 
-  if (target.closest(".fab")) {
+  // ✅ FAB тільки на Log
+  if (target.closest(".fab") && state.ui.activeTab === "log") {
     openModal();
-    return;
-  }
-
-  if (
-    target.closest(".modal-close") ||
-    (target.closest(".modal-backdrop") && !target.closest("#customer-modal"))
-  ) {
-    closeModal();
     return;
   }
 
   if (target.closest("#save-entry")) {
     saveEntryFromModal();
+    return;
+  }
+
+  if (target.closest("#finish-week-btn")) {
+    ArchiveService.archiveCurrent();
+    render();
     return;
   }
 
@@ -122,52 +121,37 @@ function handleClick(e) {
     return;
   }
 
-  if (target.closest("#finish-week-btn")) {
-    ArchiveService.archiveCurrent();
-    render();
-    return;
-  }
+  const actionBtn = target.closest("[data-action]");
+  if (!actionBtn) return;
 
-  const openArchive = target.closest('[data-action="open-archive"]');
-  if (openArchive) {
-    state.ui.archiveDetailId = openArchive.dataset.id;
+  const action = actionBtn.dataset.action;
+  const id = actionBtn.dataset.id;
+
+  /* ===== ARCHIVE ===== */
+
+  if (action === "open-archive") {
+    state.ui.archiveDetailId = id;
     saveState();
     render();
     return;
   }
 
-  if (target.closest('[data-action="close-archive"]')) {
+  if (action === "close-archive") {
     state.ui.archiveDetailId = null;
     saveState();
     render();
     return;
   }
 
-  const deleteArchiveBtn = target.closest('[data-action="delete-archive"]');
-  if (deleteArchiveBtn) {
-    const id = deleteArchiveBtn.dataset.id;
-
+  if (action === "delete-archive") {
     if (confirm("Delete this archived period?")) {
       ArchiveService.deleteArchive(id);
-
-      if (state.ui.archiveDetailId === id) {
-        state.ui.archiveDetailId = null;
-      }
-
       render();
     }
     return;
   }
 
-  /* =========================
-     CUSTOMER ACTIONS
-  ========================= */
-
-  const actionBtn = target.closest("[data-action]");
-  if (!actionBtn) return;
-
-  const action = actionBtn.dataset.action;
-  const id = actionBtn.dataset.id;
+  /* ===== CUSTOMERS ===== */
 
   if (action === "open-add-customer") {
     editingCustomerId = null;
@@ -182,8 +166,6 @@ function handleClick(e) {
   }
 
   if (action === "delete-customer") {
-    if (!id) return;
-
     if (confirm("Delete this customer?")) {
       CustomerService.delete(id);
       render();
@@ -220,7 +202,6 @@ function handleClick(e) {
     return;
   }
 }
-
 /* ===============================
    CUSTOMER MODAL
 ================================ */
