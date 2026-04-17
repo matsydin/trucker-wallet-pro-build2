@@ -160,7 +160,7 @@ $$
           <div class="log-amount">
 $$
 {entry.amount.toFixed(2)}
-          </div>
+</div>
         </div>
       </div>
     `;
