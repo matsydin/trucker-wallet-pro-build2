@@ -152,8 +152,8 @@ body {
 
 .fab {
   position: fixed;
-  right: 20px;
-  bottom: calc(90px + var(--safe-bottom));
+  right: 24px;
+  bottom: calc(96px + var(--safe-bottom));
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -163,8 +163,11 @@ body {
   font-size: 28px;
   font-weight: bold;
   box-shadow: 0 8px 20px var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
 }
-
 /* ===== TAB BAR ===== */
 
 .tabbar {
