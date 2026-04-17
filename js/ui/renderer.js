@@ -1,5 +1,5 @@
 // js/ui/renderer.js
-//1.2
+
 export function renderLogScreen(state) {
   const totalEl = document.querySelector(".summary-amount");
   const listEl = document.querySelector(".logbook-list");
@@ -8,10 +8,7 @@ export function renderLogScreen(state) {
 
   const totalAmount = state.current?.totals?.amount ?? 0;
 
-  totalEl.textContent =
-    `
-$$
-{Number(totalAmount).toFixed(2)} ${state.settings.currency}`;
+  totalEl.textContent = `${Number(totalAmount).toFixed(2)} ${state.settings.currency}`;
 
   const entries = state.current?.entries || [];
 
@@ -24,14 +21,11 @@ $$
     <div class="card">
       <div>${entry.date || ""}</div>
       <div>${Number(entry.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</div>
-      <div>
-$$
-{Number(entry.amount ?? 0).toFixed(2)}</div>
+      <div>${Number(entry.amount ?? 0).toFixed(2)}</div>
       <button data-delete="${entry.id}" type="button">Delete</button>
     </div>
   `).join("");
 }
-
 
 export function renderArchiveScreen(state) {
   const archivePage = document.querySelector('[data-page="archive"]');
@@ -48,9 +42,7 @@ export function renderArchiveScreen(state) {
       <div class="card">
         <button data-action="close-archive" type="button">← Back</button>
         <h3>${period.periodLabel}</h3>
-        <p>Gross:
-$$
-{Number(period.totals?.amount ?? 0).toFixed(2)}</p>
+        <p>Gross: ${Number(period.totals?.amount ?? 0).toFixed(2)}</p>
         <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
         <p>Loads: ${(period.entries || []).length}</p>
       </div>
@@ -59,9 +51,7 @@ $$
         <div class="card">
           <div>${entry.date || ""}</div>
           <div>${Number(entry.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</div>
-          <div>
-$$
-{Number(entry.amount ?? 0).toFixed(2)}</div>
+          <div>${Number(entry.amount ?? 0).toFixed(2)}</div>
         </div>
       `).join("")}
 
@@ -75,17 +65,14 @@ $$
   }
 
   if (!archive.length) {
-    archivePage.innerHTML =
-      `<div class="card">No archived weeks yet.</div>`;
+    archivePage.innerHTML = `<div class="card">No archived weeks yet.</div>`;
     return;
   }
 
   archivePage.innerHTML = archive.map(period => `
     <div class="card">
       <h3>${period.periodLabel}</h3>
-      <p>Gross:
-$$
-{Number(period.totals?.amount ?? 0).toFixed(2)}</p>
+      <p>Gross: ${Number(period.totals?.amount ?? 0).toFixed(2)}</p>
       <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
       <p>Loads: ${(period.entries || []).length}</p>
 
