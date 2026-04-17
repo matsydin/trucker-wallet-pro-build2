@@ -12,6 +12,40 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1220">
 </head>
+<!-- CUSTOMER MODAL -->
+
+<div class="modal" id="customer-modal" hidden>
+  <div class="modal-backdrop" data-action="close-customer-modal"></div>
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="customer-modal-title">Add Customer</h3>
+      <button class="modal-close" data-action="close-customer-modal">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <input id="customer-name" type="text" placeholder="Name" />
+
+      <input id="customer-address" type="text" placeholder="Address" />
+
+      <label class="switch-row">
+        <input type="checkbox" id="customer-24h" />
+        <span>Open 24 Hours</span>
+      </label>
+
+      <div id="customer-hours">
+        <input id="customer-open" type="time" />
+        <input id="customer-close" type="time" />
+      </div>
+
+      <textarea id="customer-notes" placeholder="Notes"></textarea>
+
+      <button class="primary-btn full-width" id="save-customer">
+        Save
+      </button>
+    </div>
+  </div>
+</div>      
 <body data-theme="dark">
 <!-- ADD ENTRY MODAL -->
 <div class="modal" hidden>
