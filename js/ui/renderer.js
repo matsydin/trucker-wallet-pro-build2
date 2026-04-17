@@ -1,41 +1,39 @@
 // js/ui/renderer.js
-
+//1.2
 /* ===============================
    LOG SCREEN
 ================================ */
 
 export function renderLogScreen(state) {
-  const summaryEl = document.querySelector(".summary");
-  const entriesEl = document.querySelector(".entries");
+  const totalEl = document.querySelector(".summary-amount");
+  const listEl = document.querySelector(".logbook-list");
 
-  if (!summaryEl || !entriesEl) return;
+  if (!totalEl || !listEl) return;
 
-  const totalMiles = state.totals?.miles ?? 0;
   const totalGross = state.totals?.gross ?? 0;
+  const totalMiles = state.totals?.miles ?? 0;
 
-  summaryEl.innerHTML = `
-    <h2>This Week</h2>
-    <p><strong>Miles:</strong> ${Number(totalMiles).toFixed(1)} ${state.ui.displayUnit}</p>
-    <p><strong>Gross:</strong> 
+  // Total card
+  totalEl.textContent = `
 $$
-{Number(totalGross).toFixed(2)}</p>
-  `;
+{Number(totalGross).toFixed(2)} CAD`;
 
+  // Entries
   const entries = state.entries || [];
 
   if (!entries.length) {
-    entriesEl.innerHTML = `<p class="empty">No entries yet</p>`;
+    listEl.innerHTML = `<div class="card">No entries yet</div>`;
     return;
   }
 
-  entriesEl.innerHTML = entries.map(entry => `
-    <div class="entry-row">
+  listEl.innerHTML = entries.map(entry => `
+    <div class="card">
       <div>${entry.date || ""}</div>
       <div>${Number(entry.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</div>
       <div>
 $$
 {Number(entry.amount ?? 0).toFixed(2)}</div>
-      <button data-delete="${entry.id}">✕</button>
+      <button data-delete="${entry.id}" type="button">Delete</button>
     </div>
   `).join("");
 }
@@ -58,30 +56,35 @@ export function renderArchiveScreen(state) {
     if (!period) return;
 
     archivePage.innerHTML = `
-      <button data-action="close-archive">← Back</button>
-      <h2>${period.periodLabel}</h2>
+      <div class="card">
+        <button data-action="close-archive" type="button">← Back</button>
+        <h3>${period.periodLabel}</h3>
 
-      <p><strong>Gross:</strong> 
+        <p>Gross: 
 $$
 {Number(period.totals?.gross ?? 0).toFixed(2)}</p>
-      <p><strong>Miles:</strong> ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
-      <p><strong>Loads:</strong> ${(period.entries || []).length}</p>
-
-      <div>
-        ${(period.entries || []).map(entry => `
-          <div class="entry-row">
-            <div>${entry.date || ""}</div>
-            <div>${Number(entry.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</div>
-            <div>
-$$
-{Number(entry.amount ?? 0).toFixed(2)}</div>
-          </div>
-        `).join("")}
+        <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
+        <p>Loads: ${(period.entries || []).length}</p>
       </div>
 
-      <button data-action="delete-archive" data-id="${period.id}">
-        Delete Period
-      </button>
+      ${(period.entries || []).map(entry => `
+        <div class="card">
+          <div>${entry.date || ""}</div>
+          <div>${Number(entry.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</div>
+          <div>
+$$
+{Number(entry.amount ?? 0).toFixed(2)}</div>
+        </div>
+      `).join("")}
+
+      <div class="card">
+        <button 
+          data-action="delete-archive" 
+          data-id="${period.id}"
+          type="button">
+          Delete Period
+        </button>
+      </div>
     `;
 
     return;
@@ -90,30 +93,33 @@ $$
   // ===== LIST VIEW =====
   if (!archive.length) {
     archivePage.innerHTML = `
-      <h2>Archive</h2>
-      <p>No archived weeks yet.</p>
+      <div class="card">
+        No archived weeks yet.
+      </div>
     `;
     return;
   }
 
-  archivePage.innerHTML = `
-    <h2>Archive</h2>
+  archivePage.innerHTML = archive.map(period => `
+    <div class="card">
+      <h3>${period.periodLabel}</h3>
+      <p>Gross: $${Number(period.totals?.gross ?? 0).toFixed(2)}</p>
+      <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
+      <p>Loads: ${(period.entries || []).length}</p>
 
-    ${archive.map(period => `
-      <div class="archive-card">
-        <h3>${period.periodLabel}</h3>
-        <p>Gross: $${Number(period.totals?.gross ?? 0).toFixed(2)}</p>
-        <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
-        <p>Loads: ${(period.entries || []).length}</p>
+      <button 
+        data-action="open-archive" 
+        data-id="${period.id}"
+        type="button">
+        View
+      </button>
 
-        <button data-action="open-archive" data-id="${period.id}">
-          View
-        </button>
-
-        <button data-action="delete-archive" data-id="${period.id}">
-          Delete
-        </button>
-      </div>
-    `).join("")}
-  `;
+      <button 
+        data-action="delete-archive" 
+        data-id="${period.id}"
+        type="button">
+        Delete
+      </button>
+    </div>
+  `).join("");
 }
