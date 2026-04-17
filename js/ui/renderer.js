@@ -1,4 +1,5 @@
 // js/ui/renderer.js
+import { getYearTotal } from "../services/timeline.service.js";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -168,14 +169,26 @@ export function renderArchiveScreen(state) {
 
     return;
   }
+// ✅ Year Summary (based on unified timeline)
+const now = new Date();
+const currentYear = now.getFullYear();
 
+const yearTotals = getYearTotal(currentYear);
   if (!archive.length) {
     archivePage.innerHTML =
       '<div class="card">No archived weeks yet.</div>';
     return;
   }
 
-  archivePage.innerHTML = archive.map(period => {
+  archivePage.innerHTML =
+  '<div class="card">' +
+    '<h3>' + currentYear + ' Summary</h3>' +
+    '<p>Gross: $' + Number(yearTotals.amount ?? 0).toFixed(2) + '</p>' +
+    '<p>Loads: ' + Number(yearTotals.loads ?? 0) + '</p>' +
+    '<p>Waiting: ' + Number(yearTotals.waitingHours ?? 0).toFixed(1) + ' h</p>' +
+  '</div>' +
+
+  archive.map(period => {
     const totals = period.totals || {};
 
     const distance =
