@@ -299,3 +299,218 @@ body {
   color: #000;
   font-size: 16px;
 }
+/* =========================================
+   BUILD 2 — FLEET / MODAL POLISH PATCH
+========================================= */
+
+/* ===== SCREEN / HEADERS ===== */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.screen-header h2,
+.screen-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.data-segmented {
+  margin-bottom: 4px;
+}
+
+/* ===== CARD LIST ===== */
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-header > div:last-child {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.card p {
+  margin: 6px 0;
+  line-height: 1.4;
+}
+
+.muted {
+  color: var(--text-secondary);
+}
+
+/* ===== EMPTY STATE ===== */
+
+.empty-state {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ===== BUTTONS INSIDE CARDS ===== */
+
+.card button:not(.primary-btn) {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: var(--card-elev);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.card button:not(.primary-btn):active {
+  transform: scale(0.98);
+}
+
+/* ===== FORM ===== */
+
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--card-elev);
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 96px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.form-group input {
+  background: var(--card-elev);
+  color: var(--text);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  outline: none;
+  transition: box-shadow var(--transition), background var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* ===== SEARCH ===== */
+
+input[data-action="customer-search"],
+input[data-action="trailer-search"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: none;
+  background: var(--card-elev);
+  color: var(--text);
+  font-size: 16px;
+}
+
+/* ===== ERROR ===== */
+
+.form-error {
+  min-height: 18px;
+  margin-top: -6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--danger);
+}
+
+/* ===== MODAL BODY ===== */
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-sheet {
+  background: var(--card);
+  padding-bottom: calc(20px + var(--safe-bottom));
+}
+
+.modal-close {
+  cursor: pointer;
+}
+
+/* ===== SWITCH ROW ===== */
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.switch-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== FULL WIDTH ===== */
+
+.full-width {
+  width: 100%;
+}
+
+/* ===== LIGHT THEME FIXES ===== */
+
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group textarea,
+[data-theme="light"] input[data-action="customer-search"],
+[data-theme="light"] input[data-action="trailer-search"] {
+  background: #eef2f7;
+  color: var(--text);
+}
+
+[data-theme="light"] .card button:not(.primary-btn) {
+  background: #eef2f7;
+}
+
+/* ===== SMALL INTERACTION POLISH ===== */
+
+button {
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.99);
+}
