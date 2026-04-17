@@ -30,7 +30,20 @@ function render() {
       btn.dataset.unit === state.ui.displayUnit
     );
   });
+// ✅ FAB тільки на Log
+const fab = document.querySelector(".fab");
+if (fab) {
+  fab.style.display =
+    state.ui.activeTab === "log" ? "flex" : "none";
+}
 
+// ✅ KM/MI toggle тільки на Log
+const segmented = document.querySelector(".segmented");
+if (segmented) {
+  segmented.style.display =
+    state.ui.activeTab === "log" ? "flex" : "none";
+}
+   
   if (state.ui.activeTab === "log") {
     renderLogScreen(state);
     return;
