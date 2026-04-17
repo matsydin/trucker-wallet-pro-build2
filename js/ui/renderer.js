@@ -46,7 +46,7 @@ export function renderArchiveScreen(state) {
   if (!archivePage) return;
 
   const archive = state.archive || [];
-  const detailId = state.archiveDetailId;
+  const detailId = state.ui.archiveDetailId;
 
   if (detailId) {
     const period = archive.find(p => p.id === detailId);
@@ -58,7 +58,7 @@ export function renderArchiveScreen(state) {
         <h3>${period.periodLabel}</h3>
         <p>Gross: 
 $$
-{Number(period.totals?.gross ?? 0).toFixed(2)}</p>
+{Number(period.totals?.amount ?? 0).toFixed(2)}</p>
         <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
         <p>Loads: ${(period.entries || []).length}</p>
       </div>
@@ -92,7 +92,7 @@ $$
   archivePage.innerHTML = archive.map(period => `
     <div class="card">
       <h3>${period.periodLabel}</h3>
-      <p>Gross: $${Number(period.totals?.gross ?? 0).toFixed(2)}</p>
+      <p>Gross: $${Number(period.totals?.amount ?? 0).toFixed(2)}</p>
       <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
       <p>Loads: ${(period.entries || []).length}</p>
 
