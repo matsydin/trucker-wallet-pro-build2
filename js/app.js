@@ -7,7 +7,7 @@ import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
 
 /* ===============================
-   RENDER
+   RENDER APP STATE
 ================================ */
 
 function render() {
@@ -45,7 +45,7 @@ function render() {
 }
 
 /* ===============================
-   ACTIONS
+   TAB / UNIT / THEME ACTIONS
 ================================ */
 
 function setTab(tab) {
@@ -70,7 +70,7 @@ function toggleTheme() {
 }
 
 /* ===============================
-   EVENTS
+   GLOBAL CLICK HANDLER
 ================================ */
 
 function handleClick(e) {
@@ -157,10 +157,51 @@ function handleClick(e) {
     }
     return;
   }
+
+  /* =========================
+     ADD CUSTOMER ✅ NEW
+  ========================= */
+
+  const actionBtn = target.closest('[data-action]');
+  if (actionBtn) {
+    const action = actionBtn.dataset.action;
+    const id = actionBtn.dataset.id;
+
+    if (action === "open-add-customer") {
+      const name = prompt("Customer name:");
+      if (!name) return;
+
+      CustomerService.add({
+        name,
+        address: "",
+        is24h: false,
+        openTime: "",
+        closeTime: "",
+        notes: ""
+      });
+
+      render();
+      return;
+    }
+
+    /* =========================
+       DELETE CUSTOMER ✅ NEW
+    ========================= */
+
+    if (action === "delete-customer") {
+      if (!id) return;
+
+      if (confirm("Delete this customer?")) {
+        CustomerService.delete(id);
+        render();
+      }
+      return;
+    }
+  }
 }
 
 /* ===============================
-   MODAL
+   MODAL FUNCTIONS
 ================================ */
 
 function openModal() {
@@ -206,7 +247,7 @@ function saveEntryFromModal() {
 }
 
 /* ===============================
-   INIT
+   INIT APP
 ================================ */
 
 function init() {
