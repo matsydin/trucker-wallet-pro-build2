@@ -160,6 +160,7 @@ function saveEntryFromModal() {
   distanceInput.value = "";
   pickupsInput.value = "";
   closeModal();
+  render();
 }
 /* ===============================
    INIT
