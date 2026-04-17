@@ -1,10 +1,8 @@
-// js/app.js
-import { renderCustomers } from "./ui/renderer.js";
-import { CustomerService } from "./services/customer.service.js";
-import { renderArchiveScreen, renderLogScreen } from './ui/renderer.js';
+import { renderLogScreen, renderArchiveScreen, renderCustomers } from "./ui/renderer.js";
 import { state, saveState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
+import { CustomerService } from "./services/customer.service.js";
 
 /* ===============================
    RENDER APP STATE
@@ -26,7 +24,7 @@ function render() {
     );
   });
 
-  // ✅ KM / MI toggle
+  // KM / MI toggle
   document.querySelectorAll("[data-unit]").forEach(btn => {
     btn.classList.toggle(
       "active",
@@ -34,13 +32,21 @@ function render() {
     );
   });
 
+  // ✅ SCREEN RENDERING (FIXED ORDER)
+
+  if (state.ui.activeTab === "log") {
+    renderLogScreen(state);
+    return;
+  }
+
   if (state.ui.activeTab === "archive") {
     renderArchiveScreen(state);
-  } else {
-    renderLogScreen(state);
+    return;
   }
+
   if (state.ui.activeTab === "data") {
-    renderCustomers(state); // ✅ NEW
+    renderCustomers(state);
+    return;
   }
 }
 
@@ -125,8 +131,6 @@ function handleClick(e) {
     return;
   }
 
-  // ✅ ВАЖЛИВО — використовуємо state.ui.archiveDetailId
-
   const openArchive = target.closest('[data-action="open-archive"]');
   if (openArchive) {
     state.ui.archiveDetailId = openArchive.dataset.id;
@@ -159,10 +163,10 @@ function handleClick(e) {
   }
 
   /* =========================
-     ADD CUSTOMER ✅ NEW
+     CUSTOMER ACTIONS
   ========================= */
 
-  const actionBtn = target.closest('[data-action]');
+  const actionBtn = target.closest("[data-action]");
   if (actionBtn) {
     const action = actionBtn.dataset.action;
     const id = actionBtn.dataset.id;
@@ -183,10 +187,6 @@ function handleClick(e) {
       render();
       return;
     }
-
-    /* =========================
-       DELETE CUSTOMER ✅ NEW
-    ========================= */
 
     if (action === "delete-customer") {
       if (!id) return;
