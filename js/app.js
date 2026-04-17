@@ -1,5 +1,4 @@
 // js/app.js
-import { initEvents } from "./ui/events.js";
 import { state, saveState, loadState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
