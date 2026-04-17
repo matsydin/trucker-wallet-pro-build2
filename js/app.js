@@ -1,4 +1,6 @@
 // js/app.js
+import { renderCustomers } from "./ui/renderer.js";
+import { CustomerService } from "./services/customer.service.js";
 import { renderArchiveScreen, renderLogScreen } from './ui/renderer.js';
 import { state, saveState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
@@ -36,6 +38,9 @@ function render() {
     renderArchiveScreen(state);
   } else {
     renderLogScreen(state);
+  }
+  if (state.ui.activeTab === "data") {
+    renderCustomers(state); // ✅ NEW
   }
 }
 
