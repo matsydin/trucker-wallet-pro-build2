@@ -50,7 +50,11 @@ export function renderArchiveScreen(state) {
       ${(period.entries || []).map(entry => `
         <div class="card">
           <div>${entry.date || ""}</div>
-          <div>${Number(entry.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</div>
+        <div>${
+  state.ui.displayUnit === "km"
+    ? Number(entry.kilometers ?? 0).toFixed(1)
+    : Number(entry.miles ?? 0).toFixed(1)
+} ${state.ui.displayUnit}</div>
           <div>${Number(entry.amount ?? 0).toFixed(2)}</div>
         </div>
       `).join("")}
