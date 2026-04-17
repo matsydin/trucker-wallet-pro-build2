@@ -10,12 +10,14 @@ export function renderLogScreen(state) {
 
   if (!totalEl || !listEl) return;
 
-  const totalGross = state.totals?.gross ?? 0;
-  totalEl.textContent = `
+  const totalAmount = state.current?.totals?.amount ?? 0;
+
+  totalEl.textContent =
+    `
 $$
 {Number(totalAmount).toFixed(2)} ${state.settings.currency}`;
 
-  const entries = state.entries || [];
+  const entries = state.current?.entries || [];
 
   if (!entries.length) {
     listEl.innerHTML = `<div class="card">No entries yet</div>`;
