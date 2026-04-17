@@ -136,34 +136,58 @@ export function renderArchiveScreen(state) {
 ====================================== */
 
 export function renderCustomers(state) {
-  const container = document.getElementById("data-page");
+  const container = document.querySelector('[data-page="data"]');
   if (!container) return;
 
   const customers = state.customers;
+  const search = state.ui.customerSearch || "";
+
+  const filtered = search
+    ? customers.filter(c =>
+        c.name.toLowerCase().includes(search.toLowerCase())
+      )
+    : customers;
 
   let html = `
     <div class="screen">
+
       <div class="screen-header">
         <h2>Customers</h2>
-        <button class="primary-btn" data-action="open-add-customer">
+        <button class="primary-btn"
+                data-action="open-add-customer">
           + Add
         </button>
       </div>
+
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="Search customer..."
+          value="${search}"
+          data-action="customer-search"
+        />
+      </div>
   `;
 
-  if (customers.length === 0) {
-    html += `<div class="empty-state">No customers yet</div>`;
+  if (filtered.length === 0) {
+    html += `<div class="empty-state">No customers found</div>`;
   } else {
     html += `<div class="card-list">`;
 
-    customers.forEach(c => {
+    filtered.forEach(c => {
       html += `
         <div class="card">
           <div class="card-header">
             <h3>${c.name}</h3>
-            <div class="card-actions">
-              <button data-action="edit-customer" data-id="${c.id}">Edit</button>
-              <button data-action="delete-customer" data-id="${c.id}">Delete</button>
+            <div>
+              <button data-action="edit-customer"
+                      data-id="${c.id}">
+                Edit
+              </button>
+              <button data-action="delete-customer"
+                      data-id="${c.id}">
+                Delete
+              </button>
             </div>
           </div>
 
