@@ -14,7 +14,9 @@ const defaultState = {
   inputUnit: "km",
   language: "EN",
   archiveDetailId: null,
-  customerSearch: "" // ✅ NEW
+  customerSearch: "",
+  trailerSearch: "",      // ✅ NEW
+  dataTab: "customers"    // ✅ NEW
 },
 
   settings: {
