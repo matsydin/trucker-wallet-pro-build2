@@ -113,6 +113,12 @@ if (e.target.closest("#save-entry")) {
   saveEntryFromModal();
   return;
 }
+   // Finish Week button
+if (e.target.closest("#finish-week-btn")) {
+  ArchiveService.archiveCurrent();
+  render();
+  return;
+}
    // Temporary: archive on long press brand
 if (e.target.closest(".brand") && e.shiftKey) {
   ArchiveService.archiveCurrent();
