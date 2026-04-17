@@ -4,6 +4,8 @@ import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
 import { CustomerService } from "./services/customer.service.js";
 
+let editingCustomerId = null;
+
 /* ===============================
    RENDER APP STATE
 ================================ */
@@ -11,12 +13,10 @@ import { CustomerService } from "./services/customer.service.js";
 function render() {
   document.body.setAttribute("data-theme", state.ui.theme);
 
-  // показ сторінок
   document.querySelectorAll(".page").forEach(page => {
     page.hidden = page.dataset.page !== state.ui.activeTab;
   });
 
-  // активна вкладка
   document.querySelectorAll(".tab").forEach(tab => {
     tab.classList.toggle(
       "active",
@@ -24,15 +24,12 @@ function render() {
     );
   });
 
-  // KM / MI toggle
   document.querySelectorAll("[data-unit]").forEach(btn => {
     btn.classList.toggle(
       "active",
       btn.dataset.unit === state.ui.displayUnit
     );
   });
-
-  // ✅ SCREEN RENDERING (FIXED ORDER)
 
   if (state.ui.activeTab === "log") {
     renderLogScreen(state);
@@ -51,7 +48,7 @@ function render() {
 }
 
 /* ===============================
-   TAB / UNIT / THEME ACTIONS
+   TAB / UNIT / THEME
 ================================ */
 
 function setTab(tab) {
@@ -107,7 +104,7 @@ function handleClick(e) {
 
   if (
     target.closest(".modal-close") ||
-    target.closest(".modal-backdrop")
+    (target.closest(".modal-backdrop") && !target.closest("#customer-modal"))
   ) {
     closeModal();
     return;
@@ -130,9 +127,7 @@ function handleClick(e) {
     render();
     return;
   }
-   if (action === "customer-search") {
-  return;
-}
+
   const openArchive = target.closest('[data-action="open-archive"]');
   if (openArchive) {
     state.ui.archiveDetailId = openArchive.dataset.id;
@@ -169,45 +164,116 @@ function handleClick(e) {
   ========================= */
 
   const actionBtn = target.closest("[data-action]");
-  if (actionBtn) {
-    const action = actionBtn.dataset.action;
-    const id = actionBtn.dataset.id;
+  if (!actionBtn) return;
 
-    if (action === "open-add-customer") {
-      const name = prompt("Customer name:");
-      if (!name) return;
+  const action = actionBtn.dataset.action;
+  const id = actionBtn.dataset.id;
 
-      CustomerService.add({
-        name,
-        address: "",
-        is24h: false,
-        openTime: "",
-        closeTime: "",
-        notes: ""
-      });
+  if (action === "open-add-customer") {
+    editingCustomerId = null;
+    openCustomerModal();
+    return;
+  }
 
+  if (action === "edit-customer") {
+    editingCustomerId = id;
+    openCustomerModal(id);
+    return;
+  }
+
+  if (action === "delete-customer") {
+    if (!id) return;
+
+    if (confirm("Delete this customer?")) {
+      CustomerService.delete(id);
       render();
-      return;
+    }
+    return;
+  }
+
+  if (action === "close-customer-modal") {
+    closeCustomerModal();
+    return;
+  }
+
+  if (action === "save-customer") {
+    const name = document.getElementById("customer-name").value.trim();
+    if (!name) return;
+
+    const data = {
+      name,
+      address: document.getElementById("customer-address").value,
+      is24h: document.getElementById("customer-24h").checked,
+      openTime: document.getElementById("customer-open").value,
+      closeTime: document.getElementById("customer-close").value,
+      notes: document.getElementById("customer-notes").value
+    };
+
+    if (editingCustomerId) {
+      CustomerService.edit(editingCustomerId, data);
+    } else {
+      CustomerService.add(data);
     }
 
-    if (action === "delete-customer") {
-      if (!id) return;
-
-      if (confirm("Delete this customer?")) {
-        CustomerService.delete(id);
-        render();
-      }
-      return;
-    }
+    closeCustomerModal();
+    render();
+    return;
   }
 }
 
 /* ===============================
-   MODAL FUNCTIONS
+   CUSTOMER MODAL
+================================ */
+
+function openCustomerModal(id = null) {
+  const modal = document.getElementById("customer-modal");
+  if (!modal) return;
+
+  const title = document.getElementById("customer-modal-title");
+  const name = document.getElementById("customer-name");
+  const address = document.getElementById("customer-address");
+  const is24h = document.getElementById("customer-24h");
+  const open = document.getElementById("customer-open");
+  const close = document.getElementById("customer-close");
+  const notes = document.getElementById("customer-notes");
+
+  if (id) {
+    const c = state.customers.find(c => c.id === id);
+    if (!c) return;
+
+    title.textContent = "Edit Customer";
+    name.value = c.name;
+    address.value = c.address;
+    is24h.checked = c.is24h;
+    open.value = c.openTime || "";
+    close.value = c.closeTime || "";
+    notes.value = c.notes;
+  } else {
+    title.textContent = "Add Customer";
+    name.value = "";
+    address.value = "";
+    is24h.checked = false;
+    open.value = "";
+    close.value = "";
+    notes.value = "";
+  }
+
+  modal.hidden = false;
+}
+
+function closeCustomerModal() {
+  const modal = document.getElementById("customer-modal");
+  if (!modal) return;
+
+  modal.hidden = true;
+}
+
+/* ===============================
+   ENTRY MODAL
 ================================ */
 
 function openModal() {
-  const modal = document.querySelector(".modal");
+  const modal = document.querySelector(".modal:not(#customer-modal)");
   if (!modal) return;
 
   modal.hidden = false;
@@ -217,7 +283,7 @@ function openModal() {
 }
 
 function closeModal() {
-  const modal = document.querySelector(".modal");
+  const modal = document.querySelector(".modal:not(#customer-modal)");
   if (!modal) return;
 
   modal.hidden = true;
@@ -249,7 +315,18 @@ function saveEntryFromModal() {
 }
 
 /* ===============================
-   INIT APP
+   SEARCH LISTENER
+================================ */
+
+document.addEventListener("input", function(e) {
+  if (e.target.dataset.action === "customer-search") {
+    CustomerService.setSearch(e.target.value);
+    render();
+  }
+});
+
+/* ===============================
+   INIT
 ================================ */
 
 function init() {
