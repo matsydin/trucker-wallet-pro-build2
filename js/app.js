@@ -151,7 +151,7 @@ function saveEntryFromModal() {
   if (!distanceKm || distanceKm <= 0) return;
 
   LogbookService.addEntry({
-    distanceKm,
+    kilometers,
     date,
     loads: pickups,
   waitingHours: 0
