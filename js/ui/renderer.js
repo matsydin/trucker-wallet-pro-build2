@@ -136,7 +136,7 @@ export function renderArchiveScreen(state) {
 ====================================== */
 
 export function renderCustomers(state) {
-  const container = document.getElementById("app");
+  const container = document.getElementById("data-page");
   if (!container) return;
 
   const customers = state.customers;
@@ -152,11 +152,7 @@ export function renderCustomers(state) {
   `;
 
   if (customers.length === 0) {
-    html += `
-      <div class="empty-state">
-        No customers yet
-      </div>
-    `;
+    html += `<div class="empty-state">No customers yet</div>`;
   } else {
     html += `<div class="card-list">`;
 
@@ -165,9 +161,10 @@ export function renderCustomers(state) {
         <div class="card">
           <div class="card-header">
             <h3>${c.name}</h3>
-            <button data-action="delete-customer" data-id="${c.id}">
-              Delete
-            </button>
+            <div class="card-actions">
+              <button data-action="edit-customer" data-id="${c.id}">Edit</button>
+              <button data-action="delete-customer" data-id="${c.id}">Delete</button>
+            </div>
           </div>
 
           ${c.address ? `<p>${c.address}</p>` : ""}
