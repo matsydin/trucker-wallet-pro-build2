@@ -8,12 +8,13 @@ const STORAGE_KEY = "tw_pro_build2_state";
 
 const defaultState = {
   ui: {
-    theme: "dark",
-    activeTab: "log",
-    displayUnit: "km",
-    inputUnit: "km",
-    language: "EN"
-  },
+  theme: "dark",
+  activeTab: "log",
+  displayUnit: "km",
+  inputUnit: "km",
+  language: "EN",
+  archiveDetailId: null
+},
 
   settings: {
     driverName: "",
