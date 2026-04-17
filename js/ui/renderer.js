@@ -1,5 +1,17 @@
 // js/ui/renderer.js
-// FINAL CLEAN VERSION
+
+/* ======================================
+   HELPERS
+====================================== */
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 /* ======================================
    RENDER LOG SCREEN
@@ -44,6 +56,7 @@ export function renderLogScreen(state) {
 /* ======================================
    RENDER DATA SCREEN
 ====================================== */
+
 export function renderDataScreen(state) {
   const container = document.querySelector('[data-page="data"]');
   if (!container) return;
@@ -52,32 +65,32 @@ export function renderDataScreen(state) {
 
   let html = `
     <div class="screen">
-
       <div class="screen-header">
         <h2>Data</h2>
       </div>
 
       <div class="segmented data-segmented">
-        <button data-action="set-data-tab"
-                data-tab="customers"
-                class="${active === "customers" ? "active" : ""}">
+        <button
+          data-action="set-data-tab"
+          data-tab="customers"
+          class="${active === "customers" ? "active" : ""}">
           Customers
         </button>
 
-        <button data-action="set-data-tab"
-                data-tab="fleet"
-                class="${active === "fleet" ? "active" : ""}">
+        <button
+          data-action="set-data-tab"
+          data-tab="fleet"
+          class="${active === "fleet" ? "active" : ""}">
           Fleet
         </button>
       </div>
-  `;
 
-  html += `<div id="data-content"></div>`;
-  html += `</div>`;
+      <div id="data-content"></div>
+    </div>
+  `;
 
   container.innerHTML = html;
 
-  // ✅ Рендер внутрішнього модуля
   if (active === "customers") {
     renderCustomers(state);
   }
@@ -97,10 +110,6 @@ export function renderArchiveScreen(state) {
 
   const archive = state.archive || [];
   const detailId = state.ui.archiveDetailId;
-
-  // ===============================
-  // DETAIL VIEW
-  // ===============================
 
   if (detailId) {
     const period = archive.find(p => p.id === detailId);
@@ -145,59 +154,6 @@ export function renderArchiveScreen(state) {
 
     return;
   }
-/* ======================================
-   RENDER FLEET
-====================================== */
-   export function renderFleet(state) {
-  const container = document.getElementById("data-content");
-  if (!container) return;
-
-  const trailers = state.trailers;
-
-  let html = `
-    <div class="screen-header">
-      <h3>Fleet</h3>
-      <button class="primary-btn"
-              data-action="open-add-trailer">
-        + Add
-      </button>
-    </div>
-  `;
-
-  if (!trailers.length) {
-    html += `<div class="empty-state">No trailers yet</div>`;
-  } else {
-    html += `<div class="card-list">`;
-
-    trailers.forEach(t => {
-      html += `
-        <div class="card">
-          <div class="card-header">
-            <h3>#${t.unitNumber}</h3>
-            <div>
-              <button data-action="edit-trailer"
-                      data-id="${t.id}">Edit</button>
-              <button data-action="delete-trailer"
-                      data-id="${t.id}">Delete</button>
-            </div>
-          </div>
-
-          ${t.plate ? `<p>Plate: ${t.plate}</p>` : ""}
-          ${t.maxLoad ? `<p>Max Load: ${t.maxLoad}</p>` : ""}
-          ${t.psi ? `<p>PSI: ${t.psi}</p>` : ""}
-          ${t.notes ? `<p class="muted">${t.notes}</p>` : ""}
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-  }
-
-  container.innerHTML = html;
-}
-  // ===============================
-  // LIST VIEW
-  // ===============================
 
   if (!archive.length) {
     archivePage.innerHTML =
@@ -245,7 +201,6 @@ export function renderCustomers(state) {
 
   let html = `
     <div class="screen">
-
       <div class="screen-header">
         <h2>Customers</h2>
         <button class="primary-btn"
@@ -258,7 +213,7 @@ export function renderCustomers(state) {
         <input
           type="text"
           placeholder="Search customer..."
-          value="${search}"
+          value="${escapeHtml(search)}"
           data-action="customer-search"
         />
       </div>
@@ -273,7 +228,7 @@ export function renderCustomers(state) {
       html += `
         <div class="card">
           <div class="card-header">
-            <h3>${c.name}</h3>
+            <h3>${escapeHtml(c.name)}</h3>
             <div>
               <button data-action="edit-customer"
                       data-id="${c.id}">
@@ -286,17 +241,98 @@ export function renderCustomers(state) {
             </div>
           </div>
 
-          ${c.address ? `<p>${c.address}</p>` : ""}
+          ${c.address ? `<p>${escapeHtml(c.address)}</p>` : ""}
 
           ${
             c.is24h
               ? `<p>Open 24 Hours</p>`
               : c.openTime && c.closeTime
-              ? `<p>${c.openTime} - ${c.closeTime}</p>`
+              ? `<p>${escapeHtml(c.openTime)} - ${escapeHtml(c.closeTime)}</p>`
               : ""
           }
 
-          ${c.notes ? `<p class="muted">${c.notes}</p>` : ""}
+          ${c.notes ? `<p class="muted">${escapeHtml(c.notes)}</p>` : ""}
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+
+  container.innerHTML = html;
+}
+
+/* ======================================
+   RENDER FLEET
+====================================== */
+
+export function renderFleet(state) {
+  const container = document.getElementById("data-content");
+  if (!container) return;
+
+  const search = state.ui.trailerSearch || "";
+  const query = search.trim().toLowerCase();
+
+  const trailers = query
+    ? state.trailers.filter(t =>
+        [
+          t.unitNumber,
+          t.plate,
+          t.maxLoad,
+          t.psi,
+          t.notes
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      )
+    : state.trailers;
+
+  let html = `
+    <div class="screen">
+      <div class="screen-header">
+        <h2>Fleet</h2>
+        <button class="primary-btn" data-action="open-add-trailer">
+          + Add
+        </button>
+      </div>
+
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="Search trailer..."
+          value="${escapeHtml(search)}"
+          data-action="trailer-search"
+        />
+      </div>
+  `;
+
+  if (!trailers.length) {
+    html += `<div class="empty-state">No trailers found</div>`;
+  } else {
+    html += `<div class="card-list">`;
+
+    trailers.forEach(t => {
+      html += `
+        <div class="card">
+          <div class="card-header">
+            <h3>#${escapeHtml(t.unitNumber)}</h3>
+            <div>
+              <button data-action="edit-trailer" data-id="${t.id}">
+                Edit
+              </button>
+              <button data-action="delete-trailer" data-id="${t.id}">
+                Delete
+              </button>
+            </div>
+          </div>
+
+          ${t.plate ? `<p>Plate: ${escapeHtml(t.plate)}</p>` : ""}
+          ${t.maxLoad ? `<p>Max Load: ${escapeHtml(t.maxLoad)}</p>` : ""}
+          ${t.psi ? `<p>PSI: ${escapeHtml(t.psi)}</p>` : ""}
+          ${t.notes ? `<p class="muted">${escapeHtml(t.notes)}</p>` : ""}
         </div>
       `;
     });
