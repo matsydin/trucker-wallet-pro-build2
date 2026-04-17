@@ -11,6 +11,19 @@ import { ArchiveService } from "./services/archive.service.js";
 function render() {
   document.body.setAttribute("data-theme", state.ui.theme);
 
+  // показ сторінок
+  document.querySelectorAll(".page").forEach(page => {
+    page.hidden = page.dataset.page !== state.ui.activeTab;
+  });
+
+  // активна вкладка
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.toggle(
+      "active",
+      tab.dataset.tab === state.ui.activeTab
+    );
+  });
+
   if (state.ui.activeTab === "archive") {
     renderArchiveScreen(state);
   } else {
@@ -44,40 +57,35 @@ function toggleTheme() {
 }
 
 /* ===============================
-   EVENTS (Delegation)
+   EVENTS
 ================================ */
 
 function handleClick(e) {
   const target = e.target;
 
-  // Tabs
   const tab = target.closest(".tab");
   if (tab) {
     setTab(tab.dataset.tab);
     return;
   }
 
-  // KM / MI toggle
   const unitBtn = target.closest("[data-unit]");
   if (unitBtn) {
     setUnit(unitBtn.dataset.unit);
     return;
   }
 
-  // Brand (theme toggle)
   const brand = target.closest(".brand");
   if (brand && !e.shiftKey) {
     toggleTheme();
     return;
   }
 
-  // FAB
   if (target.closest(".fab")) {
     openModal();
     return;
   }
 
-  // Close modal
   if (
     target.closest(".modal-close") ||
     target.closest(".modal-backdrop")
@@ -86,13 +94,11 @@ function handleClick(e) {
     return;
   }
 
-  // Save entry
   if (target.closest("#save-entry")) {
     saveEntryFromModal();
     return;
   }
 
-  // Delete entry
   const deleteBtn = target.closest("[data-delete]");
   if (deleteBtn) {
     LogbookService.deleteEntry(deleteBtn.dataset.delete);
@@ -100,53 +106,44 @@ function handleClick(e) {
     return;
   }
 
-  // Finish Week
   if (target.closest("#finish-week-btn")) {
     ArchiveService.archiveCurrent();
     render();
     return;
   }
 
-  // Archive (shift + brand)
-  if (brand && e.shiftKey) {
-    ArchiveService.archiveCurrent();
-    render();
-    return;
-  }
+  // ✅ ВАЖЛИВО — використовуємо state.ui.archiveDetailId
 
-  // OPEN ARCHIVE DETAIL
   const openArchive = target.closest('[data-action="open-archive"]');
   if (openArchive) {
-    state.archiveDetailId = openArchive.dataset.id;
+    state.ui.archiveDetailId = openArchive.dataset.id;
     saveState();
     render();
     return;
   }
 
-  // CLOSE ARCHIVE DETAIL
   if (target.closest('[data-action="close-archive"]')) {
-    state.archiveDetailId = null;
+    state.ui.archiveDetailId = null;
     saveState();
     render();
     return;
   }
 
-  // DELETE ARCHIVE
-const deleteArchiveBtn = target.closest('[data-action="delete-archive"]');
-if (deleteArchiveBtn) {
-  const id = deleteArchiveBtn.dataset.id;
+  const deleteArchiveBtn = target.closest('[data-action="delete-archive"]');
+  if (deleteArchiveBtn) {
+    const id = deleteArchiveBtn.dataset.id;
 
-  if (confirm("Delete this archived period?")) {
-    ArchiveService.deleteArchive(id);
+    if (confirm("Delete this archived period?")) {
+      ArchiveService.deleteArchive(id);
 
-    if (state.archiveDetailId === id) {
-      state.archiveDetailId = null;
+      if (state.ui.archiveDetailId === id) {
+        state.ui.archiveDetailId = null;
+      }
+
+      render();
     }
-
-    render();
+    return;
   }
-  return;
-}
 }
 
 /* ===============================
