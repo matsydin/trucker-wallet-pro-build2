@@ -60,9 +60,9 @@ function render() {
       state.ui.activeTab === "log" ? "flex" : "none";
   }
 
-  const segmented = document.querySelector(".segmented");
-  if (segmented) {
-    segmented.style.display =
+    const unitToggle = document.getElementById("unit-toggle");
+  if (unitToggle) {
+    unitToggle.style.display =
       state.ui.activeTab === "log" ? "flex" : "none";
   }
 
