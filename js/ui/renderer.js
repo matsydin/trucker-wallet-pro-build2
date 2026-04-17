@@ -188,7 +188,7 @@ export function renderArchiveScreen(state) {
         '<h3>' + escapeHtml(period.periodLabel) + '</h3>' +
         '<p>Gross: $' + Number(totals.amount ?? 0).toFixed(2) + '</p>' +
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
-        '<p>Loads: ' + Number(totals.loads ?? 0) + '</p>'
+        '<p>Loads: ' + Number(totals.loads ?? 0) + '</p>'+
         '<button data-action="open-archive" data-id="' + period.id + '" type="button">View</button>' +
         '<button data-action="delete-archive" data-id="' + period.id + '" type="button">Delete</button>' +
       '</div>'
