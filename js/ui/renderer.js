@@ -131,7 +131,7 @@ export function renderArchiveScreen(state) {
         '<h3>' + escapeHtml(period.periodLabel) + '</h3>' +
         '<p>Gross: $' + Number(totals.amount ?? 0).toFixed(2) + '</p>' +
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
-        '<p>Loads: ' + (period.entries || []).length + '</p>' +
+        '<p>Loads: ' + Number(totals.loads ?? 0) + '</p>' +
       '</div>' +
 
       (period.entries || []).map(entry => {
