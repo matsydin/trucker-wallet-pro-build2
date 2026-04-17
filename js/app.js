@@ -132,21 +132,21 @@ function handleClick(e) {
   }
 
   // DELETE ARCHIVE
-  const deleteArchiveBtn = target.closest('[data-action="delete-archive"]');
-  if (deleteArchiveBtn) {
-    const id = deleteArchiveBtn.dataset.id;
+const deleteArchiveBtn = target.closest('[data-action="delete-archive"]');
+if (deleteArchiveBtn) {
+  const id = deleteArchiveBtn.dataset.id;
 
-    if (confirm("Delete this archived period?")) {
-      deleteArchive(id);
+  if (confirm("Delete this archived period?")) {
+    ArchiveService.deleteArchive(id);
 
-      if (state.archiveDetailId === id) {
-        state.archiveDetailId = null;
-      }
-
-      render();
+    if (state.archiveDetailId === id) {
+      state.archiveDetailId = null;
     }
-    return;
+
+    render();
   }
+  return;
+}
 }
 
 /* ===============================
