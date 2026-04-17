@@ -112,6 +112,14 @@ if (e.target.closest("#save-entry")) {
   saveEntryFromModal();
   return;
 }
+// Delete entry
+const deleteBtn = e.target.closest("[data-delete]");
+if (deleteBtn) {
+  const id = deleteBtn.dataset.delete;
+  LogbookService.deleteEntry(id);
+  render();
+  return;
+}
    // Finish Week button
 if (e.target.closest("#finish-week-btn")) {
   ArchiveService.archiveCurrent();
