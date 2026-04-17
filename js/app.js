@@ -223,25 +223,31 @@ function openCustomerModal(id = null) {
   const modal = document.getElementById("customer-modal");
   if (!modal) return;
 
-  const title = document.getElementById("customer-modal-title");
   const name = document.getElementById("customer-name");
   const address = document.getElementById("customer-address");
   const is24h = document.getElementById("customer-24h");
   const open = document.getElementById("customer-open");
   const close = document.getElementById("customer-close");
   const notes = document.getElementById("customer-notes");
+  const title = document.getElementById("customer-modal-title");
+
+  // ✅ якщо щось не знайдено — зупиняємо
+  if (!name || !address || !is24h || !open || !close || !notes || !title) {
+    console.error("Customer modal elements not found in DOM");
+    return;
+  }
 
   if (id) {
     const c = state.customers.find(c => c.id === id);
     if (!c) return;
 
     title.textContent = "Edit Customer";
-    name.value = c.name;
-    address.value = c.address;
-    is24h.checked = c.is24h;
+    name.value = c.name || "";
+    address.value = c.address || "";
+    is24h.checked = c.is24h || false;
     open.value = c.openTime || "";
     close.value = c.closeTime || "";
-    notes.value = c.notes;
+    notes.value = c.notes || "";
   } else {
     title.textContent = "Add Customer";
     name.value = "";
