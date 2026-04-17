@@ -107,7 +107,61 @@
     </div>
   </div>
 </div>
+<!-- ===============================
+     TRAILER MODAL
+================================= -->
 
+<div class="modal" id="trailer-modal" hidden>
+  <div class="modal-backdrop" data-action="close-trailer-modal"></div>
+
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <div class="modal-title" id="trailer-modal-title">
+        Add Trailer
+      </div>
+      <button class="modal-close"
+              type="button"
+              data-action="close-trailer-modal">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label>Unit Number</label>
+        <input id="trailer-unit-number" type="text" placeholder="e.g. 4021">
+      </div>
+
+      <div class="form-group">
+        <label>Plate</label>
+        <input id="trailer-plate" type="text" placeholder="e.g. AB12345">
+      </div>
+
+      <div class="form-group">
+        <label>Max Load</label>
+        <input id="trailer-max-load" type="number" min="0" placeholder="e.g. 45000">
+      </div>
+
+      <div class="form-group">
+        <label>PSI</label>
+        <input id="trailer-psi" type="number" min="0" placeholder="e.g. 110">
+      </div>
+
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="trailer-notes" placeholder="Notes"></textarea>
+      </div>
+
+      <div id="trailer-modal-error" class="form-error"></div>
+
+      <button class="primary-btn full-width"
+              data-action="save-trailer"
+              type="button">
+        Save Trailer
+      </button>
+
+    </div>
+  </div>
+</div>
 <!-- ===============================
      HEADER
 ================================= -->
