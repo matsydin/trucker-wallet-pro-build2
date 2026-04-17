@@ -1,6 +1,6 @@
 // js/app.js
 
-import { state, saveState } from "./state.js";
+import { state, saveState, loadState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
 import { renderLogScreen } from "./ui/renderer.js";
@@ -166,11 +166,17 @@ function saveEntryFromModal() {
 ================================ */
 
 function init() {
-  document.addEventListener("click", handleClick);
 
-  // ✅ Recalculate totals on app start
+  // ✅ 1. Завантажити state з localStorage
+  loadState();
+
+  // ✅ 2. Перерахувати totals (на випадок старих даних)
   LogbookService.calculateTotals();
 
+  // ✅ 3. Підключити події
+  document.addEventListener("click", handleClick);
+
+  // ✅ 4. Перший рендер
   render();
 }
 
