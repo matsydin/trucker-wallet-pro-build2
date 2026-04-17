@@ -1,9 +1,5 @@
 // js/ui/renderer.js
 
-/* ======================================
-   HELPERS
-====================================== */
-
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -44,10 +40,17 @@ export function renderLogScreen(state) {
 
     return (
       '<div class="card">' +
-        '<div>' + (entry.date || "") + '</div>' +
-        '<div>' + distance + " " + state.ui.displayUnit + '</div>' +
-        '<div>$' + Number(entry.amount ?? 0).toFixed(2) + '</div>' +
-        '<button data-delete="' + entry.id + '" type="button">Delete</button>' +
+        '<div class="card-header">' +
+          '<h3>' + escapeHtml(entry.date || "") + '</h3>' +
+          '<div>' +
+            '<button data-action="edit-log-entry" data-id="' + entry.id + '" type="button">Edit</button>' +
+            '<button data-delete="' + entry.id + '" type="button">Delete</button>' +
+          '</div>' +
+        '</div>' +
+        '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
+        '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
+        '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
+        '<p class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</p>' +
       '</div>'
     );
   }).join("");
@@ -125,7 +128,7 @@ export function renderArchiveScreen(state) {
     archivePage.innerHTML =
       '<div class="card">' +
         '<button data-action="close-archive" type="button">← Back</button>' +
-        '<h3>' + period.periodLabel + '</h3>' +
+        '<h3>' + escapeHtml(period.periodLabel) + '</h3>' +
         '<p>Gross: $' + Number(totals.amount ?? 0).toFixed(2) + '</p>' +
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
         '<p>Loads: ' + (period.entries || []).length + '</p>' +
@@ -139,9 +142,20 @@ export function renderArchiveScreen(state) {
 
         return (
           '<div class="card">' +
-            '<div>' + (entry.date || "") + '</div>' +
-            '<div>' + entryDistance + " " + state.ui.displayUnit + '</div>' +
-            '<div>$' + Number(entry.amount ?? 0).toFixed(2) + '</div>' +
+            '<div class="card-header">' +
+              '<h3>' + escapeHtml(entry.date || "") + '</h3>' +
+              '<div>' +
+                '<button data-action="edit-archive-entry" data-period-id="' + period.id + '" data-id="' + entry.id + '" type="button">Edit</button>' +
+                '<button data-action="delete-archive-entry" data-period-id="' + period.id + '" data-id="' + entry.id + '" type="button">Delete</button>' +
+              '</div>' +
+            '</div>' +
+            '<p>' + entryDistance + " " + state.ui.displayUnit + '</p>' +
+            '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
+            '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
+            '<p>Rate: $' + Number(entry.rateSnapshot?.perMile ?? 0).toFixed(2) + '/mi</p>' +
+            '<p>Drop: $' + Number(entry.rateSnapshot?.perDrop ?? 0).toFixed(2) + '</p>' +
+            '<p>Waiting Rate: $' + Number(entry.rateSnapshot?.perWaiting ?? 0).toFixed(2) + '</p>' +
+            '<p class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</p>' +
           '</div>'
         );
       }).join("") +
@@ -171,7 +185,7 @@ export function renderArchiveScreen(state) {
 
     return (
       '<div class="card">' +
-        '<h3>' + period.periodLabel + '</h3>' +
+        '<h3>' + escapeHtml(period.periodLabel) + '</h3>' +
         '<p>Gross: $' + Number(totals.amount ?? 0).toFixed(2) + '</p>' +
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
         '<p>Loads: ' + (period.entries || []).length + '</p>' +
