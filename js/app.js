@@ -2,7 +2,7 @@
 import { renderArchiveScreen, renderLogScreen } from './ui/renderer.js';
 import { state, saveState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
-import { ArchiveService, deleteArchive } from "./services/archive.service.js";
+import { ArchiveService } from "./services/archive.service.js";
 
 /* ===============================
    RENDER
