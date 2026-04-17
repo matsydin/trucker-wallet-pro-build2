@@ -1,5 +1,5 @@
 // js/ui/renderer.js
-//1.2
+
 /* ===============================
    LOG SCREEN
 ================================ */
@@ -11,14 +11,10 @@ export function renderLogScreen(state) {
   if (!totalEl || !listEl) return;
 
   const totalGross = state.totals?.gross ?? 0;
-  const totalMiles = state.totals?.miles ?? 0;
-
-  // Total card
   totalEl.textContent = `
 $$
 {Number(totalGross).toFixed(2)} CAD`;
 
-  // Entries
   const entries = state.entries || [];
 
   if (!entries.length) {
@@ -50,7 +46,6 @@ export function renderArchiveScreen(state) {
   const archive = state.archive || [];
   const detailId = state.archiveDetailId;
 
-  // ===== DETAIL VIEW =====
   if (detailId) {
     const period = archive.find(p => p.id === detailId);
     if (!period) return;
@@ -59,7 +54,6 @@ export function renderArchiveScreen(state) {
       <div class="card">
         <button data-action="close-archive" type="button">← Back</button>
         <h3>${period.periodLabel}</h3>
-
         <p>Gross: 
 $$
 {Number(period.totals?.gross ?? 0).toFixed(2)}</p>
@@ -78,24 +72,17 @@ $$
       `).join("")}
 
       <div class="card">
-        <button 
-          data-action="delete-archive" 
-          data-id="${period.id}"
-          type="button">
+        <button data-action="delete-archive" data-id="${period.id}" type="button">
           Delete Period
         </button>
       </div>
     `;
-
     return;
   }
 
-  // ===== LIST VIEW =====
   if (!archive.length) {
     archivePage.innerHTML = `
-      <div class="card">
-        No archived weeks yet.
-      </div>
+      <div class="card">No archived weeks yet.</div>
     `;
     return;
   }
@@ -107,17 +94,11 @@ $$
       <p>Miles: ${Number(period.totals?.miles ?? 0).toFixed(1)} ${state.ui.displayUnit}</p>
       <p>Loads: ${(period.entries || []).length}</p>
 
-      <button 
-        data-action="open-archive" 
-        data-id="${period.id}"
-        type="button">
+      <button data-action="open-archive" data-id="${period.id}" type="button">
         View
       </button>
 
-      <button 
-        data-action="delete-archive" 
-        data-id="${period.id}"
-        type="button">
+      <button data-action="delete-archive" data-id="${period.id}" type="button">
         Delete
       </button>
     </div>
