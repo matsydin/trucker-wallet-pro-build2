@@ -124,4 +124,4 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-export { state, saveState };
+export { state, saveState, loadState };
