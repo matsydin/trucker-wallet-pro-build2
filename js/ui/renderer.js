@@ -42,6 +42,52 @@ export function renderLogScreen(state) {
 }
 
 /* ======================================
+   RENDER DATA SCREEN
+====================================== */
+export function renderDataScreen(state) {
+  const container = document.querySelector('[data-page="data"]');
+  if (!container) return;
+
+  const active = state.ui.dataTab;
+
+  let html = `
+    <div class="screen">
+
+      <div class="screen-header">
+        <h2>Data</h2>
+      </div>
+
+      <div class="segmented data-segmented">
+        <button data-action="set-data-tab"
+                data-tab="customers"
+                class="${active === "customers" ? "active" : ""}">
+          Customers
+        </button>
+
+        <button data-action="set-data-tab"
+                data-tab="fleet"
+                class="${active === "fleet" ? "active" : ""}">
+          Fleet
+        </button>
+      </div>
+  `;
+
+  html += `<div id="data-content"></div>`;
+  html += `</div>`;
+
+  container.innerHTML = html;
+
+  // ✅ Рендер внутрішнього модуля
+  if (active === "customers") {
+    renderCustomers(state);
+  }
+
+  if (active === "fleet") {
+    renderFleet(state);
+  }
+}
+
+/* ======================================
    RENDER ARCHIVE SCREEN
 ====================================== */
 
@@ -136,7 +182,7 @@ export function renderArchiveScreen(state) {
 ====================================== */
 
 export function renderCustomers(state) {
-  const container = document.querySelector('[data-page="data"]');
+  const container = document.getElementById("data-content");
   if (!container) return;
 
   const customers = state.customers;
