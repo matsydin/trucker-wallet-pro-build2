@@ -1,3 +1,5 @@
+// js/ui/renderer.js
+
 import { state } from "../state.js";
 
 export function renderLogScreen() {
@@ -6,39 +8,37 @@ export function renderLogScreen() {
 }
 
 function renderSummary() {
-  const summaryEl = document.querySelector("#summary");
+  const amountEl = document.querySelector(".summary-amount");
+  if (!amountEl) return;
 
   const totals = state.current.totals;
   const currency = state.settings.currency;
 
-  summaryEl.innerHTML = `
-    <div class="summary-card">
-      <div class="summary-amount">
-        ${currency} ${totals.amount.toFixed(2)}
-      </div>
-      <div class="summary-distance">
-        ${totals.kilometers.toFixed(1)} km
-      </div>
-    </div>
-  `;
+  amountEl.textContent =
+    `${currency} ${totals.amount.toFixed(2)}`;
 }
 
 function renderEntries() {
-  const listEl = document.querySelector("#entryList");
+  const listEl = document.querySelector(".logbook-list");
+  if (!listEl) return;
+
   listEl.innerHTML = "";
 
   state.current.entries.forEach(entry => {
+
     const card = document.createElement("div");
-    card.className = "entry-card";
+    card.className = "card";
 
     card.innerHTML = `
-      <div class="entry-date">${entry.date}</div>
-      <div>${entry.kilometers} km</div>
-      <div>${entry.amount.toFixed(2)} ${state.settings.currency}</div>
+      <div class="entry-row">
+        <div><strong>${entry.date}</strong></div>
+        <div>${entry.kilometers} km</div>
+        <div>${state.settings.currency} ${entry.amount.toFixed(2)}</div>
+      </div>
 
       <div class="entry-actions">
-        <button data-edit="${entry.id}">Edit</button>
-        <button data-delete="${entry.id}">Delete</button>
+        <button data-edit="${entry.id}" type="button">Edit</button>
+        <button data-delete="${entry.id}" type="button">Delete</button>
       </div>
     `;
 
