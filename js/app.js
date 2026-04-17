@@ -175,9 +175,6 @@ function saveEntryFromModal() {
 
 function init() {
 
-  // ✅ 1. Завантажити state з localStorage
-  loadState();
-
   // ✅ 2. Перерахувати totals (на випадок старих даних)
   LogbookService.calculateTotals();
 
