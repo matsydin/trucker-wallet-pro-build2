@@ -1,42 +1,21 @@
 // js/app.js
-import { state, saveState, loadState } from "./state.js";
+import { renderArchiveScreen, renderLogScreen } from './ui/renderer.js';
+import { state, saveState } from "./state.js";
 import { LogbookService } from "./services/logbook.service.js";
-import { ArchiveService } from "./services/archive.service.js";
-import { renderLogScreen } from "./ui/renderer.js";
+import { ArchiveService, deleteArchive } from "./services/archive.service.js";
 
 /* ===============================
    RENDER
 ================================ */
 
-function renderUI() {
-  // Theme
+function render() {
   document.body.setAttribute("data-theme", state.ui.theme);
 
-  // Active tab buttons
-  document.querySelectorAll(".tab").forEach(tab => {
-    tab.classList.toggle(
-      "active",
-      tab.dataset.tab === state.ui.activeTab
-    );
-  });
-
-  // Page visibility
-  document.querySelectorAll(".page").forEach(page => {
-    page.hidden = page.dataset.page !== state.ui.activeTab;
-  });
-
-  // Unit segmented toggle
-  document.querySelectorAll(".segmented button").forEach(btn => {
-    btn.classList.toggle(
-      "active",
-      btn.dataset.unit === state.ui.displayUnit
-    );
-  });
-}
-
-function render() {
-  renderUI();
-  renderLogScreen();      // ✅ тепер рендер через renderer.js
+  if (state.ui.activeTab === "archive") {
+    renderArchiveScreen(state);
+  } else {
+    renderLogScreen(state);
+  }
 }
 
 /* ===============================
@@ -45,7 +24,6 @@ function render() {
 
 function setTab(tab) {
   if (state.ui.activeTab === tab) return;
-
   state.ui.activeTab = tab;
   saveState();
   render();
@@ -53,7 +31,6 @@ function setTab(tab) {
 
 function setUnit(unit) {
   if (state.ui.displayUnit === unit) return;
-
   state.ui.displayUnit = unit;
   saveState();
   render();
@@ -62,7 +39,6 @@ function setUnit(unit) {
 function toggleTheme() {
   state.ui.theme =
     state.ui.theme === "dark" ? "light" : "dark";
-
   saveState();
   render();
 }
@@ -72,67 +48,110 @@ function toggleTheme() {
 ================================ */
 
 function handleClick(e) {
+  const target = e.target;
 
   // Tabs
-  const tab = e.target.closest(".tab");
+  const tab = target.closest(".tab");
   if (tab) {
     setTab(tab.dataset.tab);
     return;
   }
 
   // KM / MI toggle
-  const unitBtn = e.target.closest("[data-unit]");
+  const unitBtn = target.closest("[data-unit]");
   if (unitBtn) {
     setUnit(unitBtn.dataset.unit);
     return;
   }
 
-  // Brand (temporary theme toggle)
-  const brand = e.target.closest(".brand");
-  if (brand) {
+  // Brand (theme toggle)
+  const brand = target.closest(".brand");
+  if (brand && !e.shiftKey) {
     toggleTheme();
     return;
   }
 
- // FAB
-const fab = e.target.closest(".fab");
-if (fab) {
-  openModal();
-  return;
-}
-   // Close modal
-if (e.target.closest(".modal-close") ||
-    e.target.closest(".modal-backdrop")) {
-  closeModal();
-  return;
+  // FAB
+  if (target.closest(".fab")) {
+    openModal();
+    return;
+  }
+
+  // Close modal
+  if (
+    target.closest(".modal-close") ||
+    target.closest(".modal-backdrop")
+  ) {
+    closeModal();
+    return;
+  }
+
+  // Save entry
+  if (target.closest("#save-entry")) {
+    saveEntryFromModal();
+    return;
+  }
+
+  // Delete entry
+  const deleteBtn = target.closest("[data-delete]");
+  if (deleteBtn) {
+    LogbookService.deleteEntry(deleteBtn.dataset.delete);
+    render();
+    return;
+  }
+
+  // Finish Week
+  if (target.closest("#finish-week-btn")) {
+    ArchiveService.archiveCurrent();
+    render();
+    return;
+  }
+
+  // Archive (shift + brand)
+  if (brand && e.shiftKey) {
+    ArchiveService.archiveCurrent();
+    render();
+    return;
+  }
+
+  // OPEN ARCHIVE DETAIL
+  const openArchive = target.closest('[data-action="open-archive"]');
+  if (openArchive) {
+    state.archiveDetailId = openArchive.dataset.id;
+    saveState();
+    render();
+    return;
+  }
+
+  // CLOSE ARCHIVE DETAIL
+  if (target.closest('[data-action="close-archive"]')) {
+    state.archiveDetailId = null;
+    saveState();
+    render();
+    return;
+  }
+
+  // DELETE ARCHIVE
+  const deleteArchiveBtn = target.closest('[data-action="delete-archive"]');
+  if (deleteArchiveBtn) {
+    const id = deleteArchiveBtn.dataset.id;
+
+    if (confirm("Delete this archived period?")) {
+      deleteArchive(id);
+
+      if (state.archiveDetailId === id) {
+        state.archiveDetailId = null;
+      }
+
+      render();
+    }
+    return;
+  }
 }
 
-// Save entry
-if (e.target.closest("#save-entry")) {
-  saveEntryFromModal();
-  return;
-}
-// Delete entry
-const deleteBtn = e.target.closest("[data-delete]");
-if (deleteBtn) {
-  const id = deleteBtn.dataset.delete;
-  LogbookService.deleteEntry(id);
-  render();
-  return;
-}
-   // Finish Week button
-if (e.target.closest("#finish-week-btn")) {
-  ArchiveService.archiveCurrent();
-  render();
-  return;
-}
-   // Temporary: archive on long press brand
-if (e.target.closest(".brand") && e.shiftKey) {
-  ArchiveService.archiveCurrent();
-  render();
-  return;
-}
-}
+/* ===============================
+   MODAL
+================================ */
 
 function openModal() {
   const modal = document.querySelector(".modal");
@@ -163,7 +182,7 @@ function saveEntryFromModal() {
   if (!distanceKm || distanceKm <= 0) return;
 
   LogbookService.addEntry({
-    kilometers: distanceKm,   // ✅ ПРАВИЛЬНА ЗМІННА
+    kilometers: distanceKm,
     date: date,
     loads: pickups,
     waitingHours: 0
@@ -173,22 +192,16 @@ function saveEntryFromModal() {
   pickupsInput.value = "";
 
   closeModal();
-
-  render();   // ✅ одразу оновлюємо UI
+  render();
 }
+
 /* ===============================
    INIT
 ================================ */
 
 function init() {
-
-  // ✅ 2. Перерахувати totals (на випадок старих даних)
   LogbookService.calculateTotals();
-
-  // ✅ 3. Підключити події
   document.addEventListener("click", handleClick);
-
-  // ✅ 4. Перший рендер
   render();
 }
 
