@@ -39,9 +39,11 @@ const defaultState = {
   current: {
     entries: [],
     totals: {
-      kilometers: 0,
-      miles: 0,
-      amount: 0
+     kilometers: 0,
+     miles: 0,
+     loads: 0,           // ✅ ДОДАТИ
+     waitingHours: 0,    // ✅ ДОДАТИ
+     amount: 0
     }
   },
 
@@ -67,7 +69,19 @@ function loadState() {
       return migrateFromV1(parsed);
     }
 
-    return deepMerge(structuredClone(defaultState), parsed);
+    const merged = deepMerge(structuredClone(defaultState), parsed);
+
+    // ✅ ensure current.totals structure (backward safety)
+    merged.current.totals = {
+      kilometers: merged.current.totals.kilometers ?? 0,
+      miles: merged.current.totals.miles ?? 0,
+      loads: merged.current.totals.loads ?? 0,
+      waitingHours: merged.current.totals.waitingHours ?? 0,
+      amount: merged.current.totals.amount ?? 0
+    };
+
+    return merged;
+
   } catch {
     return structuredClone(defaultState);
   }
