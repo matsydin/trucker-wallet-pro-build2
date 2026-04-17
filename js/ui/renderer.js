@@ -1,11 +1,13 @@
-// js/ui/renderer.js
-
 import { state } from "../state.js";
 
 export function renderLogScreen() {
   renderSummary();
   renderEntries();
 }
+
+/* ===============================
+   SUMMARY
+================================ */
 
 function renderSummary() {
   const amountEl = document.querySelector(".summary-amount");
@@ -17,6 +19,10 @@ function renderSummary() {
   amountEl.textContent = `${currency} ${amount.toFixed(2)}`;
 }
 
+/* ===============================
+   ENTRIES
+================================ */
+
 function renderEntries() {
   const listEl = document.querySelector(".logbook-list");
   if (!listEl) return;
@@ -25,15 +31,15 @@ function renderEntries() {
 
   state.current.entries.forEach(entry => {
 
-    
     const unit = state.ui.displayUnit;
 
-const distance =
-  unit === "mi"
-    ? entry.miles ?? 0
-    : entry.kilometers ?? 0;
+    const distance =
+      unit === "mi"
+        ? entry.miles ?? 0
+        : entry.kilometers ?? 0;
 
-const unitLabel = unit === "mi" ? "mi" : "km";
+    const unitLabel = unit === "mi" ? "mi" : "km";
+
     const amount = entry.amount ?? 0;
     const date = entry.date ?? "—";
 
@@ -43,14 +49,7 @@ const unitLabel = unit === "mi" ? "mi" : "km";
     card.innerHTML = `
       <div class="entry-row">
         <div><strong>${date}</strong></div>
-        const unit = state.ui.displayUnit;
-const distance =
-  unit === "mi"
-    ? entry.miles ?? 0
-    : entry.kilometers ?? 0;
-
-const unitLabel = unit === "mi" ? "mi" : "km";
-
+        <div>${distance} ${unitLabel}</div>
         <div>${state.settings.currency} ${amount.toFixed(2)}</div>
       </div>
 
