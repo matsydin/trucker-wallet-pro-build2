@@ -174,7 +174,7 @@ export function renderArchiveScreen(state) {
 
         '<div class="archive-summary-top">' +
           '<h3>' + label + '</h3>' +
-          '<button class="export-btn" data-action="export-archive">Export</button>' +
+      
         '</div>' +
 
         '<div class="archive-summary-grid">' +
