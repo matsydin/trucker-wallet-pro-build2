@@ -648,10 +648,11 @@ function saveEntryFromModal() {
 const meals = {};
 
 for (let type of mealTypes) {
-  const pill = document.querySelector(`.meal-pill[data-meal="${type}"]`);
-  const select = document.getElementById(`meal-${type}-location`);
+  const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
+  const checkbox = card?.querySelector(".meal-checkbox");
+  const select = card?.querySelector(".meal-select");
 
-  const taken = pill?.classList.contains("active");
+  const taken = checkbox?.checked;
   const location = select?.value;
 
   if (taken && !location) {
@@ -660,7 +661,7 @@ for (let type of mealTypes) {
   }
 
   meals[type] = {
-    taken,
+    taken: !!taken,
     location: taken ? location : ""
   };
 }
