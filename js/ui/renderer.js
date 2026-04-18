@@ -1,5 +1,6 @@
 // js/ui/renderer.js
 import { getYearTotal } from "../services/timeline.service.js";
+import { ArchiveService } from "../services/archive.service.js";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -115,6 +116,8 @@ export function renderArchiveScreen(state) {
   const archive = state.archive || [];
   const detailId = state.ui.archiveDetailId;
 
+  /* ===== DETAIL VIEW ===== */
+
   if (detailId) {
     const period = archive.find(p => p.id === detailId);
     if (!period) return;
@@ -153,9 +156,6 @@ export function renderArchiveScreen(state) {
             '<p>' + entryDistance + " " + state.ui.displayUnit + '</p>' +
             '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
             '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
-            '<p>Rate: $' + Number(entry.rateSnapshot?.perMile ?? 0).toFixed(2) + '/mi</p>' +
-            '<p>Drop: $' + Number(entry.rateSnapshot?.perDrop ?? 0).toFixed(2) + '</p>' +
-            '<p>Waiting Rate: $' + Number(entry.rateSnapshot?.perWaiting ?? 0).toFixed(2) + '</p>' +
             '<p class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</p>' +
           '</div>'
         );
@@ -169,60 +169,115 @@ export function renderArchiveScreen(state) {
 
     return;
   }
-// ✅ Year Summary (based on unified timeline)
-const now = new Date();
-const currentYear = now.getFullYear();
 
-const yearTotals = getYearTotal(currentYear);
+  /* ===== MAIN HIERARCHY VIEW ===== */
+
+  const { archiveView, archiveYear, archiveMonth } = state.ui;
+
+  let content = "";
+
   if (!archive.length) {
-    archivePage.innerHTML =
-      '<div class="card">No archived weeks yet.</div>';
-    return;
+    content = '<div class="card">No archived weeks yet.</div>';
   }
 
- archivePage.innerHTML =
-  '<div class="card">' +
-    '<h3>' + currentYear + ' Summary</h3>' +
-    '<p>Gross: $' + Number(yearTotals.amount ?? 0).toFixed(2) + '</p>' +
-    '<p>Loads: ' + Number(yearTotals.loads ?? 0) + '</p>' +
-    '<p>Waiting: ' + Number(yearTotals.waitingHours ?? 0).toFixed(1) + ' h</p>' +
-  '</div>' +
+  else if (archiveView === "years") {
+    const years = ArchiveService.getArchiveYears();
 
-  '<div class="card">' +
-    '<h3>Archived Weeks</h3>' +
-    '<div class="archive-table">' +
+    content =
+      '<div class="archive-table">' +
+        '<div class="archive-row archive-header">' +
+          '<div>Year</div>' +
+          '<div>Distance</div>' +
+          '<div>Loads</div>' +
+          '<div>Total</div>' +
+        '</div>' +
 
-  '<div class="archive-row archive-header">' +
-  '<div>Week</div>' +
-  '<div>Distance</div>' +
-  '<div>Loads</div>' +
-  '<div>Total</div>' +
-  '<div></div>' +
-'</div>' +
-
-      archive.map(period => {
-        const totals = period.totals || {};
-        
-        const distance =
-      state.ui.displayUnit === "km"
-    ? Number(totals.kilometers ?? 0).toFixed(1)
-    : Number(totals.miles ?? 0).toFixed(1);
-
-        return (
-          '<div class="archive-row">' +
-            '<div>' + escapeHtml(period.periodLabel) + '</div>' +
-            '<div class="text-right">' + distance + ' ' + state.ui.displayUnit + '</div>' +
-            '<div>' + Number(totals.loads ?? 0) + '</div>' +
-            '<div>$' + Number(totals.amount ?? 0).toFixed(2) + '</div>' +
-            '<div>' +
-              '<button data-action="open-archive" data-id="' + period.id + '" type="button">View</button>' +
-            '</div>' +
+        years.map(y =>
+          '<div class="archive-row" data-action="open-archive-year" data-year="' + y.year + '">' +
+            '<div>' + y.year + '</div>' +
+            '<div>' + Number(y.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</div>' +
+            '<div>' + Number(y.loads ?? 0) + '</div>' +
+            '<div>$' + Number(y.amount ?? 0).toFixed(2) + '</div>' +
           '</div>'
-        );
-      }).join("") +
+        ).join("") +
 
-    '</div>' +
-  '</div>';
+      '</div>';
+  }
+
+  else if (archiveView === "months") {
+    if (archiveYear === null) {
+      content = '<div class="card">Select a year</div>';
+    } else {
+      const months = ArchiveService.getArchiveMonths(archiveYear);
+
+      content =
+        '<div class="archive-table">' +
+          '<div class="archive-row archive-header">' +
+            '<div>Month</div>' +
+            '<div>Distance</div>' +
+            '<div>Loads</div>' +
+            '<div>Total</div>' +
+          '</div>' +
+
+          months.map(m => {
+            const monthName = new Date(m.year, m.month)
+              .toLocaleString("en-US", { month: "long" });
+
+            return (
+              '<div class="archive-row" data-action="open-archive-month" data-year="' + m.year + '" data-month="' + m.month + '">' +
+                '<div>' + monthName + '</div>' +
+                '<div>' + Number(m.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</div>' +
+                '<div>' + Number(m.loads ?? 0) + '</div>' +
+                '<div>$' + Number(m.amount ?? 0).toFixed(2) + '</div>' +
+              '</div>'
+            );
+          }).join("") +
+
+        '</div>';
+    }
+  }
+
+  else {
+    const weeks = ArchiveService.getArchivedWeeks(archiveYear, archiveMonth);
+
+    content =
+      '<div class="archive-table">' +
+        '<div class="archive-row archive-header">' +
+          '<div>Week</div>' +
+          '<div>Distance</div>' +
+          '<div>Loads</div>' +
+          '<div>Total</div>' +
+          '<div></div>' +
+        '</div>' +
+
+        weeks.map(period => {
+          const totals = period.totals || {};
+
+          const distance =
+            state.ui.displayUnit === "km"
+              ? Number(totals.kilometers ?? 0).toFixed(1)
+              : Number(totals.miles ?? 0).toFixed(1);
+
+          return (
+            '<div class="archive-row">' +
+              '<div>' + escapeHtml(period.periodLabel) + '</div>' +
+              '<div>' + distance + ' ' + state.ui.displayUnit + '</div>' +
+              '<div>' + Number(totals.loads ?? 0) + '</div>' +
+              '<div>$' + Number(totals.amount ?? 0).toFixed(2) + '</div>' +
+              '<div>' +
+                '<button data-action="open-archive" data-id="' + period.id + '">View</button>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join("") +
+
+      '</div>';
+  }
+
+  archivePage.innerHTML =
+    '<div class="screen">' +
+      content +
+    '</div>';
 }
 
 /* ======================================
