@@ -83,7 +83,29 @@ function loadState() {
       waitingHours: merged.current.totals.waitingHours ?? 0,
       amount: merged.current.totals.amount ?? 0
     };
+// ✅ Ensure meals exist (backward compatibility)
 
+merged.current.entries.forEach(entry => {
+  if (!entry.meals) {
+    entry.meals = {
+      breakfast: { taken: false, location: "" },
+      lunch: { taken: false, location: "" },
+      dinner: { taken: false, location: "" }
+    };
+  }
+});
+
+merged.archive.forEach(period => {
+  (period.entries || []).forEach(entry => {
+    if (!entry.meals) {
+      entry.meals = {
+        breakfast: { taken: false, location: "" },
+        lunch: { taken: false, location: "" },
+        dinner: { taken: false, location: "" }
+      };
+    }
+  });
+});
     return merged;
 
   } catch {
