@@ -250,7 +250,9 @@ export function renderArchiveScreen(state) {
       ' • Loads: ' + Number(entry.loads ?? 0) +
       ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
     '</div>' +
-
+    (mealsCount > 0
+  ? '<div class="entry-meals muted">' + mealsSummary + '</div>'
+  : '') +
     '<div class="entry-actions">' +
 
       '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
