@@ -150,15 +150,8 @@ export function renderArchiveScreen(state) {
   if (level === "detail") {
   header +=
     '<div class="archive-header-row">' +
-
       '<button class="archive-back-btn" data-action="archive-back">← Back</button>' +
-
-      '<button class="primary-btn archive-export-btn" data-action="export-archive">' +
-        'Export' +
-      '</button>' +
-
     '</div>' +
-
     '<h2>Week Details</h2>';
 }
 
