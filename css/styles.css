@@ -596,13 +596,16 @@ button:active {
 }
 
 .export-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
   background: none;
-  border: none;
   color: var(--accent);
-  font-size: 22px;
-  padding: 4px 8px;
+  font-weight: 500;
+  font-size: 15px;
   cursor: pointer;
-  line-height: 1;
+  border: none;
 }
 
 .export-header-btn:hover {
