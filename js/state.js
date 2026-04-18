@@ -8,29 +8,25 @@ const STORAGE_KEY = "tw_pro_build2_state";
 
 const defaultState = {
   ui: {
-    theme: "dark",
-    activeTab: "log",
-    displayUnit: "km",
-    inputUnit: "km",
-    language: "EN",
+  theme: "dark",
+  activeTab: "log",
+  displayUnit: "km",
+  inputUnit: "km",
+  language: "EN",
 
-    archiveDetailId: null,
+  /* ===== Archive Navigation ===== */
 
-    
-     archiveYear: null,
-     archiveMonth: null,
+  archiveView: "years",   // years | months | weeks | entries
 
-    customerSearch: "",
-    trailerSearch: "",
-    dataTab: "customers",
+  archiveYear: null,
+  archiveMonth: null,
+  archiveWeekId: null,
 
-    modal: {
-      type: null,
-      mode: null,
-      entityId: null,
-      parentId: null
-    }
-  },
+  archiveFilter: {
+    from: null,
+    to: null
+  }
+};
 
   settings: {
     driverName: "",
