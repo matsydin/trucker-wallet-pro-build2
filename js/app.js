@@ -545,6 +545,22 @@ function openEntryModal(id = null) {
     distanceInput.value = entry.kilometers ?? "";
     pickupsInput.value = entry.loads ?? 0;
     waitingInput.value = entry.waitingHours ?? 0;
+        const meals = entry.meals || {
+      breakfast: { taken: false, location: "" },
+      lunch: { taken: false, location: "" },
+      dinner: { taken: false, location: "" }
+    };
+
+    ["breakfast", "lunch", "dinner"].forEach(type => {
+      const checkbox = document.getElementById(`meal-${type}`);
+      const select = document.getElementById(`meal-${type}-location`);
+
+      if (checkbox && select) {
+        checkbox.checked = meals[type]?.taken || false;
+        select.value = meals[type]?.location || "";
+        select.disabled = !checkbox.checked;
+      }
+    });
   } else {
     if (title) title.textContent = "New Entry";
 
