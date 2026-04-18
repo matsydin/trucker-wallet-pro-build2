@@ -680,7 +680,7 @@ function saveArchiveEntryFromModal() {
    SEARCH / INPUT LISTENER
 ================================ */
 
-document.addEventListener("input", function(e) {
+document.addEventListener("change", function(e) {
   if (e.target.dataset.action === "customer-search") {
     CustomerService.setSearch(e.target.value);
     render();
