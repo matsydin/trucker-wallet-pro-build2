@@ -235,7 +235,8 @@ export function renderArchiveScreen(state) {
             state.ui.displayUnit === "km"
               ? Number(entry.kilometers ?? 0).toFixed(1)
               : Number(entry.miles ?? 0).toFixed(1);
-
+          const mealsCount = getMealsCount(entry.meals);
+          const mealsSummary = formatMealsSummary(entry.meals);
           return (
   '<div class="archive-entry-card">' +
 
