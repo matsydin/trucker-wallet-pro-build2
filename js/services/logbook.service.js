@@ -4,6 +4,14 @@ import { state, saveState } from "../state.js";
 
 const KM_TO_MI = 0.621371;
 
+function createDefaultMeals() {
+  return {
+    breakfast: { taken: false, location: "" },
+    lunch: { taken: false, location: "" },
+    dinner: { taken: false, location: "" }
+  };
+}
+
 export const LogbookService = {
 
   convertKmToMiles(km) {
@@ -19,31 +27,30 @@ export const LogbookService = {
   },
 
   calculateTotals() {
-  let kilometers = 0;
-  let miles = 0;
-  let loads = 0;            
-  let waitingHours = 0;     
-  let amount = 0;
+    let kilometers = 0;
+    let miles = 0;
+    let loads = 0;
+    let waitingHours = 0;
+    let amount = 0;
 
-  state.current.entries.forEach(entry => {
-    kilometers += Number(entry.kilometers || 0);
-    miles += Number(entry.miles || 0);
-    loads += Number(entry.loads || 0);              
-    waitingHours += Number(entry.waitingHours || 0); 
-    amount += Number(entry.amount || 0);
-  });
+    state.current.entries.forEach(entry => {
+      kilometers += Number(entry.kilometers || 0);
+      miles += Number(entry.miles || 0);
+      loads += Number(entry.loads || 0);
+      waitingHours += Number(entry.waitingHours || 0);
+      amount += Number(entry.amount || 0);
+    });
 
-  state.current.totals = {
-    kilometers: +kilometers.toFixed(1),
-    miles: +miles.toFixed(1),
-    loads: +loads.toFixed(0),               
-    waitingHours: +waitingHours.toFixed(1), 
-    amount: +amount.toFixed(2)
-  };
-},
+    state.current.totals = {
+      kilometers: +kilometers.toFixed(1),
+      miles: +miles.toFixed(1),
+      loads: +loads.toFixed(0),
+      waitingHours: +waitingHours.toFixed(1),
+      amount: +amount.toFixed(2)
+    };
+  },
 
   addEntry(data) {
-    meals: entryData.meals || createDefaultMeals(),
     const miles = this.convertKmToMiles(data.kilometers);
 
     const rateSnapshot = {
@@ -67,21 +74,14 @@ export const LogbookService = {
       loads: data.loads,
       waitingHours: data.waitingHours,
       rateSnapshot,
-      amount
+      amount,
+      meals: data.meals || createDefaultMeals()
     };
 
     state.current.entries.push(entry);
 
     this.calculateTotals();
     saveState();
-    
-    function createDefaultMeals() {
-  return {
-    breakfast: { taken: false, location: "" },
-    lunch: { taken: false, location: "" },
-    dinner: { taken: false, location: "" }
-  };
-}
   },
 
   editEntry(id, newData) {
@@ -95,13 +95,15 @@ export const LogbookService = {
 
     entry.miles = this.convertKmToMiles(newData.kilometers);
 
-    // ❗ Використовуємо старий rateSnapshot
+    // Використовуємо старий rateSnapshot
     entry.amount = this.calculateAmount({
       miles: entry.miles,
       loads: entry.loads,
       waitingHours: entry.waitingHours,
       rate: entry.rateSnapshot
     });
+
+    entry.meals = newData.meals || createDefaultMeals();
 
     this.calculateTotals();
     saveState();
