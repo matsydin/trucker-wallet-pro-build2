@@ -54,15 +54,18 @@ export function renderLogScreen(state) {
   }
 
   listEl.innerHTML = entries.map(entry => {
+
     const distance =
       state.ui.displayUnit === "km"
         ? Number(entry.kilometers ?? 0).toFixed(1)
         : Number(entry.miles ?? 0).toFixed(1);
 
+    const mealsCount = getMealsCount(entry.meals);
+    const mealsSummary = formatMealsSummary(entry.meals);
+
     return (
-      const mealsCount = getMealsCount(entry.meals);
-      const mealsSummary = formatMealsSummary(entry.meals);
       '<div class="card">' +
+
         '<div class="card-header">' +
           '<h3>' + escapeHtml(entry.date || "") + '</h3>' +
           '<div>' +
@@ -70,15 +73,22 @@ export function renderLogScreen(state) {
             '<button data-delete="' + entry.id + '" type="button">Delete</button>' +
           '</div>' +
         '</div>' +
+
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
         '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
         '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
+
         (mealsCount > 0
-        ? '<p class="muted">' + mealsSummary + '</p>'
-        : '') +
-        '<p class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</p>' +
+          ? '<p class="muted">' + mealsSummary + '</p>'
+          : '') +
+
+        '<p class="entry-amount">$' +
+          Number(entry.amount ?? 0).toFixed(2) +
+        '</p>' +
+
       '</div>'
     );
+
   }).join("");
 }
 
