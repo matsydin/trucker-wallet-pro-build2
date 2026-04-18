@@ -242,11 +242,16 @@ export function renderArchiveScreen(state) {
                'data-period-id="' + period.id + '" ' +
                'data-id="' + entry.id + '">Edit</button>' +
 
-              '<button class="archive-action-btn archive-delete-btn" data-action="delete-archive-entry" ' +
-              'data-period-id="' + period.id + '" ' +
-              'data-id="' + entry.id + '">Delete</button>'
-
-              '</div>' +
+              html += `
+  <button 
+    class="archive-action-btn archive-delete-btn"
+    data-action="delete-archive-entry"
+    data-period-id="${period.id}"
+    data-id="${entry.id}">
+    Delete
+  </button>
+</div>
+`;
 
             '</div>'
           );
