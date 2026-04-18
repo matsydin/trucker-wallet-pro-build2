@@ -554,8 +554,28 @@ function openEntryModal(id = null) {
     const meals = entry.meals || {};
 
     mealTypes.forEach(type => {
-      const pill = document.querySelector(`.meal-pill[data-meal="${type}"]`);
-      const select = document.getElementById(`meal-${type}-location`);
+      mealTypes.forEach(type => {
+  const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
+  const checkbox = card?.querySelector(".meal-checkbox");
+  const select = card?.querySelector(".meal-select");
+
+  const taken = meals[type]?.taken;
+  const location = meals[type]?.location || "";
+
+  if (checkbox) checkbox.checked = !!taken;
+  if (card) card.classList.toggle("active", !!taken);
+  if (select) select.value = location;
+});
+      
+      mealTypes.forEach(type => {
+  const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
+  const checkbox = card?.querySelector(".meal-checkbox");
+  const select = card?.querySelector(".meal-select");
+
+  if (checkbox) checkbox.checked = false;
+  if (card) card.classList.remove("active");
+  if (select) select.value = "";
+});
 
       const taken = meals[type]?.taken;
       const location = meals[type]?.location || "";
