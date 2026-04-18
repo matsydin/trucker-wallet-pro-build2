@@ -735,3 +735,23 @@ button:active {
   gap: 8px;
   margin-top: 10px;
 }
+.meal-item {
+  margin-bottom: 16px;
+}
+
+.meal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.meal-location {
+  margin-top: 8px;
+  width: 100%;
+  display: none;
+}
+
+.meal-location:not(:disabled) {
+  display: block;
+}
