@@ -702,7 +702,20 @@ document.addEventListener("change", function(e) {
    Archive Export
 ================================ */
 function handleArchiveExport() {
-  const data = getCurrentArchiveData(); // твоя логіка отримання даних
+  const periodId = state.ui.archiveDetailId;
+
+  let data;
+  let filename;
+
+  if (periodId) {
+    data = ArchiveService.getById(periodId);
+    filename = "archive-" + (data?.periodLabel || periodId) + ".json";
+  } else {
+    data = state.archive;
+    filename = "archive-all.json";
+  }
+
+  if (!data) return;
 
   const blob = new Blob(
     [JSON.stringify(data, null, 2)],
@@ -712,7 +725,7 @@ function handleArchiveExport() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "archive-export.json";
+  a.download = filename;
   a.click();
 
   URL.revokeObjectURL(url);
