@@ -212,7 +212,7 @@ const yearTotals = getYearTotal(currentYear);
         return (
           '<div class="archive-row">' +
             '<div>' + escapeHtml(period.periodLabel) + '</div>' +
-            '<div>' + entriesCount + '</div>' +
+            '<div class="text-right">' + distance + ' ' + state.ui.displayUnit + '</div>' +
             '<div>' + Number(totals.loads ?? 0) + '</div>' +
             '<div>$' + Number(totals.amount ?? 0).toFixed(2) + '</div>' +
             '<div>' +
