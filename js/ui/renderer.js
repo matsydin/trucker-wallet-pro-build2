@@ -315,12 +315,13 @@ export function renderArchiveScreen(state) {
   if (level === "years") {
     const years = ArchiveService.getArchiveYears();
 
-    const total = years.reduce((acc, y) => {
-      acc.amount += y.amount ?? 0;
-      acc.kilometers += y.kilometers ?? 0;
-      acc.loads += y.loads ?? 0;
-      return acc;
-    }, { amount: 0, kilometers: 0, loads: 0 });
+   const total = years.reduce((acc, y) => {
+  acc.amount += y.amount ?? 0;
+  acc.kilometers += y.kilometers ?? 0;
+  acc.loads += y.loads ?? 0;
+  acc.meals += y.meals ?? 0;
+  return acc;
+}, { amount: 0, kilometers: 0, loads: 0, meals: 0 });
 
     const summary = renderSummary(total, "All Years");
 
@@ -354,11 +355,12 @@ export function renderArchiveScreen(state) {
     const months = ArchiveService.getArchiveMonths(archiveYear);
 
     const total = months.reduce((acc, m) => {
-      acc.amount += m.amount ?? 0;
-      acc.kilometers += m.kilometers ?? 0;
-      acc.loads += m.loads ?? 0;
-      return acc;
-    }, { amount: 0, kilometers: 0, loads: 0 });
+  acc.amount += m.amount ?? 0;
+  acc.kilometers += m.kilometers ?? 0;
+  acc.loads += m.loads ?? 0;
+  acc.meals += m.meals ?? 0;
+  return acc;
+}, { amount: 0, kilometers: 0, loads: 0, meals: 0 });
 
     const summary = renderSummary(total, archiveYear);
 
@@ -396,11 +398,12 @@ export function renderArchiveScreen(state) {
   const weeks = ArchiveService.getArchivedWeeks(archiveYear, archiveMonth);
 
   const total = weeks.reduce((acc, w) => {
-    acc.amount += w.totals.amount ?? 0;
-    acc.kilometers += w.totals.kilometers ?? 0;
-    acc.loads += w.totals.loads ?? 0;
-    return acc;
-  }, { amount: 0, kilometers: 0, loads: 0 });
+  acc.amount += w.totals.amount ?? 0;
+  acc.kilometers += w.totals.kilometers ?? 0;
+  acc.loads += w.totals.loads ?? 0;
+  acc.meals += w.totals.meals ?? 0;
+  return acc;
+}, { amount: 0, kilometers: 0, loads: 0, meals: 0 });
 
   const monthName = new Date(archiveYear, archiveMonth)
     .toLocaleString("en-US", { month: "long" });
