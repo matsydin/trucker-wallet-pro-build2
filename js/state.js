@@ -16,6 +16,10 @@ const defaultState = {
 
     archiveDetailId: null,
 
+     archiveView: "weeks",   // "weeks" | "months" | "years"
+     archiveYear: null,
+     archiveMonth: null,
+
     customerSearch: "",
     trailerSearch: "",
     dataTab: "customers",
