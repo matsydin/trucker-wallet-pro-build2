@@ -131,12 +131,34 @@ export function renderArchiveScreen(state) {
      BACK BUTTON
   ============================ */
 
-  let backBtn = "";
+  let header = '<div class="archive-header">';
 
-  if (level !== "years") {
-    backBtn =
-   '<button class="archive-back-btn" data-action="archive-back">← Back</button>';
-  }
+if (level === "years") {
+  header += '<h2>Archive</h2>';
+}
+
+if (level === "months") {
+  header +=
+    '<span class="archive-link" data-action="archive-back">← Archive</span>' +
+    '<h2>' + archiveYear + '</h2>';
+}
+
+if (level === "weeks") {
+  const monthName = new Date(archiveYear, archiveMonth)
+    .toLocaleString("en-US", { month: "long" });
+
+  header +=
+    '<span class="archive-link" data-action="archive-back">← ' + archiveYear + '</span>' +
+    '<h2>' + monthName + ' ' + archiveYear + '</h2>';
+}
+
+if (level === "detail") {
+  header +=
+    '<span class="archive-link" data-action="archive-back">← Back</span>' +
+    '<h2>Week Details</h2>';
+}
+
+header += '</div>';
 
   /* ============================
      SUMMARY BAR
