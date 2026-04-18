@@ -1,6 +1,7 @@
 // js/ui/renderer.js
 import { getYearTotal } from "../services/timeline.service.js";
 import { ArchiveService } from "../services/archive.service.js";
+import { ArchiveAggregationService } from "../services/archive-aggregation.service.js";
 
 function escapeHtml(value) {
   return String(value ?? "")
