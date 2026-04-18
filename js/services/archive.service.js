@@ -187,6 +187,7 @@ function recalculateArchiveTotals(periodId) {
   let loads = 0;
   let waitingHours = 0;
   let amount = 0;
+  let meals = 0;
 
   period.entries.forEach(entry => {
     kilometers += Number(entry.kilometers || 0);
