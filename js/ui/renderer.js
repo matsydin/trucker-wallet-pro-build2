@@ -209,6 +209,10 @@ export function renderArchiveScreen(state) {
           '<span>Loads</span>' +
           '<strong>' + Number(totals.loads ?? 0) + '</strong>' +
         '</div>' +
+        '<div class="summary-item">' +
+          '<span>Meals</span>' +
+          '<strong>' + Number(totals.meals ?? 0) + '</strong>' +
+        '</div>' +
 
       '</div>' +
 
