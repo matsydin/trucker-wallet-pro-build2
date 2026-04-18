@@ -26,13 +26,17 @@ function archiveCurrent() {
 
     entries: structuredClone(entries),
 
-    totals: {
-      kilometers: state.current.totals.kilometers ?? 0,
-      miles: state.current.totals.miles ?? 0,
-      loads: state.current.totals.loads ?? 0,
-      waitingHours: state.current.totals.waitingHours ?? 0,
-      amount: state.current.totals.amount ?? 0
-    }
+   totals: {
+     kilometers: state.current.totals.kilometers ?? 0,
+     miles: state.current.totals.miles ?? 0,
+     loads: state.current.totals.loads ?? 0,
+     waitingHours: state.current.totals.waitingHours ?? 0,
+     amount: state.current.totals.amount ?? 0,
+     meals: entries.reduce((acc, e) => {
+    return acc + ["breakfast","lunch","dinner"]
+      .filter(type => e.meals?.[type]?.taken).length;
+  }, 0)
+}
   };
 
   state.archive.unshift(archiveItem);
