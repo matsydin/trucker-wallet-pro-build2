@@ -275,9 +275,27 @@ export function renderArchiveScreen(state) {
   }
 
   archivePage.innerHTML =
-    '<div class="screen">' +
-      content +
-    '</div>';
+  '<div class="screen">' +
+
+    /* ===== SEGMENTED NAV ===== */
+
+    '<div class="segmented archive-segmented">' +
+      '<button data-action="set-archive-view" data-view="weeks" ' +
+        (state.ui.archiveView === "weeks" ? 'class="active"' : '') +
+      '>Weeks</button>' +
+
+      '<button data-action="set-archive-view" data-view="months" ' +
+        (state.ui.archiveView === "months" ? 'class="active"' : '') +
+      '>Months</button>' +
+
+      '<button data-action="set-archive-view" data-view="years" ' +
+        (state.ui.archiveView === "years" ? 'class="active"' : '') +
+      '>Years</button>' +
+    '</div>' +
+
+    content +
+
+  '</div>';
 }
 
 /* ======================================
