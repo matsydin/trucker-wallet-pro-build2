@@ -10,6 +10,25 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+function getMealsCount(meals) {
+  if (!meals) return 0;
+
+  return ["breakfast", "lunch", "dinner"]
+    .filter(type => meals[type]?.taken)
+    .length;
+}
+
+function formatMealsSummary(meals) {
+  if (!meals) return "";
+
+  const parts = [];
+
+  if (meals.breakfast?.taken) parts.push("B(" + meals.breakfast.location + ")");
+  if (meals.lunch?.taken) parts.push("L(" + meals.lunch.location + ")");
+  if (meals.dinner?.taken) parts.push("D(" + meals.dinner.location + ")");
+
+  return parts.length ? "Meals: " + parts.join(", ") : "";
+}
 
 /* ======================================
    RENDER LOG SCREEN
