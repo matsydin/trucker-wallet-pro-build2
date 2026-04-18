@@ -735,87 +735,95 @@ button:active {
   gap: 8px;
   margin-top: 10px;
 }
-.meal-item {
-  margin-bottom: 16px;
+/* ======================================
+   MEALS — ACCORDION STYLE (Build 2.2)
+====================================== */
+
+.meals-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.meal-row {
+.meal-card {
+  background: var(--card-elev);
+  border-radius: 16px;
+  padding: 14px 16px;
+  transition: var(--transition);
+  border: 1px solid transparent;
+}
+
+.meal-card.active {
+  border-color: var(--accent-soft);
+}
+
+.meal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 15px;
 }
 
-.meal-location {
-  margin-top: 8px;
-  width: 100%;
+.meal-body {
   display: none;
+  margin-top: 12px;
 }
 
-.meal-location:not(:disabled) {
+.meal-card.active .meal-body {
   display: block;
 }
-.meals-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+
+.meal-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
 }
 
-.meal-pill {
-  background: #ffe600;
-  border-radius: 999px;
-  padding: 10px 16px;
-  min-width: 140px;
+/* ===== Toggle Switch ===== */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
   cursor: pointer;
-  transition: 0.2s ease;
-  position: relative;
-}
-
-.meal-pill.active {
-  background: #ffd000;
-}
-
-.meal-pill-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.meal-toggle {
-  width: 36px;
-  height: 20px;
-  background: #bbb;
-  border-radius: 20px;
-  position: relative;
+  background-color: #666;
+  border-radius: 22px;
+  inset: 0;
   transition: 0.2s;
 }
 
-.meal-toggle::after {
+.slider:before {
   content: "";
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
   height: 16px;
-  background: white;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
   border-radius: 50%;
   transition: 0.2s;
 }
 
-.meal-pill.active .meal-toggle {
-  background: #4caf50;
+.switch input:checked + .slider {
+  background-color: var(--accent);
 }
 
-.meal-pill.active .meal-toggle::after {
-  left: 18px;
-}
-
-.meal-select {
-  display: none;
-  margin-top: 8px;
-  width: 100%;
-}
-
-.meal-pill.active .meal-select {
-  display: block;
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
 }
