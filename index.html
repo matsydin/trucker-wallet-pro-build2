@@ -50,69 +50,61 @@
 
 <hr>
 
+<hr>
+
 <div class="form-group">
   <label>Meals</label>
 
-  <div class="meal-item">
-    <div class="meal-row">
-      <span>Breakfast</span>
-      <label class="meal-switch">
-        <input type="checkbox" id="meal-breakfast">
-        <span class="slider"></span>
-      </label>
-    </div>
-    <select id="meal-breakfast-location" class="meal-location" disabled>
-      <option value="">Select province / US</option>
-      <option>AB</option><option>BC</option><option>MB</option>
-      <option>NB</option><option>NL</option><option>NS</option>
-      <option>NT</option><option>NU</option><option>ON</option>
-      <option>PE</option><option>QC</option><option>SK</option>
-      <option>YT</option><option>US</option>
-    </select>
-  </div>
+  <div class="meals-row">
 
-  <div class="meal-item">
-    <div class="meal-row">
-      <span>Lunch</span>
-      <label class="meal-switch">
-        <input type="checkbox" id="meal-lunch">
-        <span class="slider"></span>
-      </label>
+    <!-- Breakfast -->
+    <div class="meal-pill" data-meal="breakfast">
+      <div class="meal-pill-inner">
+        <span>Breakfast</span>
+        <div class="meal-toggle" id="meal-breakfast-toggle"></div>
+      </div>
+      <select id="meal-breakfast-location" class="meal-select">
+        <option value="">Select province / US</option>
+        <option>AB</option><option>BC</option><option>MB</option>
+        <option>NB</option><option>NL</option><option>NS</option>
+        <option>NT</option><option>NU</option><option>ON</option>
+        <option>PE</option><option>QC</option><option>SK</option>
+        <option>YT</option><option>US</option>
+      </select>
     </div>
-    <select id="meal-lunch-location" class="meal-location" disabled>
-      <option value="">Select province / US</option>
-      <option>AB</option><option>BC</option><option>MB</option>
-      <option>NB</option><option>NL</option><option>NS</option>
-      <option>NT</option><option>NU</option><option>ON</option>
-      <option>PE</option><option>QC</option><option>SK</option>
-      <option>YT</option><option>US</option>
-    </select>
-  </div>
 
-  <div class="meal-item">
-    <div class="meal-row">
-      <span>Dinner</span>
-      <label class="meal-switch">
-        <input type="checkbox" id="meal-dinner">
-        <span class="slider"></span>
-      </label>
+    <!-- Lunch -->
+    <div class="meal-pill" data-meal="lunch">
+      <div class="meal-pill-inner">
+        <span>Lunch</span>
+        <div class="meal-toggle" id="meal-lunch-toggle"></div>
+      </div>
+      <select id="meal-lunch-location" class="meal-select">
+        <option value="">Select province / US</option>
+        <option>AB</option><option>BC</option><option>MB</option>
+        <option>NB</option><option>NL</option><option>NS</option>
+        <option>NT</option><option>NU</option><option>ON</option>
+        <option>PE</option><option>QC</option><option>SK</option>
+        <option>YT</option><option>US</option>
+      </select>
     </div>
-    <select id="meal-dinner-location" class="meal-location" disabled>
-      <option value="">Select province / US</option>
-      <option>AB</option><option>BC</option><option>MB</option>
-      <option>NB</option><option>NL</option><option>NS</option>
-      <option>NT</option><option>NU</option><option>ON</option>
-      <option>PE</option><option>QC</option><option>SK</option>
-      <option>YT</option><option>US</option>
-    </select>
-  </div>
 
-</div>
-
-      <button class="primary-btn" id="save-entry" type="button">
-        Save Entry
-      </button>
+    <!-- Dinner -->
+    <div class="meal-pill" data-meal="dinner">
+      <div class="meal-pill-inner">
+        <span>Dinner</span>
+        <div class="meal-toggle" id="meal-dinner-toggle"></div>
+      </div>
+      <select id="meal-dinner-location" class="meal-select">
+        <option value="">Select province / US</option>
+        <option>AB</option><option>BC</option><option>MB</option>
+        <option>NB</option><option>NL</option><option>NS</option>
+        <option>NT</option><option>NU</option><option>ON</option>
+        <option>PE</option><option>QC</option><option>SK</option>
+        <option>YT</option><option>US</option>
+      </select>
     </div>
+
   </div>
 </div>
 
