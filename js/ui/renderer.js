@@ -235,65 +235,78 @@ export function renderArchiveScreen(state) {
   ============================ */
 
   if (level === "detail") {
-    const period = allPeriods.find(p => p.id === archiveDetailId);
-    if (!period) return;
+  const period = allPeriods.find(p => p.id === archiveDetailId);
+  if (!period) return;
 
-    const summary = renderSummary(period.totals, period.periodLabel);
+  const summary = renderSummary(period.totals, period.periodLabel);
 
-    const entries =
-      '<div class="archive-entries">' +
+  const entries =
+    '<div class="archive-entries">' +
 
-        (period.entries || []).map(entry => {
+      (period.entries || []).map(entry => {
 
-          const distance =
-            state.ui.displayUnit === "km"
-              ? Number(entry.kilometers ?? 0).toFixed(1)
-              : Number(entry.miles ?? 0).toFixed(1);
-          const mealsCount = getMealsCount(entry.meals);
-          const mealsSummary = formatMealsSummary(entry.meals);
-          return (
-  '<div class="archive-entry-card">' +
+        const distance =
+          state.ui.displayUnit === "km"
+            ? Number(entry.kilometers ?? 0).toFixed(1)
+            : Number(entry.miles ?? 0).toFixed(1);
 
-    '<div class="entry-top">' +
-      '<div class="entry-date">' + escapeHtml(entry.date) + '</div>' +
-      '<div class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</div>' +
-    '</div>' +
+        const mealsCount = getMealsCount(entry.meals);
+        const mealsSummary = formatMealsSummary(entry.meals);
 
-    '<div class="entry-meta">' +
-      distance + ' ' + state.ui.displayUnit +
-      ' • Loads: ' + Number(entry.loads ?? 0) +
-      ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
-    '</div>' +
-    (mealsCount > 0
-  ? '<div class="entry-meals muted">' + mealsSummary + '</div>'
-  : '') +
-    '<div class="entry-actions">' +
+        return (
+          '<div class="archive-entry-card">' +
 
-      '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
-      'data-period-id="' + period.id + '" ' +
-      'data-id="' + entry.id + '">Edit</button>' +
+            '<div class="entry-top">' +
+              '<div class="entry-date">' +
+                escapeHtml(entry.date || "") +
+              '</div>' +
+              '<div class="entry-amount">$' +
+                Number(entry.amount ?? 0).toFixed(2) +
+              '</div>' +
+            '</div>' +
 
-      '<button class="archive-action-btn archive-delete-btn" data-action="delete-archive-entry" ' +
-      'data-period-id="' + period.id + '" ' +
-      'data-id="' + entry.id + '">Delete</button>' +
+            '<div class="entry-meta">' +
+              distance + ' ' + state.ui.displayUnit +
+              ' • Loads: ' + Number(entry.loads ?? 0) +
+              ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
+            '</div>' +
 
-    '</div>' +
+            (mealsCount > 0
+              ? '<div class="entry-meals muted">' + mealsSummary + '</div>'
+              : '') +
 
-  '</div>'
-);
-        }).join("") +
+            '<div class="entry-actions">' +
 
-      '</div>';
+              '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
+                'data-period-id="' + period.id + '" ' +
+                'data-id="' + entry.id + '">' +
+                'Edit' +
+              '</button>' +
 
-    archivePage.innerHTML =
-      '<div class="screen">' +
-        header +
-        summary +
-        entries +
-      '</div>';
+              '<button class="archive-action-btn archive-delete-btn" data-action="delete-archive-entry" ' +
+                'data-period-id="' + period.id + '" ' +
+                'data-id="' + entry.id + '">' +
+                'Delete' +
+              '</button>' +
 
-    return;
-  }
+            '</div>' +
+
+          '</div>'
+        );
+
+      }).join("") +
+
+    '</div>';
+
+  archivePage.innerHTML =
+    '<div class="screen">' +
+      header +
+      summary +
+      entries +
+    '</div>';
+
+  return;
+}
 
   /* ============================
      YEARS VIEW
