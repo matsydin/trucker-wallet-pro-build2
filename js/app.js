@@ -256,6 +256,22 @@ function handleClick(e) {
     saveArchiveEntryFromModal();
     return;
   }
+    if (action === "open-archive-year") {
+    state.ui.archiveYear = Number(actionBtn.dataset.year);
+    state.ui.archiveView = "months";
+    saveState();
+    render();
+    return;
+  }
+
+  if (action === "open-archive-month") {
+    state.ui.archiveYear = Number(actionBtn.dataset.year);
+    state.ui.archiveMonth = Number(actionBtn.dataset.month);
+    state.ui.archiveView = "weeks";
+    saveState();
+    render();
+    return;
+  }
 
   /* ===== CUSTOMERS ===== */
 
