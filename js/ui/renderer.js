@@ -60,6 +60,8 @@ export function renderLogScreen(state) {
         : Number(entry.miles ?? 0).toFixed(1);
 
     return (
+      const mealsCount = getMealsCount(entry.meals);
+      const mealsSummary = formatMealsSummary(entry.meals);
       '<div class="card">' +
         '<div class="card-header">' +
           '<h3>' + escapeHtml(entry.date || "") + '</h3>' +
@@ -71,6 +73,9 @@ export function renderLogScreen(state) {
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
         '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
         '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
+        (mealsCount > 0
+        ? '<p class="muted">' + mealsSummary + '</p>'
+        : '') +
         '<p class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</p>' +
       '</div>'
     );
