@@ -238,13 +238,13 @@ export function renderArchiveScreen(state) {
 
               '<div class="entry-actions">' +
 
-                '<button class="ghost-btn" data-action="edit-archive-entry" ' +
-                  'data-period-id="' + period.id + '" ' +
-                  'data-id="' + entry.id + '">Edit</button>' +
+               '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
+               'data-period-id="' + period.id + '" ' +
+               'data-id="' + entry.id + '">Edit</button>' +
 
-                '<button class="danger-btn" data-action="delete-archive-entry" ' +
-                  'data-period-id="' + period.id + '" ' +
-                  'data-id="' + entry.id + '">Delete</button>' +
+              '<button class="archive-action-btn archive-delete-btn" data-action="delete-archive-entry" ' +
+              'data-period-id="' + period.id + '" ' +
+              'data-id="' + entry.id + '">Delete</button>'
 
               '</div>' +
 
