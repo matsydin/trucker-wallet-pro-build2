@@ -291,22 +291,7 @@ if (!target) return;
   render();
   return;
 }
-  if (action === "set-archive-view") {
-  state.ui.archiveView = actionBtn.dataset.view;
-
-  if (state.ui.archiveView === "years") {
-    state.ui.archiveYear = null;
-    state.ui.archiveMonth = null;
-  }
-
-  if (state.ui.archiveView === "months") {
-    state.ui.archiveMonth = null;
-  }
-
-  saveState();
-  render();
-  return;
-}
+  
 
   /* ===== CUSTOMERS ===== */
 
