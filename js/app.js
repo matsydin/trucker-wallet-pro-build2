@@ -621,25 +621,25 @@ function saveEntryFromModal() {
   /* ===== MEALS ===== */
 
   const mealTypes = ["breakfast", "lunch", "dinner"];
-  const meals = {};
+const meals = {};
 
-  for (let type of mealTypes) {
-    const checkbox = document.getElementById(`meal-${type}`);
-    const select = document.getElementById(`meal-${type}-location`);
+for (let type of mealTypes) {
+  const pill = document.querySelector(`.meal-pill[data-meal="${type}"]`);
+  const select = document.getElementById(`meal-${type}-location`);
 
-    const taken = checkbox?.checked;
-    const location = select?.value;
+  const taken = pill?.classList.contains("active");
+  const location = select?.value;
 
-    if (taken && !location) {
-      alert(`${type} location required`);
-      return;
-    }
-
-    meals[type] = {
-      taken: !!taken,
-      location: taken ? location : ""
-    };
+  if (taken && !location) {
+    alert(`${type} location required`);
+    return;
   }
+
+  meals[type] = {
+    taken,
+    location: taken ? location : ""
+  };
+}
 
   const payload = {
     kilometers,
