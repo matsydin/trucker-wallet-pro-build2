@@ -278,13 +278,12 @@ if (!target) return;
 }
 
   if (action === "open-archive-month") {
-    state.ui.archiveYear = Number(actionBtn.dataset.year);
-    state.ui.archiveMonth = Number(actionBtn.dataset.month);
-    state.ui.archiveView = "weeks";
-    saveState();
-    render();
-    return;
-  }
+  state.ui.archiveYear = Number(actionBtn.dataset.year);
+  state.ui.archiveMonth = Number(actionBtn.dataset.month);
+  saveState();
+  render();
+  return;
+}
   if (action === "archive-back") {
   if (state.ui.archiveDetailId) {
     state.ui.archiveDetailId = null;
