@@ -162,36 +162,35 @@ export function renderArchiveScreen(state) {
   ============================ */
 
   function renderSummary(totals, label) {
-    return (
-      '<div class="archive-summary">' +
+  return (
+    '<div class="archive-summary">' +
 
-        '<div class="archive-summary-top">' +
-          '<h3>' + label + '</h3>' +
-      
+      '<div class="archive-summary-top">' +
+        '<h3>' + label + '</h3>' +
+      '</div>' +
+
+      '<div class="archive-summary-grid">' +
+
+        '<div class="summary-item">' +
+          '<span>Gross</span>' +
+          '<strong>$' + Number(totals.amount ?? 0).toFixed(2) + '</strong>' +
         '</div>' +
 
-        '<div class="archive-summary-grid">' +
-
-          '<div class="summary-item">' +
-            '<span>Gross</span>' +
-            '<strong>$' + Number(totals.amount ?? 0).toFixed(2) + '</strong>' +
-          '</div>' +
-
-          '<div class="summary-item">' +
-            '<span>Distance</span>' +
-            '<strong>' + Number(totals.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</strong>' +
-          '</div>' +
-
-          '<div class="summary-item">' +
-            '<span>Loads</span>' +
-            '<strong>' + Number(totals.loads ?? 0) + '</strong>' +
-          '</div>' +
-
+        '<div class="summary-item">' +
+          '<span>Distance</span>' +
+          '<strong>' + Number(totals.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</strong>' +
         '</div>' +
 
-      '</div>'
-    );
-  }
+        '<div class="summary-item">' +
+          '<span>Loads</span>' +
+          '<strong>' + Number(totals.loads ?? 0) + '</strong>' +
+        '</div>' +
+
+      '</div>' +
+
+    '</div>'
+  );
+}
 
   /* ============================
      DETAIL VIEW
