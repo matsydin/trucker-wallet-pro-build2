@@ -276,6 +276,19 @@ if (!target) return;
     render();
     return;
   }
+  if (action === "archive-back") {
+  if (state.ui.archiveDetailId) {
+    state.ui.archiveDetailId = null;
+  } else if (state.ui.archiveMonth !== null) {
+    state.ui.archiveMonth = null;
+  } else if (state.ui.archiveYear !== null) {
+    state.ui.archiveYear = null;
+  }
+
+  saveState();
+  render();
+  return;
+}
   if (action === "set-archive-view") {
   state.ui.archiveView = actionBtn.dataset.view;
 
