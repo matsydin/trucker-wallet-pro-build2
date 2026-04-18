@@ -221,40 +221,33 @@ export function renderArchiveScreen(state) {
               : Number(entry.miles ?? 0).toFixed(1);
 
           return (
-            '<div class="archive-entry-card">' +
+  '<div class="archive-entry-card">' +
 
-              '<div class="entry-top">' +
-                '<div class="entry-date">' + escapeHtml(entry.date) + '</div>' +
-                '<div class="entry-amount">$' +
-                  Number(entry.amount ?? 0).toFixed(2) +
-                '</div>' +
-              '</div>' +
+    '<div class="entry-top">' +
+      '<div class="entry-date">' + escapeHtml(entry.date) + '</div>' +
+      '<div class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</div>' +
+    '</div>' +
 
-              '<div class="entry-meta">' +
-                distance + ' ' + state.ui.displayUnit +
-                ' • Loads: ' + Number(entry.loads ?? 0) +
-                ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
-              '</div>' +
+    '<div class="entry-meta">' +
+      distance + ' ' + state.ui.displayUnit +
+      ' • Loads: ' + Number(entry.loads ?? 0) +
+      ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
+    '</div>' +
 
-              '<div class="entry-actions">' +
+    '<div class="entry-actions">' +
 
-               '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
-               'data-period-id="' + period.id + '" ' +
-               'data-id="' + entry.id + '">Edit</button>' +
+      '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
+      'data-period-id="' + period.id + '" ' +
+      'data-id="' + entry.id + '">Edit</button>' +
 
-              html += `
-  <button 
-    class="archive-action-btn archive-delete-btn"
-    data-action="delete-archive-entry"
-    data-period-id="${period.id}"
-    data-id="${entry.id}">
-    Delete
-  </button>
-</div>
-`;
+      '<button class="archive-action-btn archive-delete-btn" data-action="delete-archive-entry" ' +
+      'data-period-id="' + period.id + '" ' +
+      'data-id="' + entry.id + '">Delete</button>' +
 
-            '</div>'
-          );
+    '</div>' +
+
+  '</div>'
+);
         }).join("") +
 
       '</div>';
