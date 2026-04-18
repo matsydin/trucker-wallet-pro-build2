@@ -145,7 +145,12 @@ export function renderDataScreen(state) {
 ====================================== */
 
 export function renderArchiveScreen(state) {
+  const { archiveView } = state.ui;
   const archivePage = document.querySelector('[data-page="archive"]');
+  if (archiveView === "years") {
+  renderArchiveYears(state);
+  return;
+}
   if (!archivePage) return;
 
   const { archiveYear, archiveMonth, archiveDetailId } = state.ui;
