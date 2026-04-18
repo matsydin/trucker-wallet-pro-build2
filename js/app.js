@@ -695,6 +695,21 @@ document.addEventListener("change", function(e) {
     normalizeTrailerPlateLive();
     return;
   }
+    // Meals toggle
+  if (e.target.id.startsWith("meal-") && !e.target.id.includes("location")) {
+    const type = e.target.id.replace("meal-", "");
+    const select = document.getElementById(`meal-${type}-location`);
+
+    if (select) {
+      select.disabled = !e.target.checked;
+
+      if (!e.target.checked) {
+        select.value = "";
+      }
+    }
+
+    return;
+  }
 });
 /* ===============================
    Archive Export
