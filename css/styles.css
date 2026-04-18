@@ -227,7 +227,7 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 100;
+  z-index: 9999;
 }
 
 .modal[hidden] {
@@ -235,10 +235,11 @@ body {
 }
 
 .modal-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(4px);
+  z-index: 9998;
 }
 
 .modal-sheet {
