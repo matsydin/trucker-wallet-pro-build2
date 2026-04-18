@@ -192,13 +192,13 @@ const yearTotals = getYearTotal(currentYear);
     '<h3>Archived Weeks</h3>' +
     '<div class="archive-table">' +
 
-      '<div class="archive-row archive-header">' +
-        '<div>Week Period</div>' +
-        '<div>Entries</div>' +
-        '<div>Loads</div>' +
-        '<div>Total</div>' +
-        '<div></div>' +
-      '</div>' +
+  '<div class="archive-row archive-header">' +
+  '<div>Week</div>' +
+  '<div>Distance</div>' +
+  '<div>Loads</div>' +
+  '<div>Total</div>' +
+  '<div></div>' +
+'</div>' +
 
       archive.map(period => {
         const totals = period.totals || {};
