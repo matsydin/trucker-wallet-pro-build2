@@ -144,7 +144,10 @@ export function renderDataScreen(state) {
    RENDER ARCHIVE SCREEN
 ====================================== */
 export function renderArchiveScreen(state) {
-
+if (state.ui.archiveView === "years-table") {
+  renderArchiveYearsTable(state);
+  return;
+}
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
 
@@ -417,6 +420,55 @@ $$
           </div>
         `;
       }).join("")}
+    </div>
+  `;
+}
+function renderArchiveYearsTable(state) {
+
+  const container = document.querySelector('[data-page="archive"]');
+  if (!container) return;
+
+  const years = ArchiveAggregationService.getYearsSummary();
+
+  container.innerHTML = `
+    <div class="archive-table-screen">
+
+      <div class="archive-title">Archive</div>
+
+      <div class="archive-segmented">
+        <button class="active">Years</button>
+        <button>Months</button>
+        <button>Weeks</button>
+      </div>
+
+      <div class="archive-grid">
+
+        <div class="archive-grid-header">
+          <div>YEAR</div>
+          <div>DISTANCE</div>
+          <div>LOADS</div>
+          <div>MEALS</div>
+          <div>WAITING</div>
+          <div>TOTAL</div>
+        </div>
+
+        ${years.map(y => `
+          <div class="archive-grid-row"
+               data-action="archive-open-year"
+               data-year="${y.year}">
+
+            <div>${y.year}</div>
+            <div>${y.distance.toFixed(0)}</div>
+            <div>${y.loads}</div>
+            <div>${y.meals}</div>
+            <div>${y.waiting.toFixed(1)}</div>
+            <div>$${y.total.toFixed(2)}</div>
+
+          </div>
+        `).join("")}
+
+      </div>
+
     </div>
   `;
 }
