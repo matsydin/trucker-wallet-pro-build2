@@ -138,7 +138,9 @@ function normalizeTrailerPlateLive() {
 function handleClick(e) {
 
   const target = e.target;
-if (!target) return;
+  if (!target) return;
+
+  /* ===== TABS ===== */
 
   const tab = target.closest(".tab");
   if (tab) {
@@ -157,6 +159,8 @@ if (!target) return;
     toggleTheme();
     return;
   }
+
+  /* ===== LOG ===== */
 
   if (target.closest(".fab") && state.ui.activeTab === "log") {
     editingEntryId = null;
@@ -196,14 +200,16 @@ if (!target) return;
   }
 
   const actionBtn = target.matches("[data-action]")
-  ? target
-  : target.closest("[data-action]");
-  
+    ? target
+    : target.closest("[data-action]");
+
   if (!actionBtn) return;
 
   const action = actionBtn.dataset.action;
   const id = actionBtn.dataset.id;
   const periodId = actionBtn.dataset.periodId;
+
+  /* ===== DATA TAB ===== */
 
   if (action === "set-data-tab") {
     state.ui.dataTab = actionBtn.dataset.tab;
@@ -212,7 +218,7 @@ if (!target) return;
     return;
   }
 
-  /* ===== LOG ===== */
+  /* ===== LOG ENTRY EDIT ===== */
 
   if (action === "edit-log-entry") {
     editingEntryId = id;
@@ -220,21 +226,9 @@ if (!target) return;
     return;
   }
 
-  /* ===== ARCHIVE ===== */
-
-  if (action === "open-archive") {
-    state.ui.archiveDetailId = id;
-    saveState();
-    render();
-    return;
-  }
-
-  if (action === "close-archive") {
-    state.ui.archiveDetailId = null;
-    saveState();
-    render();
-    return;
-  }
+  /* ===================================================
+     ARCHIVE — CORE ACTIONS
+  =================================================== */
 
   if (action === "delete-archive") {
     if (confirm("Delete this archived period?")) {
@@ -243,9 +237,12 @@ if (!target) return;
     }
     return;
   }
+
   if (action === "export-archive") {
-  handleArchiveExport();
-}
+    handleArchiveExport();
+    return;
+  }
+
   if (action === "edit-archive-entry") {
     editingArchivePeriodId = periodId;
     editingArchiveEntryId = id;
@@ -271,36 +268,58 @@ if (!target) return;
     saveArchiveEntryFromModal();
     return;
   }
-    if (action === "open-archive-year") {
-  state.ui.archiveYear = Number(actionBtn.dataset.year);
-  saveState();
-  render();
-  return;
-}
 
-  if (action === "open-archive-month") {
-  state.ui.archiveYear = Number(actionBtn.dataset.year);
-  state.ui.archiveMonth = Number(actionBtn.dataset.month);
-  saveState();
-  render();
-  return;
-}
-  if (action === "archive-back") {
-  if (state.ui.archiveDetailId) {
-    state.ui.archiveDetailId = null;
-  } else if (state.ui.archiveMonth !== null) {
-    state.ui.archiveMonth = null;
-  } else if (state.ui.archiveYear !== null) {
-    state.ui.archiveYear = null;
+  /* ===================================================
+     ARCHIVE — NEW HIERARCHY NAVIGATION
+  =================================================== */
+
+  if (action === "archive-open-year") {
+    state.ui.archiveYear = Number(actionBtn.dataset.year);
+    state.ui.archiveView = "months";
+    saveState();
+    render();
+    return;
   }
 
-  saveState();
-  render();
-  return;
-}
-  
+  if (action === "archive-open-month") {
+    state.ui.archiveMonth = Number(actionBtn.dataset.month);
+    state.ui.archiveView = "weeks";
+    saveState();
+    render();
+    return;
+  }
 
-  /* ===== CUSTOMERS ===== */
+  if (action === "archive-open-week") {
+    state.ui.archiveWeekId = id;
+    state.ui.archiveView = "entries";
+    saveState();
+    render();
+    return;
+  }
+
+  if (action === "archive-back") {
+
+    if (state.ui.archiveView === "entries") {
+      state.ui.archiveView = "weeks";
+      state.ui.archiveWeekId = null;
+    }
+    else if (state.ui.archiveView === "weeks") {
+      state.ui.archiveView = "months";
+      state.ui.archiveMonth = null;
+    }
+    else if (state.ui.archiveView === "months") {
+      state.ui.archiveView = "years";
+      state.ui.archiveYear = null;
+    }
+
+    saveState();
+    render();
+    return;
+  }
+
+  /* ===================================================
+     CUSTOMERS
+  =================================================== */
 
   if (action === "open-add-customer") {
     editingCustomerId = null;
@@ -351,7 +370,9 @@ if (!target) return;
     return;
   }
 
-  /* ===== FLEET ===== */
+  /* ===================================================
+     TRAILERS
+  =================================================== */
 
   if (action === "open-add-trailer") {
     editingTrailerId = null;
