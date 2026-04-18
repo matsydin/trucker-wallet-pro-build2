@@ -602,33 +602,46 @@ function saveEntryFromModal() {
   const loads = parseInt(pickupsInput.value || "0", 10);
   const waitingHours = parseFloat(waitingInput.value || "0");
 
-  if (!date || !kilometers || kilometers <= 0) return;
-
-  const mealTypes = ["breakfast", "lunch", "dinner"];
-const meals = {};
-
-for (let type of mealTypes) {
-  const taken = document.getElementById(`meal-${type}`)?.checked;
-  const location = document.getElementById(`meal-${type}-location`)?.value;
-
-  if (taken && !location) {
-    alert(`${type} location required`);
+  if (!date) {
+    alert("Date required");
     return;
   }
 
-  meals[type] = {
-    taken: !!taken,
-    location: taken ? location : ""
-  };
-}
+  if (!kilometers || kilometers <= 0) {
+    alert("Distance must be greater than 0");
+    return;
+  }
 
-const payload = {
-  kilometers,
-  date,
-  loads,
-  waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours,
-  meals
-};
+  /* ===== MEALS ===== */
+
+  const mealTypes = ["breakfast", "lunch", "dinner"];
+  const meals = {};
+
+  for (let type of mealTypes) {
+    const checkbox = document.getElementById(`meal-${type}`);
+    const select = document.getElementById(`meal-${type}-location`);
+
+    const taken = checkbox?.checked;
+    const location = select?.value;
+
+    if (taken && !location) {
+      alert(`${type} location required`);
+      return;
+    }
+
+    meals[type] = {
+      taken: !!taken,
+      location: taken ? location : ""
+    };
+  }
+
+  const payload = {
+    kilometers,
+    date,
+    loads,
+    waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours,
+    meals
+  };
 
   if (editingEntryId) {
     LogbookService.editEntry(editingEntryId, payload);
@@ -636,11 +649,8 @@ const payload = {
     LogbookService.addEntry(payload);
   }
 
-  distanceInput.value = "";
-  pickupsInput.value = "";
-  waitingInput.value = "";
-
   editingEntryId = null;
+
   closeEntryModal();
   render();
 }
