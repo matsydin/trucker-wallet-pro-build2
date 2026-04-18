@@ -728,3 +728,31 @@ button:active {
   justify-content: center;
   z-index: 1100;
 }
+/* ======================================
+   ARCHIVE TABLE
+====================================== */
+
+.archive-table {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.archive-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.archive-header {
+  font-weight: 600;
+  opacity: 0.8;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.archive-row button {
+  padding: 6px 12px;
+  font-size: 14px;
+}
