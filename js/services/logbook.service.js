@@ -73,6 +73,14 @@ export const LogbookService = {
 
     this.calculateTotals();
     saveState();
+    
+    function createDefaultMeals() {
+  return {
+    breakfast: { taken: false, location: "" },
+    lunch: { taken: false, location: "" },
+    dinner: { taken: false, location: "" }
+  };
+}
   },
 
   editEntry(id, newData) {
