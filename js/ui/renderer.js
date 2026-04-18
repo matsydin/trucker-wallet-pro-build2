@@ -180,7 +180,7 @@ const yearTotals = getYearTotal(currentYear);
     return;
   }
 
-  archivePage.innerHTML =
+ archivePage.innerHTML =
   '<div class="card">' +
     '<h3>' + currentYear + ' Summary</h3>' +
     '<p>Gross: $' + Number(yearTotals.amount ?? 0).toFixed(2) + '</p>' +
@@ -188,25 +188,37 @@ const yearTotals = getYearTotal(currentYear);
     '<p>Waiting: ' + Number(yearTotals.waitingHours ?? 0).toFixed(1) + ' h</p>' +
   '</div>' +
 
-  archive.map(period => {
-    const totals = period.totals || {};
+  '<div class="card">' +
+    '<h3>Archived Weeks</h3>' +
+    '<div class="archive-table">' +
 
-    const distance =
-      state.ui.displayUnit === "km"
-        ? Number(totals.kilometers ?? 0).toFixed(1)
-        : Number(totals.miles ?? 0).toFixed(1);
+      '<div class="archive-row archive-header">' +
+        '<div>Week Period</div>' +
+        '<div>Entries</div>' +
+        '<div>Loads</div>' +
+        '<div>Total</div>' +
+        '<div></div>' +
+      '</div>' +
 
-    return (
-      '<div class="card">' +
-        '<h3>' + escapeHtml(period.periodLabel) + '</h3>' +
-        '<p>Gross: $' + Number(totals.amount ?? 0).toFixed(2) + '</p>' +
-        '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
-        '<p>Loads: ' + Number(totals.loads ?? 0) + '</p>'+
-        '<button data-action="open-archive" data-id="' + period.id + '" type="button">View</button>' +
-        '<button data-action="delete-archive" data-id="' + period.id + '" type="button">Delete</button>' +
-      '</div>'
-    );
-  }).join("");
+      archive.map(period => {
+        const totals = period.totals || {};
+        const entriesCount = (period.entries || []).length;
+
+        return (
+          '<div class="archive-row">' +
+            '<div>' + escapeHtml(period.periodLabel) + '</div>' +
+            '<div>' + entriesCount + '</div>' +
+            '<div>' + Number(totals.loads ?? 0) + '</div>' +
+            '<div>$' + Number(totals.amount ?? 0).toFixed(2) + '</div>' +
+            '<div>' +
+              '<button data-action="open-archive" data-id="' + period.id + '" type="button">View</button>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join("") +
+
+    '</div>' +
+  '</div>';
 }
 
 /* ======================================
