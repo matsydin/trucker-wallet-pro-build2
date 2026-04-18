@@ -168,6 +168,7 @@ body {
   justify-content: center;
   z-index: 1100;
 }
+
 /* ===== TAB BAR ===== */
 
 .tabbar {
@@ -175,40 +176,32 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-
   padding: 12px 16px calc(12px + var(--safe-bottom));
-
   background: var(--bg);
-
   display: flex;
   justify-content: center;
 }
 
 .tabbar-inner {
   display: flex;
-  width: 100%;              /* ✅ ГОЛОВНЕ */
-  max-width: 600px;         /* ✅ красиво на великих екранах */
-  
+  width: 100%;
+  max-width: 600px;
   background: var(--card-elev);
   border-radius: 16px;
   padding: 6px;
 }
+
 .tab {
   flex: 1;
-
   background: transparent;
   border: none;
   outline: none;
-
   -webkit-appearance: none;
   appearance: none;
-
   padding: 10px 0;
   border-radius: 12px;
-
   font-size: 13px;
   font-weight: 600;
-
   color: var(--text-secondary);
   transition: var(--transition);
 }
@@ -217,9 +210,8 @@ body {
   background: var(--accent);
   color: #000;
 }
-/* ===============================
-   MODAL
-================================ */
+
+/* ===== MODAL ===== */
 
 .modal {
   position: fixed;
@@ -246,10 +238,11 @@ body {
   position: relative;
   width: 100%;
   max-width: 600px;
-  background: var(--card-bg, #111c2d);
+  background: var(--card);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   padding: 20px;
+  padding-bottom: calc(20px + var(--safe-bottom));
   box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
 }
 
@@ -270,7 +263,15 @@ body {
   border: none;
   font-size: 20px;
   color: inherit;
+  cursor: pointer;
 }
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== FORM ===== */
 
 .form-group {
   margin-bottom: 16px;
@@ -283,15 +284,47 @@ body {
   opacity: 0.7;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
   border: none;
-  background: #1c2a44;
-  color: white;
+  background: var(--card-elev);
+  color: var(--text);
   font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  transition: box-shadow var(--transition), background var(--transition);
 }
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.form-error {
+  min-height: 18px;
+  margin-top: -6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--danger);
+}
+
+/* ===== PRIMARY BUTTON ===== */
 
 .primary-btn {
   width: 100%;
@@ -299,13 +332,10 @@ body {
   border-radius: 14px;
   border: none;
   font-weight: 600;
-  background: #d4af37;
+  background: var(--accent);
   color: #000;
   font-size: 16px;
 }
-/* =========================================
-   BUILD 2 — FLEET / MODAL POLISH PATCH
-========================================= */
 
 /* ===== SCREEN / HEADERS ===== */
 
@@ -397,45 +427,6 @@ body {
   transform: scale(0.98);
 }
 
-/* ===== FORM ===== */
-
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: var(--card-elev);
-  color: var(--text);
-  font-size: 16px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 96px;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--text-secondary);
-}
-
-.form-group input {
-  background: var(--card-elev);
-  color: var(--text);
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-  outline: none;
-  transition: box-shadow var(--transition), background var(--transition);
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  box-shadow: 0 0 0 2px var(--accent-soft);
-}
-
 /* ===== SEARCH ===== */
 
 input[data-action="customer-search"],
@@ -447,33 +438,6 @@ input[data-action="trailer-search"] {
   background: var(--card-elev);
   color: var(--text);
   font-size: 16px;
-}
-
-/* ===== ERROR ===== */
-
-.form-error {
-  min-height: 18px;
-  margin-top: -6px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--danger);
-}
-
-/* ===== MODAL BODY ===== */
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-sheet {
-  background: var(--card);
-  padding-bottom: calc(20px + var(--safe-bottom));
-}
-
-.modal-close {
-  cursor: pointer;
 }
 
 /* ===== SWITCH ROW ===== */
@@ -509,198 +473,7 @@ input[data-action="trailer-search"] {
   background: #eef2f7;
 }
 
-/* ===== SMALL INTERACTION POLISH ===== */
-
-button {
-  cursor: pointer;
-}
-
-button:active {
-  transform: scale(0.99);
-}
-/* =========================================
-   BUILD 2 — LOG / ARCHIVE / FLEET POLISH
-========================================= */
-
-.screen {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.screen-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.screen-header h2,
-.screen-header h3 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.data-segmented {
-  margin-bottom: 4px;
-}
-
-.card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.card-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.card-header > div:last-child {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.card p {
-  margin: 6px 0;
-  line-height: 1.4;
-}
-
-.muted {
-  color: var(--text-secondary);
-}
-
-.empty-state {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 20px 16px;
-  text-align: center;
-  color: var(--text-secondary);
-}
-
-.card button:not(.primary-btn) {
-  border: none;
-  border-radius: 10px;
-  padding: 8px 12px;
-  background: var(--card-elev);
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-.card button:not(.primary-btn):active {
-  transform: scale(0.98);
-}
-
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: var(--card-elev);
-  color: var(--text);
-  font-size: 16px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 96px;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--text-secondary);
-}
-
-.form-group input {
-  background: var(--card-elev);
-  color: var(--text);
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-  outline: none;
-  transition: box-shadow var(--transition), background var(--transition);
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  box-shadow: 0 0 0 2px var(--accent-soft);
-}
-
-input[data-action="customer-search"],
-input[data-action="trailer-search"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: none;
-  background: var(--card-elev);
-  color: var(--text);
-  font-size: 16px;
-}
-
-.form-error {
-  min-height: 18px;
-  margin-top: -6px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--danger);
-}
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-sheet {
-  background: var(--card);
-  padding-bottom: calc(20px + var(--safe-bottom));
-}
-
-.modal-close {
-  cursor: pointer;
-}
-
-.switch-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.switch-row input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-}
-
-.full-width {
-  width: 100%;
-}
-
-[data-theme="light"] .form-group input,
-[data-theme="light"] .form-group textarea,
-[data-theme="light"] input[data-action="customer-search"],
-[data-theme="light"] input[data-action="trailer-search"] {
-  background: #eef2f7;
-  color: var(--text);
-}
-
-[data-theme="light"] .card button:not(.primary-btn) {
-  background: #eef2f7;
-}
+/* ===== GLOBAL BUTTON ===== */
 
 button {
   cursor: pointer;
@@ -710,25 +483,6 @@ button:active {
   transform: scale(0.99);
 }
 
-/* FAB FIX */
-.fab {
-  position: fixed;
-  right: 24px;
-  bottom: calc(96px + var(--safe-bottom));
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: none;
-  background: var(--accent);
-  color: #000;
-  font-size: 28px;
-  font-weight: bold;
-  box-shadow: 0 8px 20px var(--accent-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1100;
-}
 /* ======================================
    ARCHIVE TABLE
 ====================================== */
@@ -743,17 +497,18 @@ button:active {
   grid-template-columns: 2fr 1fr 1fr 1fr 80px;
   gap: 12px;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.archive-header {
-  font-weight: 600;
-  opacity: 0.8;
+.archive-row.archive-header {
+  font-size: 12px;
+  opacity: 0.6;
+  text-transform: uppercase;
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-.archive-header div {
+.archive-row.archive-header div {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
@@ -761,6 +516,15 @@ button:active {
 
 .archive-row div {
   min-width: 0;
+}
+
+.archive-row div:last-child {
+  text-align: right;
+}
+
+.archive-row div:nth-child(2) {
+  text-align: right;
+  font-weight: 500;
 }
 
 .archive-row button {
@@ -772,28 +536,61 @@ button:active {
 .text-right {
   text-align: right;
 }
-/* ===============================
-   ARCHIVE BACK
-================================ */
+
+/* ======================================
+   ARCHIVE HEADER
+====================================== */
+
+.archive-header {
+  margin-bottom: 20px;
+}
+
+.archive-header h2 {
+  margin: 6px 0 0 0;
+  font-size: 22px;
+}
+
+.archive-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.archive-link {
+  font-size: 14px;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.archive-link:hover {
+  opacity: 1;
+}
+
+/* ======================================
+   ARCHIVE BACK BUTTON
+====================================== */
 
 .archive-back-btn {
-  background: none;
-  border: none;
-  color: var(--accent);
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 500;
   font-size: 14px;
-  margin-bottom: 16px;
   cursor: pointer;
-  padding: 0;
+  border: none;
+  margin-bottom: 8px;
 }
 
 .archive-back-btn:hover {
-  text-decoration: underline;
+  opacity: 0.9;
 }
 
-
-/* ===============================
+/* ======================================
    ARCHIVE SUMMARY
-================================ */
+====================================== */
 
 .archive-summary {
   background: linear-gradient(
@@ -813,24 +610,10 @@ button:active {
   margin-bottom: 16px;
 }
 
-.archive-summary-top h2 {
+.archive-summary-top h2,
+.archive-summary-top h3 {
   margin: 0;
   font-size: 20px;
-}
-
-.export-btn {
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.export-btn:hover {
-  background: var(--accent);
-  color: #000;
 }
 
 .archive-summary-grid {
@@ -850,75 +633,30 @@ button:active {
   font-size: 18px;
 }
 
+/* ======================================
+   ARCHIVE EXPORT / ACTION BUTTONS
+====================================== */
 
-/* ===============================
-   ARCHIVE TABLE IMPROVEMENTS
-================================ */
-
-.archive-row {
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.archive-row.archive-header {
-  font-size: 12px;
-  opacity: 0.6;
-  text-transform: uppercase;
-}
-
-.archive-row div:last-child {
-  text-align: right;
-}
-
-.archive-row div:nth-child(2) {
-  text-align: right;
-  font-weight: 500;
-}
-.archive-header {
-  margin-bottom: 20px;
-}
-
-.archive-header h2 {
-  margin: 6px 0 0 0;
-  font-size: 22px;
-}
-
-.archive-link {
-  font-size: 14px;
-  opacity: 0.6;
+.export-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
   cursor: pointer;
 }
 
-.archive-link:hover {
-  opacity: 1;
-}
-.archive-back-btn {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 12px;
+.export-btn:hover {
   background: var(--accent);
   color: #000;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  margin-bottom: 8px;
-}
-
-.archive-back-btn:hover {
-  opacity: 0.9;
-}
-.archive-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
 }
 
 .archive-export-btn {
   padding: 10px 20px;
   border-radius: 14px;
 }
+
 .archive-action-btn {
   background: transparent;
   border: 1px solid var(--accent);
@@ -943,4 +681,33 @@ button:active {
 .archive-delete-btn:hover {
   background: #d9534f;
   color: #fff;
+}
+
+/* ======================================
+   ARCHIVE ENTRIES
+====================================== */
+
+.archive-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.archive-entry-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.entry-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
 }
