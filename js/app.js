@@ -569,6 +569,16 @@ function openEntryModal(id = null) {
     distanceInput.value = "";
     pickupsInput.value = "";
     waitingInput.value = "";
+        ["breakfast", "lunch", "dinner"].forEach(type => {
+      const checkbox = document.getElementById(`meal-${type}`);
+      const select = document.getElementById(`meal-${type}-location`);
+
+      if (checkbox && select) {
+        checkbox.checked = false;
+        select.value = "";
+        select.disabled = true;
+      }
+    });
   }
 
   modal.hidden = false;
