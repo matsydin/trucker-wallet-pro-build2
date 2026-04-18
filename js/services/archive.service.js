@@ -4,6 +4,10 @@ import { state, saveState } from "../state.js";
 
 const KM_TO_MI = 0.621371;
 
+/* ======================================
+   ARCHIVE CURRENT PERIOD
+====================================== */
+
 function archiveCurrent() {
   const entries = state.current.entries;
 
@@ -22,7 +26,13 @@ function archiveCurrent() {
 
     entries: structuredClone(entries),
 
-    totals: structuredClone(state.current.totals)
+    totals: {
+      kilometers: state.current.totals.kilometers ?? 0,
+      miles: state.current.totals.miles ?? 0,
+      loads: state.current.totals.loads ?? 0,
+      waitingHours: state.current.totals.waitingHours ?? 0,
+      amount: state.current.totals.amount ?? 0
+    }
   };
 
   state.archive.unshift(archiveItem);
@@ -35,11 +45,17 @@ function archiveCurrent() {
   state.current.totals = {
     kilometers: 0,
     miles: 0,
+    loads: 0,
+    waitingHours: 0,
     amount: 0
   };
 
   saveState();
 }
+
+/* ======================================
+   BASIC CRUD
+====================================== */
 
 function deleteArchive(id) {
   state.archive = state.archive.filter(a => a.id !== id);
@@ -54,6 +70,97 @@ function deleteArchive(id) {
 function getById(id) {
   return state.archive.find(a => a.id === id);
 }
+
+/* ======================================
+   AGGREGATION — YEARS / MONTHS / WEEKS
+====================================== */
+
+function getArchivedWeeks(year = null, month = null) {
+  let weeks = [...state.archive];
+
+  if (year !== null) {
+    weeks = weeks.filter(w =>
+      new Date(w.periodStart).getFullYear() === year
+    );
+  }
+
+  if (month !== null) {
+    weeks = weeks.filter(w =>
+      new Date(w.periodStart).getMonth() === month
+    );
+  }
+
+  return weeks.sort(
+    (a, b) => new Date(b.periodEnd) - new Date(a.periodEnd)
+  );
+}
+
+function getArchiveYears() {
+  const map = {};
+
+  state.archive.forEach(period => {
+    const year = new Date(period.periodStart).getFullYear();
+
+    if (!map[year]) {
+      map[year] = {
+        year,
+        kilometers: 0,
+        miles: 0,
+        loads: 0,
+        waitingHours: 0,
+        amount: 0
+      };
+    }
+
+    map[year].kilometers += period.totals.kilometers ?? 0;
+    map[year].miles += period.totals.miles ?? 0;
+    map[year].loads += period.totals.loads ?? 0;
+    map[year].waitingHours += period.totals.waitingHours ?? 0;
+    map[year].amount += period.totals.amount ?? 0;
+  });
+
+  return Object.values(map).sort((a, b) => b.year - a.year);
+}
+
+function getArchiveMonths(year) {
+  if (year === null || year === undefined) return [];
+
+  const map = {};
+
+  state.archive.forEach(period => {
+    const date = new Date(period.periodStart);
+    const pYear = date.getFullYear();
+
+    if (pYear !== year) return;
+
+    const month = date.getMonth();
+    const key = `${year}-${month}`;
+
+    if (!map[key]) {
+      map[key] = {
+        year,
+        month,
+        kilometers: 0,
+        miles: 0,
+        loads: 0,
+        waitingHours: 0,
+        amount: 0
+      };
+    }
+
+    map[key].kilometers += period.totals.kilometers ?? 0;
+    map[key].miles += period.totals.miles ?? 0;
+    map[key].loads += period.totals.loads ?? 0;
+    map[key].waitingHours += period.totals.waitingHours ?? 0;
+    map[key].amount += period.totals.amount ?? 0;
+  });
+
+  return Object.values(map).sort((a, b) => b.month - a.month);
+}
+
+/* ======================================
+   ENTRY EDITING
+====================================== */
 
 function convertKmToMiles(km) {
   return +(Number(km || 0) * KM_TO_MI).toFixed(1);
@@ -80,16 +187,16 @@ function recalculateArchiveTotals(periodId) {
   period.entries.forEach(entry => {
     kilometers += Number(entry.kilometers || 0);
     miles += Number(entry.miles || 0);
-    loads += Number(entry.loads || 0);              // ✅ ДОДАНО
-    waitingHours += Number(entry.waitingHours || 0); // ✅ ДОДАНО
+    loads += Number(entry.loads || 0);
+    waitingHours += Number(entry.waitingHours || 0);
     amount += Number(entry.amount || 0);
   });
 
   period.totals = {
     kilometers: +kilometers.toFixed(1),
     miles: +miles.toFixed(1),
-    loads: +loads.toFixed(0),              // ✅ ДОДАНО
-    waitingHours: +waitingHours.toFixed(1),// ✅ ДОДАНО
+    loads: +loads.toFixed(0),
+    waitingHours: +waitingHours.toFixed(1),
     amount: +amount.toFixed(2)
   };
 
@@ -101,10 +208,10 @@ function recalculateArchiveTotals(periodId) {
 
 function editArchivedEntry(periodId, entryId, newData) {
   const period = getById(periodId);
-  if (!period) return { ok: false, error: "Period not found" };
+  if (!period) return { ok: false };
 
   const entry = period.entries.find(e => e.id === entryId);
-  if (!entry) return { ok: false, error: "Entry not found" };
+  if (!entry) return { ok: false };
 
   const kilometers = Number(newData.kilometers);
   const loads = Number(newData.loads || 0);
@@ -114,11 +221,11 @@ function editArchivedEntry(periodId, entryId, newData) {
   const perWaiting = Number(newData.perWaiting || 0);
 
   if (!newData.date || Number.isNaN(kilometers) || kilometers <= 0) {
-    return { ok: false, error: "Date and valid kilometers are required." };
+    return { ok: false };
   }
 
   if ([loads, waitingHours, perMile, perDrop, perWaiting].some(v => Number.isNaN(v) || v < 0)) {
-    return { ok: false, error: "All numeric values must be 0 or greater." };
+    return { ok: false };
   }
 
   entry.date = newData.date;
@@ -159,13 +266,13 @@ function deleteArchivedEntry(periodId, entryId) {
   saveState();
 }
 
+/* ======================================
+   PERIOD HELPERS
+====================================== */
+
 function generatePeriodData(entries) {
   if (!entries || entries.length === 0) {
-    return {
-      start: "",
-      end: "",
-      label: "Empty Period"
-    };
+    return { start: "", end: "", label: "Empty Period" };
   }
 
   const dates = entries.map(e => new Date(e.date));
@@ -185,6 +292,9 @@ function formatISO(date) {
 }
 
 function formatLabel(start, end) {
+  const monthShort = d =>
+    d.toLocaleString("en-US", { month: "short" });
+
   const sameDay =
     start.toDateString() === end.toDateString();
 
@@ -194,9 +304,6 @@ function formatLabel(start, end) {
 
   const sameYear =
     start.getFullYear() === end.getFullYear();
-
-  const monthShort = d =>
-    d.toLocaleString("en-US", { month: "short" });
 
   if (sameDay) {
     return `${monthShort(start)} ${start.getDate()} ${start.getFullYear()}`;
@@ -219,5 +326,8 @@ export const ArchiveService = {
   getById,
   editArchivedEntry,
   deleteArchivedEntry,
-  recalculateArchiveTotals
+  recalculateArchiveTotals,
+  getArchivedWeeks,
+  getArchiveYears,
+  getArchiveMonths
 };
