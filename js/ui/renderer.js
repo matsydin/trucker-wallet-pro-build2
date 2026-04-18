@@ -113,189 +113,204 @@ export function renderArchiveScreen(state) {
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
 
-  const archive = state.archive || [];
-  const detailId = state.ui.archiveDetailId;
+  const { archiveYear, archiveMonth, archiveDetailId } = state.ui;
 
-  /* ===== DETAIL VIEW ===== */
+  const allPeriods = state.archive || [];
 
-  if (detailId) {
-    const period = archive.find(p => p.id === detailId);
+  /* ============================
+     LEVEL DETECTION
+  ============================ */
+
+  let level = "years";
+
+  if (archiveDetailId) level = "detail";
+  else if (archiveMonth !== null) level = "weeks";
+  else if (archiveYear !== null) level = "months";
+
+  /* ============================
+     BACK BUTTON
+  ============================ */
+
+  let backBtn = "";
+
+  if (level !== "years") {
+    backBtn =
+      '<button class="ghost-btn" data-action="archive-back">← Back</button>';
+  }
+
+  /* ============================
+     SUMMARY BAR
+  ============================ */
+
+  function renderSummary(totals, label) {
+    return (
+      '<div class="card archive-summary">' +
+        '<div class="summary-header">' +
+          '<h3>' + label + '</h3>' +
+          '<button class="primary-btn" data-action="export-archive">Export CSV</button>' +
+        '</div>' +
+        '<div class="summary-grid">' +
+          '<div><span>Gross</span><strong>$' + Number(totals.amount ?? 0).toFixed(2) + '</strong></div>' +
+          '<div><span>Distance</span><strong>' + Number(totals.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</strong></div>' +
+          '<div><span>Loads</span><strong>' + Number(totals.loads ?? 0) + '</strong></div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  /* ============================
+     DETAIL VIEW
+  ============================ */
+
+  if (level === "detail") {
+    const period = allPeriods.find(p => p.id === archiveDetailId);
     if (!period) return;
 
-    const totals = period.totals || {};
-
-    const distance =
-      state.ui.displayUnit === "km"
-        ? Number(totals.kilometers ?? 0).toFixed(1)
-        : Number(totals.miles ?? 0).toFixed(1);
+    const summary = renderSummary(period.totals, period.periodLabel);
 
     archivePage.innerHTML =
-      '<div class="card">' +
-        '<button data-action="close-archive" type="button">← Back</button>' +
-        '<h3>' + escapeHtml(period.periodLabel) + '</h3>' +
-        '<p>Gross: $' + Number(totals.amount ?? 0).toFixed(2) + '</p>' +
-        '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
-        '<p>Loads: ' + Number(totals.loads ?? 0) + '</p>' +
-      '</div>' +
-
-      (period.entries || []).map(entry => {
-        const entryDistance =
-          state.ui.displayUnit === "km"
-            ? Number(entry.kilometers ?? 0).toFixed(1)
-            : Number(entry.miles ?? 0).toFixed(1);
-
-        return (
-          '<div class="card">' +
-            '<div class="card-header">' +
-              '<h3>' + escapeHtml(entry.date || "") + '</h3>' +
-              '<div>' +
-                '<button data-action="edit-archive-entry" data-period-id="' + period.id + '" data-id="' + entry.id + '" type="button">Edit</button>' +
-                '<button data-action="delete-archive-entry" data-period-id="' + period.id + '" data-id="' + entry.id + '" type="button">Delete</button>' +
-              '</div>' +
-            '</div>' +
-            '<p>' + entryDistance + " " + state.ui.displayUnit + '</p>' +
-            '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
-            '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
-            '<p class="entry-amount">$' + Number(entry.amount ?? 0).toFixed(2) + '</p>' +
-          '</div>'
-        );
-      }).join("") +
-
-      '<div class="card">' +
-        '<button data-action="delete-archive" data-id="' + period.id + '" type="button">' +
-          'Delete Period' +
-        '</button>' +
+      '<div class="screen">' +
+        backBtn +
+        summary +
       '</div>';
 
     return;
   }
 
-  /* ===== MAIN HIERARCHY VIEW ===== */
+  /* ============================
+     YEARS VIEW
+  ============================ */
 
-  const { archiveView, archiveYear, archiveMonth } = state.ui;
-
-  let content = "";
-
-  if (!archive.length) {
-    content = '<div class="card">No archived weeks yet.</div>';
-  }
-
-  else if (archiveView === "years") {
+  if (level === "years") {
     const years = ArchiveService.getArchiveYears();
 
-    content =
+    const total = years.reduce((acc, y) => {
+      acc.amount += y.amount ?? 0;
+      acc.kilometers += y.kilometers ?? 0;
+      acc.loads += y.loads ?? 0;
+      return acc;
+    }, { amount: 0, kilometers: 0, loads: 0 });
+
+    const summary = renderSummary(total, "All Years");
+
+    const table =
       '<div class="archive-table">' +
         '<div class="archive-row archive-header">' +
           '<div>Year</div>' +
-          '<div>Distance</div>' +
-          '<div>Loads</div>' +
-          '<div>Total</div>' +
+          '<div>Gross</div>' +
+          '<div></div>' +
         '</div>' +
 
         years.map(y =>
           '<div class="archive-row" data-action="open-archive-year" data-year="' + y.year + '">' +
             '<div>' + y.year + '</div>' +
-            '<div>' + Number(y.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</div>' +
-            '<div>' + Number(y.loads ?? 0) + '</div>' +
             '<div>$' + Number(y.amount ?? 0).toFixed(2) + '</div>' +
+            '<div>View</div>' +
           '</div>'
         ).join("") +
 
       '</div>';
+
+    archivePage.innerHTML =
+      '<div class="screen">' +
+        summary +
+        table +
+      '</div>';
+
+    return;
   }
 
-  else if (archiveView === "months") {
-    if (archiveYear === null) {
-      content = '<div class="card">Select a year</div>';
-    } else {
-      const months = ArchiveService.getArchiveMonths(archiveYear);
+  /* ============================
+     MONTHS VIEW
+  ============================ */
 
-      content =
-        '<div class="archive-table">' +
-          '<div class="archive-row archive-header">' +
-            '<div>Month</div>' +
-            '<div>Distance</div>' +
-            '<div>Loads</div>' +
-            '<div>Total</div>' +
-          '</div>' +
+  if (level === "months") {
+    const months = ArchiveService.getArchiveMonths(archiveYear);
 
-          months.map(m => {
-            const monthName = new Date(m.year, m.month)
-              .toLocaleString("en-US", { month: "long" });
+    const total = months.reduce((acc, m) => {
+      acc.amount += m.amount ?? 0;
+      acc.kilometers += m.kilometers ?? 0;
+      acc.loads += m.loads ?? 0;
+      return acc;
+    }, { amount: 0, kilometers: 0, loads: 0 });
 
-            return (
-              '<div class="archive-row" data-action="open-archive-month" data-year="' + m.year + '" data-month="' + m.month + '">' +
-                '<div>' + monthName + '</div>' +
-                '<div>' + Number(m.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</div>' +
-                '<div>' + Number(m.loads ?? 0) + '</div>' +
-                '<div>$' + Number(m.amount ?? 0).toFixed(2) + '</div>' +
-              '</div>'
-            );
-          }).join("") +
+    const summary = renderSummary(total, archiveYear);
 
-        '</div>';
-    }
-  }
-
-  else {
-    const weeks = ArchiveService.getArchivedWeeks(archiveYear, archiveMonth);
-
-    content =
+    const table =
       '<div class="archive-table">' +
         '<div class="archive-row archive-header">' +
-          '<div>Week</div>' +
-          '<div>Distance</div>' +
-          '<div>Loads</div>' +
-          '<div>Total</div>' +
+          '<div>Month</div>' +
+          '<div>Gross</div>' +
           '<div></div>' +
         '</div>' +
 
-        weeks.map(period => {
-          const totals = period.totals || {};
-
-          const distance =
-            state.ui.displayUnit === "km"
-              ? Number(totals.kilometers ?? 0).toFixed(1)
-              : Number(totals.miles ?? 0).toFixed(1);
+        months.map(m => {
+          const name = new Date(m.year, m.month)
+            .toLocaleString("en-US", { month: "long" });
 
           return (
-            '<div class="archive-row">' +
-              '<div>' + escapeHtml(period.periodLabel) + '</div>' +
-              '<div>' + distance + ' ' + state.ui.displayUnit + '</div>' +
-              '<div>' + Number(totals.loads ?? 0) + '</div>' +
-              '<div>$' + Number(totals.amount ?? 0).toFixed(2) + '</div>' +
-              '<div>' +
-                '<button data-action="open-archive" data-id="' + period.id + '">View</button>' +
-              '</div>' +
+            '<div class="archive-row" data-action="open-archive-month" data-year="' + m.year + '" data-month="' + m.month + '">' +
+              '<div>' + name + '</div>' +
+              '<div>$' + Number(m.amount ?? 0).toFixed(2) + '</div>' +
+              '<div>View</div>' +
             '</div>'
           );
         }).join("") +
 
       '</div>';
+
+    archivePage.innerHTML =
+      '<div class="screen">' +
+        backBtn +
+        summary +
+        table +
+      '</div>';
+
+    return;
   }
 
+  /* ============================
+     WEEKS VIEW
+  ============================ */
+
+  const weeks = ArchiveService.getArchivedWeeks(archiveYear, archiveMonth);
+
+  const total = weeks.reduce((acc, w) => {
+    acc.amount += w.totals.amount ?? 0;
+    acc.kilometers += w.totals.kilometers ?? 0;
+    acc.loads += w.totals.loads ?? 0;
+    return acc;
+  }, { amount: 0, kilometers: 0, loads: 0 });
+
+  const monthName = new Date(archiveYear, archiveMonth)
+    .toLocaleString("en-US", { month: "long" });
+
+  const summary = renderSummary(total, monthName + " " + archiveYear);
+
+  const table =
+    '<div class="archive-table">' +
+      '<div class="archive-row archive-header">' +
+        '<div>Week</div>' +
+        '<div>Gross</div>' +
+        '<div></div>' +
+      '</div>' +
+
+      weeks.map(w =>
+        '<div class="archive-row" data-action="open-archive" data-id="' + w.id + '">' +
+          '<div>' + escapeHtml(w.periodLabel) + '</div>' +
+          '<div>$' + Number(w.totals.amount ?? 0).toFixed(2) + '</div>' +
+          '<div>View</div>' +
+        '</div>'
+      ).join("") +
+
+    '</div>';
+
   archivePage.innerHTML =
-  '<div class="screen">' +
-
-    /* ===== SEGMENTED NAV ===== */
-
-    '<div class="segmented archive-segmented">' +
-      '<button data-action="set-archive-view" data-view="weeks" ' +
-        (state.ui.archiveView === "weeks" ? 'class="active"' : '') +
-      '>Weeks</button>' +
-
-      '<button data-action="set-archive-view" data-view="months" ' +
-        (state.ui.archiveView === "months" ? 'class="active"' : '') +
-      '>Months</button>' +
-
-      '<button data-action="set-archive-view" data-view="years" ' +
-        (state.ui.archiveView === "years" ? 'class="active"' : '') +
-      '>Years</button>' +
-    '</div>' +
-
-    content +
-
-  '</div>';
+    '<div class="screen">' +
+      backBtn +
+      summary +
+      table +
+    '</div>';
 }
 
 /* ======================================
