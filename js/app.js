@@ -604,12 +604,31 @@ function saveEntryFromModal() {
 
   if (!date || !kilometers || kilometers <= 0) return;
 
-  const payload = {
-    kilometers,
-    date,
-    loads,
-    waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours
+  const mealTypes = ["breakfast", "lunch", "dinner"];
+const meals = {};
+
+for (let type of mealTypes) {
+  const taken = document.getElementById(`meal-${type}`)?.checked;
+  const location = document.getElementById(`meal-${type}-location`)?.value;
+
+  if (taken && !location) {
+    alert(`${type} location required`);
+    return;
+  }
+
+  meals[type] = {
+    taken: !!taken,
+    location: taken ? location : ""
   };
+}
+
+const payload = {
+  kilometers,
+  date,
+  loads,
+  waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours,
+  meals
+};
 
   if (editingEntryId) {
     LogbookService.editEntry(editingEntryId, payload);
