@@ -114,12 +114,7 @@ export function renderArchiveScreen(state) {
   if (!archivePage) return;
 
   const { archiveYear, archiveMonth, archiveDetailId } = state.ui;
-
   const allPeriods = state.archive || [];
-
-  /* ============================
-     LEVEL DETECTION
-  ============================ */
 
   let level = "years";
 
@@ -128,73 +123,73 @@ export function renderArchiveScreen(state) {
   else if (archiveYear !== null) level = "months";
 
   /* ============================
-     BACK BUTTON
+     HEADER
   ============================ */
 
   let header = '<div class="archive-header">';
 
-if (level === "years") {
-  header += '<h2>Archive</h2>';
-}
+  if (level === "years") {
+    header += '<h2>Archive</h2>';
+  }
 
-if (level === "months") {
-  header +=
-    '<span class="archive-link" data-action="archive-back">← Archive</span>' +
-    '<h2>' + archiveYear + '</h2>';
-}
+  if (level === "months") {
+    header +=
+      '<button class="archive-back-btn" data-action="archive-back">← Archive</button>' +
+      '<h2>' + archiveYear + '</h2>';
+  }
 
-if (level === "weeks") {
-  const monthName = new Date(archiveYear, archiveMonth)
-    .toLocaleString("en-US", { month: "long" });
+  if (level === "weeks") {
+    const monthName = new Date(archiveYear, archiveMonth)
+      .toLocaleString("en-US", { month: "long" });
 
-  header +=
-    '<span class="archive-link" data-action="archive-back">← ' + archiveYear + '</span>' +
-    '<h2>' + monthName + ' ' + archiveYear + '</h2>';
-}
+    header +=
+      '<button class="archive-back-btn" data-action="archive-back">← ' + archiveYear + '</button>' +
+      '<h2>' + monthName + ' ' + archiveYear + '</h2>';
+  }
 
-if (level === "detail") {
-  header +=
-    '<span class="archive-link" data-action="archive-back">← Back</span>' +
-    '<h2>Week Details</h2>';
-}
+  if (level === "detail") {
+    header +=
+      '<button class="archive-back-btn" data-action="archive-back">← Back</button>' +
+      '<h2>Week Details</h2>';
+  }
 
-header += '</div>';
+  header += '</div>';
 
   /* ============================
-     SUMMARY BAR
+     SUMMARY
   ============================ */
 
-function renderSummary(totals, label) {
-  return (
-    '<div class="archive-summary">' +
+  function renderSummary(totals, label) {
+    return (
+      '<div class="archive-summary">' +
 
-      '<div class="archive-summary-top">' +
-        '<h2>' + label + '</h2>' +
-        '<button class="export-btn" data-action="export-archive">Export</button>' +
-      '</div>' +
-
-      '<div class="archive-summary-grid">' +
-
-        '<div class="summary-item">' +
-          '<span>Gross</span>' +
-          '<strong>$' + Number(totals.amount ?? 0).toFixed(2) + '</strong>' +
+        '<div class="archive-summary-top">' +
+          '<h3>' + label + '</h3>' +
+          '<button class="export-btn" data-action="export-archive">Export</button>' +
         '</div>' +
 
-        '<div class="summary-item">' +
-          '<span>Distance</span>' +
-          '<strong>' + Number(totals.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</strong>' +
+        '<div class="archive-summary-grid">' +
+
+          '<div class="summary-item">' +
+            '<span>Gross</span>' +
+            '<strong>$' + Number(totals.amount ?? 0).toFixed(2) + '</strong>' +
+          '</div>' +
+
+          '<div class="summary-item">' +
+            '<span>Distance</span>' +
+            '<strong>' + Number(totals.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</strong>' +
+          '</div>' +
+
+          '<div class="summary-item">' +
+            '<span>Loads</span>' +
+            '<strong>' + Number(totals.loads ?? 0) + '</strong>' +
+          '</div>' +
+
         '</div>' +
 
-        '<div class="summary-item">' +
-          '<span>Loads</span>' +
-          '<strong>' + Number(totals.loads ?? 0) + '</strong>' +
-        '</div>' +
-
-      '</div>' +
-
-    '</div>'
-  );
-}
+      '</div>'
+    );
+  }
 
   /* ============================
      DETAIL VIEW
@@ -206,10 +201,55 @@ function renderSummary(totals, label) {
 
     const summary = renderSummary(period.totals, period.periodLabel);
 
+    const entries =
+      '<div class="archive-entries">' +
+
+        (period.entries || []).map(entry => {
+
+          const distance =
+            state.ui.displayUnit === "km"
+              ? Number(entry.kilometers ?? 0).toFixed(1)
+              : Number(entry.miles ?? 0).toFixed(1);
+
+          return (
+            '<div class="archive-entry-card">' +
+
+              '<div class="entry-top">' +
+                '<div class="entry-date">' + escapeHtml(entry.date) + '</div>' +
+                '<div class="entry-amount">$' +
+                  Number(entry.amount ?? 0).toFixed(2) +
+                '</div>' +
+              '</div>' +
+
+              '<div class="entry-meta">' +
+                distance + ' ' + state.ui.displayUnit +
+                ' • Loads: ' + Number(entry.loads ?? 0) +
+                ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
+              '</div>' +
+
+              '<div class="entry-actions">' +
+
+                '<button class="ghost-btn" data-action="edit-archive-entry" ' +
+                  'data-period-id="' + period.id + '" ' +
+                  'data-id="' + entry.id + '">Edit</button>' +
+
+                '<button class="danger-btn" data-action="delete-archive-entry" ' +
+                  'data-period-id="' + period.id + '" ' +
+                  'data-id="' + entry.id + '">Delete</button>' +
+
+              '</div>' +
+
+            '</div>'
+          );
+        }).join("") +
+
+      '</div>';
+
     archivePage.innerHTML =
       '<div class="screen">' +
         header +
         summary +
+        entries +
       '</div>';
 
     return;
@@ -233,17 +273,11 @@ function renderSummary(totals, label) {
 
     const table =
       '<div class="archive-table">' +
-        '<div class="archive-row archive-header">' +
-          '<div>Year</div>' +
-          '<div>Gross</div>' +
-          '<div></div>' +
-        '</div>' +
 
         years.map(y =>
           '<div class="archive-row" data-action="open-archive-year" data-year="' + y.year + '">' +
             '<div>' + y.year + '</div>' +
             '<div>$' + Number(y.amount ?? 0).toFixed(2) + '</div>' +
-            '<div>View</div>' +
           '</div>'
         ).join("") +
 
@@ -251,6 +285,7 @@ function renderSummary(totals, label) {
 
     archivePage.innerHTML =
       '<div class="screen">' +
+        header +
         summary +
         table +
       '</div>';
@@ -276,11 +311,6 @@ function renderSummary(totals, label) {
 
     const table =
       '<div class="archive-table">' +
-        '<div class="archive-row archive-header">' +
-          '<div>Month</div>' +
-          '<div>Gross</div>' +
-          '<div></div>' +
-        '</div>' +
 
         months.map(m => {
           const name = new Date(m.year, m.month)
@@ -290,7 +320,6 @@ function renderSummary(totals, label) {
             '<div class="archive-row" data-action="open-archive-month" data-year="' + m.year + '" data-month="' + m.month + '">' +
               '<div>' + name + '</div>' +
               '<div>$' + Number(m.amount ?? 0).toFixed(2) + '</div>' +
-              '<div>View</div>' +
             '</div>'
           );
         }).join("") +
@@ -298,11 +327,11 @@ function renderSummary(totals, label) {
       '</div>';
 
     archivePage.innerHTML =
-  '<div class="screen">' +
-    header +
-    summary +
-    table +
-  '</div>';
+      '<div class="screen">' +
+        header +
+        summary +
+        table +
+      '</div>';
 
     return;
   }
@@ -327,17 +356,11 @@ function renderSummary(totals, label) {
 
   const table =
     '<div class="archive-table">' +
-      '<div class="archive-row archive-header">' +
-        '<div>Week</div>' +
-        '<div>Gross</div>' +
-        '<div></div>' +
-      '</div>' +
 
       weeks.map(w =>
         '<div class="archive-row" data-action="open-archive" data-id="' + w.id + '">' +
           '<div>' + escapeHtml(w.periodLabel) + '</div>' +
           '<div>$' + Number(w.totals.amount ?? 0).toFixed(2) + '</div>' +
-          '<div>View</div>' +
         '</div>'
       ).join("") +
 
