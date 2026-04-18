@@ -148,10 +148,19 @@ export function renderArchiveScreen(state) {
   }
 
   if (level === "detail") {
-    header +=
+  header +=
+    '<div class="archive-header-row">' +
+
       '<button class="archive-back-btn" data-action="archive-back">← Back</button>' +
-      '<h2>Week Details</h2>';
-  }
+
+      '<button class="primary-btn archive-export-btn" data-action="export-archive">' +
+        'Export' +
+      '</button>' +
+
+    '</div>' +
+
+    '<h2>Week Details</h2>';
+}
 
   header += '</div>';
 
