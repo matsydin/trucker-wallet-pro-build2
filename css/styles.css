@@ -739,7 +739,7 @@ button:active {
 
 .archive-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  grid-template-columns: 2fr 1fr 1fr 1fr 80px;
   gap: 12px;
   align-items: center;
   padding: 10px 0;
@@ -752,10 +752,22 @@ button:active {
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-.archive-row button {
-  padding: 6px 12px;
-  font-size: 14px;
+.archive-header div {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
 }
+
+.archive-row div {
+  min-width: 0;
+}
+
+.archive-row button {
+  padding: 6px 10px;
+  font-size: 13px;
+  width: 100%;
+}
+
 .text-right {
   text-align: right;
 }
