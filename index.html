@@ -48,17 +48,21 @@
       </div>
           <hr>
 
+<hr>
+
 <div class="form-group">
   <label>Meals</label>
 
-  <!-- Breakfast -->
-  <div class="meal-row">
-    <label>
-      <input type="checkbox" id="meal-breakfast">
-      Breakfast
-    </label>
-    <select id="meal-breakfast-location" disabled>
-      <option value="">Select</option>
+  <div class="meal-item">
+    <div class="meal-row">
+      <span>Breakfast</span>
+      <label class="meal-switch">
+        <input type="checkbox" id="meal-breakfast">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <select id="meal-breakfast-location" class="meal-location" disabled>
+      <option value="">Select province / US</option>
       <option>AB</option><option>BC</option><option>MB</option>
       <option>NB</option><option>NL</option><option>NS</option>
       <option>NT</option><option>NU</option><option>ON</option>
@@ -67,14 +71,16 @@
     </select>
   </div>
 
-  <!-- Lunch -->
-  <div class="meal-row">
-    <label>
-      <input type="checkbox" id="meal-lunch">
-      Lunch
-    </label>
-    <select id="meal-lunch-location" disabled>
-      <option value="">Select</option>
+  <div class="meal-item">
+    <div class="meal-row">
+      <span>Lunch</span>
+      <label class="meal-switch">
+        <input type="checkbox" id="meal-lunch">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <select id="meal-lunch-location" class="meal-location" disabled>
+      <option value="">Select province / US</option>
       <option>AB</option><option>BC</option><option>MB</option>
       <option>NB</option><option>NL</option><option>NS</option>
       <option>NT</option><option>NU</option><option>ON</option>
@@ -83,14 +89,16 @@
     </select>
   </div>
 
-  <!-- Dinner -->
-  <div class="meal-row">
-    <label>
-      <input type="checkbox" id="meal-dinner">
-      Dinner
-    </label>
-    <select id="meal-dinner-location" disabled>
-      <option value="">Select</option>
+  <div class="meal-item">
+    <div class="meal-row">
+      <span>Dinner</span>
+      <label class="meal-switch">
+        <input type="checkbox" id="meal-dinner">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <select id="meal-dinner-location" class="meal-location" disabled>
+      <option value="">Select province / US</option>
       <option>AB</option><option>BC</option><option>MB</option>
       <option>NB</option><option>NL</option><option>NS</option>
       <option>NT</option><option>NU</option><option>ON</option>
@@ -98,6 +106,7 @@
       <option>YT</option><option>US</option>
     </select>
   </div>
+
 </div>
 
       <button class="primary-btn" id="save-entry" type="button">
