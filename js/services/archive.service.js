@@ -195,15 +195,18 @@ function recalculateArchiveTotals(periodId) {
     loads += Number(entry.loads || 0);
     waitingHours += Number(entry.waitingHours || 0);
     amount += Number(entry.amount || 0);
+    meals += ["breakfast","lunch","dinner"]
+  .filter(type => entry.meals?.[type]?.taken).length;
   });
 
   period.totals = {
-    kilometers: +kilometers.toFixed(1),
-    miles: +miles.toFixed(1),
-    loads: +loads.toFixed(0),
-    waitingHours: +waitingHours.toFixed(1),
-    amount: +amount.toFixed(2)
-  };
+  kilometers: +kilometers.toFixed(1),
+  miles: +miles.toFixed(1),
+  loads: +loads.toFixed(0),
+  waitingHours: +waitingHours.toFixed(1),
+  amount: +amount.toFixed(2),
+  meals: meals
+};
 
   const periodData = generatePeriodData(period.entries);
   period.periodStart = periodData.start;
