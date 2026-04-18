@@ -202,7 +202,12 @@ const yearTotals = getYearTotal(currentYear);
 
       archive.map(period => {
         const totals = period.totals || {};
-        const entriesCount = (period.entries || []).length;
+        const totals = period.totals || {};
+
+        const distance =
+      state.ui.displayUnit === "km"
+    ? Number(totals.kilometers ?? 0).toFixed(1)
+    : Number(totals.miles ?? 0).toFixed(1);
 
         return (
           '<div class="archive-row">' +
