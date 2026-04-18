@@ -128,7 +128,8 @@ function normalizeTrailerPlateLive() {
 ================================ */
 
 function handleClick(e) {
-  const target = e.target;
+  const target = e.target.closest("button, [data-action], .tab, [data-unit]");
+if (!target) return;
 
   const tab = target.closest(".tab");
   if (tab) {
