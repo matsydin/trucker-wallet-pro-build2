@@ -919,3 +919,28 @@ button:active {
   padding: 10px 20px;
   border-radius: 14px;
 }
+.archive-action-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.archive-action-btn:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.archive-delete-btn {
+  border-color: #d9534f;
+  color: #d9534f;
+}
+
+.archive-delete-btn:hover {
+  background: #d9534f;
+  color: #fff;
+}
