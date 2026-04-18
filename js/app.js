@@ -186,7 +186,10 @@ if (!target) return;
     return;
   }
 
-  const actionBtn = target.closest("[data-action]");
+  const actionBtn = target.matches("[data-action]")
+  ? target
+  : target.closest("[data-action]");
+  
   if (!actionBtn) return;
 
   const action = actionBtn.dataset.action;
