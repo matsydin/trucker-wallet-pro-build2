@@ -271,12 +271,11 @@ if (!target) return;
     return;
   }
     if (action === "open-archive-year") {
-    state.ui.archiveYear = Number(actionBtn.dataset.year);
-    state.ui.archiveView = "months";
-    saveState();
-    render();
-    return;
-  }
+  state.ui.archiveYear = Number(actionBtn.dataset.year);
+  saveState();
+  render();
+  return;
+}
 
   if (action === "open-archive-month") {
     state.ui.archiveYear = Number(actionBtn.dataset.year);
