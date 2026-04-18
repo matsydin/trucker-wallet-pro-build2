@@ -45,8 +45,8 @@ const defaultState = {
     totals: {
      kilometers: 0,
      miles: 0,
-     loads: 0,           // ✅ ДОДАТИ
-     waitingHours: 0,    // ✅ ДОДАТИ
+     loads: 0,           
+     waitingHours: 0,    
      amount: 0
     }
   },
