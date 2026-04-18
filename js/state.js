@@ -89,6 +89,15 @@ function loadState() {
   } catch {
     return structuredClone(defaultState);
   }
+   state.current.entries.forEach(entry => {
+  if (!entry.meals) {
+    entry.meals = {
+      breakfast: { taken: false, location: "" },
+      lunch: { taken: false, location: "" },
+      dinner: { taken: false, location: "" }
+    };
+  }
+});
 }
 
 /* ======================================
