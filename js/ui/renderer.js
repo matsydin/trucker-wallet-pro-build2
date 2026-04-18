@@ -135,7 +135,7 @@ export function renderArchiveScreen(state) {
 
   if (level !== "years") {
     backBtn =
-      '<button class="ghost-btn" data-action="archive-back">← Back</button>';
+   '<button class="archive-back-btn" data-action="archive-back">← Back</button>';
   }
 
   /* ============================
