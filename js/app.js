@@ -839,6 +839,7 @@ function initMealsAccordion() {
 function init() {
   LogbookService.calculateTotals();
   document.addEventListener("click", handleClick);
+  initMealsAccordion();
   render();
 }
 
