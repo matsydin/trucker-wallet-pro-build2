@@ -298,11 +298,11 @@ function renderSummary(totals, label) {
       '</div>';
 
     archivePage.innerHTML =
-      '<div class="screen">' +
-        backBtn +
-        summary +
-        table +
-      '</div>';
+  '<div class="screen">' +
+    header +
+    summary +
+    table +
+  '</div>';
 
     return;
   }
