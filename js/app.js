@@ -818,6 +818,23 @@ function handleArchiveExport() {
 /* ===============================
    INIT
 ================================ */
+function initMealsAccordion() {
+  const cards = document.querySelectorAll(".meal-card");
+
+  cards.forEach(card => {
+    const checkbox = card.querySelector(".meal-checkbox");
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+      card.classList.toggle("active", checkbox.checked);
+
+      if (!checkbox.checked) {
+        const select = card.querySelector(".meal-select");
+        if (select) select.value = "";
+      }
+    });
+  });
+}
 
 function init() {
   LogbookService.calculateTotals();
