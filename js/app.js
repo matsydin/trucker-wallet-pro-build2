@@ -136,12 +136,7 @@ function normalizeTrailerPlateLive() {
 ================================ */
 
 function handleClick(e) {
-  // ===== MEAL PILL TOGGLE =====
-const mealPill = e.target.closest(".meal-pill");
-if (mealPill) {
-  mealPill.classList.toggle("active");
-  return;
-}
+
   const target = e.target;
 if (!target) return;
 
