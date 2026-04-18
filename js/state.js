@@ -26,7 +26,7 @@ const defaultState = {
     from: null,
     to: null
   }
-}
+},
 
   settings: {
     driverName: "",
