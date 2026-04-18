@@ -208,7 +208,7 @@ function renderSummary(totals, label) {
 
     archivePage.innerHTML =
       '<div class="screen">' +
-        backBtn +
+        header +
         summary +
       '</div>';
 
@@ -345,7 +345,7 @@ function renderSummary(totals, label) {
 
   archivePage.innerHTML =
     '<div class="screen">' +
-      backBtn +
+      header +
       summary +
       table +
     '</div>';
