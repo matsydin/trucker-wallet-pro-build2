@@ -236,6 +236,7 @@ body {
 
 .modal-sheet {
   position: relative;
+  z-index: 10000;
   width: 100%;
   max-width: 600px;
   background: var(--card);
@@ -244,6 +245,11 @@ body {
   padding: 20px;
   padding-bottom: calc(20px + var(--safe-bottom));
   box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+
+  /* ===== СКРОЛ ===== */
+  max-height: 85vh;           /* ← максимум 85% екрану */
+  overflow-y: auto;           /* ← скрол якщо контент більший */
+  -webkit-overflow-scrolling: touch;  /* ← плавний скрол на iOS */
 }
 
 .modal-header {
