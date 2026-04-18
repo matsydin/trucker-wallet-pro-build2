@@ -112,7 +112,8 @@ function getArchiveYears() {
         miles: 0,
         loads: 0,
         waitingHours: 0,
-        amount: 0
+        amount: 0,
+        meals: 0
       };
     }
 
@@ -121,6 +122,7 @@ function getArchiveYears() {
     map[year].loads += period.totals.loads ?? 0;
     map[year].waitingHours += period.totals.waitingHours ?? 0;
     map[year].amount += period.totals.amount ?? 0;
+    map[year].meals += period.totals.meals ?? 0;
   });
 
   return Object.values(map).sort((a, b) => b.year - a.year);
@@ -148,7 +150,8 @@ function getArchiveMonths(year) {
         miles: 0,
         loads: 0,
         waitingHours: 0,
-        amount: 0
+        amount: 0,
+        meals: 0
       };
     }
 
@@ -157,6 +160,7 @@ function getArchiveMonths(year) {
     map[key].loads += period.totals.loads ?? 0;
     map[key].waitingHours += period.totals.waitingHours ?? 0;
     map[key].amount += period.totals.amount ?? 0;
+    map[key].meals += period.totals.meals ?? 0;
   });
 
   return Object.values(map).sort((a, b) => b.month - a.month);
@@ -250,7 +254,9 @@ function editArchivedEntry(periodId, entryId, newData) {
   };
 
   entry.amount = calculateArchivedAmount(entry);
-
+   if (newData.meals) {
+     entry.meals = newData.meals;
+      }
   period.entries.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   recalculateArchiveTotals(periodId);
