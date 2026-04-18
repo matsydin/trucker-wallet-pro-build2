@@ -143,212 +143,30 @@ export function renderDataScreen(state) {
 /* ======================================
    RENDER ARCHIVE SCREEN
 ====================================== */
-
 export function renderArchiveScreen(state) {
-  const { archiveView } = state.ui;
+
   const archivePage = document.querySelector('[data-page="archive"]');
-  if (archiveView === "years") {
-  renderArchiveYears(state);
-  return;
-}
   if (!archivePage) return;
 
-  const { archiveYear, archiveMonth, archiveDetailId } = state.ui;
-  const allPeriods = state.archive || [];
-
-  let level = "years";
-
-  if (archiveDetailId) level = "detail";
-  else if (archiveMonth !== null) level = "weeks";
-  else if (archiveYear !== null) level = "months";
-
-  /* ============================
-     HEADER
-  ============================ */
-
-  let header = '<div class="archive-header">';
-
-  if (level === "years") {
-    header += '<h2>Archive</h2>';
-  }
-
-  if (level === "months") {
-    header +=
-      '<button class="archive-back-btn" data-action="archive-back">← Archive</button>' +
-      '<h2>' + archiveYear + '</h2>';
-  }
-
-  if (level === "weeks") {
-    const monthName = new Date(archiveYear, archiveMonth)
-      .toLocaleString("en-US", { month: "long" });
-
-    header +=
-      '<button class="archive-back-btn" data-action="archive-back">← ' + archiveYear + '</button>' +
-      '<h2>' + monthName + ' ' + archiveYear + '</h2>';
-  }
-
-  if (level === "detail") {
-  header +=
-    '<div class="archive-header-row">' +
-      '<button class="archive-back-btn" data-action="archive-back">← Back</button>' +
-    '</div>' +
-    '<h2>Week Details</h2>';
-}
-
-  header += '</div>';
-
-  /* ============================
-     SUMMARY
-  ============================ */
-
-  function renderSummary(totals, label) {
-  return (
-    '<div class="archive-summary">' +
-
-      '<div class="archive-summary-top">' +
-        '<h3>' + label + '</h3>' +
-      '</div>' +
-
-      '<div class="archive-summary-grid">' +
-
-        '<div class="summary-item">' +
-          '<span>Gross</span>' +
-          '<strong>$' + Number(totals.amount ?? 0).toFixed(2) + '</strong>' +
-        '</div>' +
-
-        '<div class="summary-item">' +
-          '<span>Distance</span>' +
-          '<strong>' + Number(totals.kilometers ?? 0).toFixed(0) + ' ' + state.ui.displayUnit + '</strong>' +
-        '</div>' +
-
-        '<div class="summary-item">' +
-          '<span>Loads</span>' +
-          '<strong>' + Number(totals.loads ?? 0) + '</strong>' +
-        '</div>' +
-        '<div class="summary-item">' +
-          '<span>Meals</span>' +
-          '<strong>' + Number(totals.meals ?? 0) + '</strong>' +
-        '</div>' +
-
-      '</div>' +
-
-    '</div>'
-  );
-}
-
-  /* ============================
-     DETAIL VIEW
-  ============================ */
-
-  if (level === "detail") {
-  const period = allPeriods.find(p => p.id === archiveDetailId);
-  if (!period) return;
-
-  const summary = renderSummary(period.totals, period.periodLabel);
-
-  const entries =
-    '<div class="archive-entries">' +
-
-      (period.entries || []).map(entry => {
-
-        const distance =
-          state.ui.displayUnit === "km"
-            ? Number(entry.kilometers ?? 0).toFixed(1)
-            : Number(entry.miles ?? 0).toFixed(1);
-
-        const mealsCount = getMealsCount(entry.meals);
-        const mealsSummary = formatMealsSummary(entry.meals);
-
-        return (
-          '<div class="archive-entry-card">' +
-
-            '<div class="entry-top">' +
-              '<div class="entry-date">' +
-                escapeHtml(entry.date || "") +
-              '</div>' +
-              '<div class="entry-amount">$' +
-                Number(entry.amount ?? 0).toFixed(2) +
-              '</div>' +
-            '</div>' +
-
-            '<div class="entry-meta">' +
-              distance + ' ' + state.ui.displayUnit +
-              ' • Loads: ' + Number(entry.loads ?? 0) +
-              ' • Waiting: ' + Number(entry.waitingHours ?? 0) + 'h' +
-            '</div>' +
-
-            (mealsCount > 0
-              ? '<div class="entry-meals muted">' + mealsSummary + '</div>'
-              : '') +
-
-            '<div class="entry-actions">' +
-
-              '<button class="archive-action-btn" data-action="edit-archive-entry" ' +
-                'data-period-id="' + period.id + '" ' +
-                'data-id="' + entry.id + '">' +
-                'Edit' +
-              '</button>' +
-
-              '<button class="archive-action-btn archive-delete-btn" data-action="delete-archive-entry" ' +
-                'data-period-id="' + period.id + '" ' +
-                'data-id="' + entry.id + '">' +
-                'Delete' +
-              '</button>' +
-
-            '</div>' +
-
-          '</div>'
-        );
-
-      }).join("") +
-
-    '</div>';
-
-  archivePage.innerHTML =
-    '<div class="screen">' +
-      header +
-      summary +
-      entries +
-    '</div>';
-
-  return;
-}
+  const { archiveView, archiveYear, archiveMonth, archiveWeekId } = state.ui;
 
   /* ============================
      YEARS VIEW
   ============================ */
 
-  if (level === "years") {
-    const years = ArchiveService.getArchiveYears();
+  if (archiveView === "years") {
 
-   const total = years.reduce((acc, y) => {
-  acc.amount += y.amount ?? 0;
-  acc.kilometers += y.kilometers ?? 0;
-  acc.loads += y.loads ?? 0;
-  acc.meals += y.meals ?? 0;
-  return acc;
-}, { amount: 0, kilometers: 0, loads: 0, meals: 0 });
+    const years = ArchiveAggregationService.getYearsSummary();
 
-    const summary = renderSummary(total, "All Years");
+    archivePage.innerHTML = `
+      <div class="screen">
+        <div class="screen-header">
+          <h2>Archive</h2>
+        </div>
 
-    const table =
-      '<div class="archive-table">' +
-
-        years.map(y =>
-          '<div class="archive-row" data-action="open-archive-year" data-year="' + y.year + '">' +
-            '<div>' + y.year + '</div>' +
-            '<div>$' + Number(y.amount ?? 0).toFixed(2) + '</div>' +
-          '</div>'
-        ).join("") +
-
-      '</div>';
-
-    archivePage.innerHTML =
-      '<div class="screen">' +
-        header +
-        summary +
-        table +
-      '</div>';
+        ${renderYearsTable(years)}
+      </div>
+    `;
 
     return;
   }
@@ -357,42 +175,25 @@ export function renderArchiveScreen(state) {
      MONTHS VIEW
   ============================ */
 
-  if (level === "months") {
-    const months = ArchiveService.getArchiveMonths(archiveYear);
+  if (archiveView === "months") {
 
-    const total = months.reduce((acc, m) => {
-  acc.amount += m.amount ?? 0;
-  acc.kilometers += m.kilometers ?? 0;
-  acc.loads += m.loads ?? 0;
-  acc.meals += m.meals ?? 0;
-  return acc;
-}, { amount: 0, kilometers: 0, loads: 0, meals: 0 });
+    const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
 
-    const summary = renderSummary(total, archiveYear);
+    archivePage.innerHTML = `
+      <div class="screen">
 
-    const table =
-      '<div class="archive-table">' +
+        <div class="archive-header">
+          <button class="archive-back-btn"
+                  data-action="archive-back">
+            ← Archive
+          </button>
+          <h2>${archiveYear}</h2>
+        </div>
 
-        months.map(m => {
-          const name = new Date(m.year, m.month)
-            .toLocaleString("en-US", { month: "long" });
+        ${renderMonthsTable(months, archiveYear)}
 
-          return (
-            '<div class="archive-row" data-action="open-archive-month" data-year="' + m.year + '" data-month="' + m.month + '">' +
-              '<div>' + name + '</div>' +
-              '<div>$' + Number(m.amount ?? 0).toFixed(2) + '</div>' +
-            '</div>'
-          );
-        }).join("") +
-
-      '</div>';
-
-    archivePage.innerHTML =
-      '<div class="screen">' +
-        header +
-        summary +
-        table +
-      '</div>';
+      </div>
+    `;
 
     return;
   }
@@ -401,41 +202,224 @@ export function renderArchiveScreen(state) {
      WEEKS VIEW
   ============================ */
 
-  const weeks = ArchiveService.getArchivedWeeks(archiveYear, archiveMonth);
+  if (archiveView === "weeks") {
 
-  const total = weeks.reduce((acc, w) => {
-  acc.amount += w.totals.amount ?? 0;
-  acc.kilometers += w.totals.kilometers ?? 0;
-  acc.loads += w.totals.loads ?? 0;
-  acc.meals += w.totals.meals ?? 0;
-  return acc;
-}, { amount: 0, kilometers: 0, loads: 0, meals: 0 });
+    const weeks = ArchiveAggregationService.getWeeksSummary(
+      archiveYear,
+      archiveMonth
+    );
 
-  const monthName = new Date(archiveYear, archiveMonth)
-    .toLocaleString("en-US", { month: "long" });
+    const monthName = new Date(archiveYear, archiveMonth)
+      .toLocaleString("en-US", { month: "long" });
 
-  const summary = renderSummary(total, monthName + " " + archiveYear);
+    archivePage.innerHTML = `
+      <div class="screen">
 
-  const table =
-    '<div class="archive-table">' +
+        <div class="archive-header">
+          <button class="archive-back-btn"
+                  data-action="archive-back">
+            ← ${archiveYear}
+          </button>
+          <h2>${monthName} ${archiveYear}</h2>
+        </div>
 
-      weeks.map(w =>
-        '<div class="archive-row" data-action="open-archive" data-id="' + w.id + '">' +
-          '<div>' + escapeHtml(w.periodLabel) + '</div>' +
-          '<div>$' + Number(w.totals.amount ?? 0).toFixed(2) + '</div>' +
-        '</div>'
-      ).join("") +
+        ${renderWeeksTable(weeks)}
 
-    '</div>';
+      </div>
+    `;
 
-  archivePage.innerHTML =
-    '<div class="screen">' +
-      header +
-      summary +
-      table +
-    '</div>';
+    return;
+  }
+
+  /* ============================
+     ENTRIES VIEW
+  ============================ */
+
+  if (archiveView === "entries") {
+
+    const period = state.archive.find(p => p.id === archiveWeekId);
+    if (!period) return;
+
+    archivePage.innerHTML = `
+      <div class="screen">
+
+        <div class="archive-header">
+          <button class="archive-back-btn"
+                  data-action="archive-back">
+            ← Back
+          </button>
+          <h2>${period.periodLabel}</h2>
+        </div>
+
+        ${renderArchiveEntries(period, state)}
+
+      </div>
+    `;
+
+    return;
+  }
+}
+function renderYearsTable(years) {
+
+  if (!years.length) {
+    return `<div class="empty-state">No archived data</div>`;
+  }
+
+  return `
+    <div class="archive-table">
+
+      <div class="archive-row archive-header">
+        <div>Year</div>
+        <div class="text-right">Distance</div>
+        <div class="text-right">Loads</div>
+        <div class="text-right">Meals</div>
+        <div class="text-right">Waiting</div>
+        <div class="text-right">Total</div>
+      </div>
+
+      ${years.map(y => `
+        <div class="archive-row"
+             data-action="archive-open-year"
+             data-year="${y.year}">
+
+          <div>${y.year}</div>
+          <div class="text-right">${y.distance.toFixed(0)}</div>
+          <div class="text-right">${y.loads}</div>
+          <div class="text-right">${y.meals}</div>
+          <div class="text-right">${y.waiting.toFixed(1)}</div>
+          <div class="text-right">
+$$
+{y.total.toFixed(2)}</div>
+
+        </div>
+      `).join("")}
+
+    </div>
+  `;
 }
 
+function renderMonthsTable(months, year) {
+
+  if (!months.length) {
+    return `<div class="empty-state">No data</div>`;
+  }
+
+  return `
+    <div class="archive-table">
+
+      <div class="archive-row archive-header">
+        <div>Month</div>
+        <div class="text-right">Distance</div>
+        <div class="text-right">Loads</div>
+        <div class="text-right">Meals</div>
+        <div class="text-right">Waiting</div>
+        <div class="text-right">Total</div>
+      </div>
+
+      ${months.map(m => {
+        const name = new Date(year, m.month)
+          .toLocaleString("en-US", { month: "long" });
+
+        return `
+          <div class="archive-row"
+               data-action="archive-open-month"
+               data-month="${m.month}">
+
+            <div>${name}</div>
+            <div class="text-right">${m.distance.toFixed(0)}</div>
+            <div class="text-right">${m.loads}</div>
+            <div class="text-right">${m.meals}</div>
+            <div class="text-right">${m.waiting.toFixed(1)}</div>
+            <div class="text-right">
+$$
+{m.total.toFixed(2)}</div>
+
+          </div>
+        `;
+      }).join("")}
+
+    </div>
+  `;
+}
+
+function renderWeeksTable(weeks) {
+
+  if (!weeks.length) {
+    return `<div class="empty-state">No data</div>`;
+  }
+
+  return `
+    <div class="archive-table">
+
+      <div class="archive-row archive-header">
+        <div>Week Period</div>
+        <div class="text-right">Distance</div>
+        <div class="text-right">Loads</div>
+        <div class="text-right">Meals</div>
+        <div class="text-right">Waiting</div>
+        <div class="text-right">Total</div>
+      </div>
+
+      ${weeks.map(w => `
+        <div class="archive-row"
+             data-action="archive-open-week"
+             data-id="${w.id}">
+
+          <div>${escapeHtml(w.label)}</div>
+          <div class="text-right">${w.distance.toFixed(0)}</div>
+          <div class="text-right">${w.loads}</div>
+          <div class="text-right">${w.meals}</div>
+          <div class="text-right">${w.waiting.toFixed(1)}</div>
+          <div class="text-right">
+$$
+{w.total.toFixed(2)}</div>
+
+        </div>
+      `).join("")}
+
+    </div>
+  `;
+}
+
+function renderArchiveEntries(period, state) {
+
+  return `
+    <div class="archive-entries">
+      ${(period.entries || []).map(entry => {
+
+        const distance =
+          state.ui.displayUnit === "km"
+            ? Number(entry.kilometers ?? 0).toFixed(1)
+            : Number(entry.miles ?? 0).toFixed(1);
+
+        const mealsSummary = formatMealsSummary(entry.meals);
+
+        return `
+          <div class="archive-entry-card">
+
+            <div class="entry-top">
+              <div>${escapeHtml(entry.date)}</div>
+              <div>
+$$
+{Number(entry.amount ?? 0).toFixed(2)}</div>
+            </div>
+
+            <div class="entry-meta">
+              ${distance} ${state.ui.displayUnit}
+              • Loads: ${entry.loads ?? 0}
+              • Waiting: ${entry.waitingHours ?? 0}h
+            </div>
+
+            ${mealsSummary
+              ? `<div class="muted">${mealsSummary}</div>`
+              : ""}
+
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
 /* ======================================
    RENDER CUSTOMERS SCREEN
 ====================================== */
