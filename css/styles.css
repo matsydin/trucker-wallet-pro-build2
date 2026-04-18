@@ -873,3 +873,21 @@ button:active {
   text-align: right;
   font-weight: 500;
 }
+.archive-header {
+  margin-bottom: 20px;
+}
+
+.archive-header h2 {
+  margin: 6px 0 0 0;
+  font-size: 22px;
+}
+
+.archive-link {
+  font-size: 14px;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.archive-link:hover {
+  opacity: 1;
+}
