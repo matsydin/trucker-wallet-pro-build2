@@ -61,10 +61,18 @@ function render() {
   }
 
     const unitToggle = document.getElementById("unit-toggle");
-  if (unitToggle) {
-    unitToggle.style.display =
-      state.ui.activeTab === "log" ? "flex" : "none";
-  }
+if (unitToggle) {
+  unitToggle.style.display =
+    state.ui.activeTab === "log" ? "flex" : "none";
+}
+
+const exportBtn = document.getElementById("export-btn");
+if (exportBtn) {
+  exportBtn.style.display =
+    state.ui.activeTab === "archive" && state.ui.archiveDetailId
+      ? "block"
+      : "none";
+}
 
   if (state.ui.activeTab === "log") {
     renderLogScreen(state);
