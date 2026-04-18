@@ -234,7 +234,9 @@ if (!target) return;
     }
     return;
   }
-
+  if (action === "export-archive") {
+  handleArchiveExport();
+}
   if (action === "edit-archive-entry") {
     editingArchivePeriodId = periodId;
     editingArchiveEntryId = id;
@@ -703,6 +705,25 @@ document.addEventListener("change", function(e) {
     return;
   }
 });
+/* ===============================
+   Archive Export
+================================ */
+function handleArchiveExport() {
+  const data = getCurrentArchiveData(); // твоя логіка отримання даних
+
+  const blob = new Blob(
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "archive-export.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
 
 /* ===============================
    INIT
