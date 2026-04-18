@@ -43,6 +43,7 @@ export const LogbookService = {
 },
 
   addEntry(data) {
+    meals: entryData.meals || createDefaultMeals(),
     const miles = this.convertKmToMiles(data.kilometers);
 
     const rateSnapshot = {
