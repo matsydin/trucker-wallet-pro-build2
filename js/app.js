@@ -207,7 +207,7 @@ function handleClick(e) {
 
   const action = actionBtn.dataset.action;
   const id = actionBtn.dataset.id;
-  const periodId = actionBtn.dataset.periodId;
+  const periodId = actionBtn.dataset.period || actionBtn.dataset.periodId;
 
   /* ===== DATA TAB ===== */
 
