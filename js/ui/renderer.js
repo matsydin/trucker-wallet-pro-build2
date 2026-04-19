@@ -157,158 +157,83 @@ export function renderDataScreen(state) {
 /* ======================================
    RENDER ARCHIVE SCREEN
 ====================================== */
+import { ArchiveService } from "../services/archive.service.js";
 
 export function renderArchiveScreen(state) {
-  let { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
 
-  // ✅ AUTO-SET DEFAULT YEAR
-  if (!archiveYear) {
-    const years = ArchiveAggregationService.getYearsSummary();
-
-    if (years.length) {
-      archiveYear = years[0].year;
-      state.ui.archiveYear = archiveYear;
-    }
-  }
-  
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
-  let content = "";
-
 
   /* =========================
-     LEVEL: MONTHS
+     DETAIL MODE (WEEK → DAYS)
   ========================== */
 
- if (state.ui.archiveTab === "months") {
+  if (state.ui.expandedWeekId) {
 
-  const months = ArchiveAggregationService.getMonthsSummary(
-    Number(state.ui.archiveYear)
-  );
-
-  content = months.length
-    ? renderMonthsTable(months, state.ui.archiveYear)
-    : '<div class="empty-state">No data</div>';
-}
-
-  /* =========================
-     LEVEL: WEEKS
-  ========================== */
-
-  if (state.ui.archiveTab === "weeks") {
-
-  
-
-  const selectedYear = Number(state.ui.archiveYear);
-
-  
-
-  let weeks = [];
-
-  const months = ArchiveAggregationService.getMonthsSummary(selectedYear);
-
-  
-
-  if (state.ui.archiveMonthFilter == null) {
-
-    months.forEach(m => {
-
-      const monthWeeks = ArchiveAggregationService.getWeeksSummary(
-        selectedYear,
-        Number(m.month)
-      );
-
-      
-
-      weeks = weeks.concat(monthWeeks);
-    });
-
-  } else {
-
-    weeks = ArchiveAggregationService.getWeeksSummary(
-      selectedYear,
-      Number(state.ui.archiveMonthFilter)
+    const period = state.archive.find(
+      p => p.id === state.ui.expandedWeekId
     );
 
-    
+    if (!period) {
+      state.ui.expandedWeekId = null;
+      return renderArchiveScreen(state);
+    }
+
+    archivePage.innerHTML = renderArchiveDetail(period, state);
+    return;
   }
 
-  
+  /* =========================
+     DEFAULT MODE (WEEKS LIST)
+  ========================== */
 
-  content = weeks.length
-    ? renderWeeksTable(weeks)
+  const selectedYear  = Number(state.ui.archiveYear);
+  const selectedMonth = state.ui.archiveMonthFilter;
+
+  const weeks = ArchiveService.getArchivedWeeks(
+    selectedYear,
+    selectedMonth
+  );
+
+  const content = weeks.length
+    ? renderWeeksTableFromPeriods(weeks)
     : '<div class="empty-state">No data</div>';
-}
-
-  /* =========================
-     LEVEL: ENTRIES
-  ========================== */
-
-//if (archiveTab === "entries") {
-  //  const period = state.archive.find(p => p.id === archiveWeekId);
-  //  if (period) {
-   //   content = renderArchiveEntries(period, state);
- //   }
-// }
-
-  /* =========================
-     FINAL LAYOUT
-  ========================== */
 
   archivePage.innerHTML = `
-  <div class="screen">
+    <div class="screen">
 
-    <!-- YEAR SELECTOR -->
-    <div class="archive-filters">
+      <div class="archive-filters">
 
-      <div class="archive-select-group">
-        <label>Year</label>
-        <select data-action="set-archive-year">
-          ${getAvailableYears().map(year => `
-            <option value="${year}" ${year === state.ui.archiveYear ? "selected" : ""}>
-              ${year}
-            </option>
-          `).join("")}
-        </select>
+        <div class="archive-select-group">
+          <label>Year</label>
+          <select data-action="set-archive-year">
+            ${getAvailableYears().map(year => `
+              <option value="${year}" ${year === state.ui.archiveYear ? "selected" : ""}>
+                ${year}
+              </option>
+            `).join("")}
+          </select>
+        </div>
+
+        <div class="archive-select-group">
+          <label>Month</label>
+          <select data-action="set-archive-month-filter">
+            <option value="">All</option>
+            ${getMonthOptions().map((name, index) => `
+              <option value="${index}" ${state.ui.archiveMonthFilter === index ? "selected" : ""}>
+                ${name}
+              </option>
+            `).join("")}
+          </select>
+        </div>
+
       </div>
 
-      <div class="archive-select-group">
-        <label>Month</label>
-        <select data-action="set-archive-month-filter">
-          <option value="">All</option>
-          ${getMonthOptions().map((name, index) => `
-            <option value="${index}" ${state.ui.archiveMonthFilter === index ? "selected" : ""}>
-              ${name}
-            </option>
-          `).join("")}
-        </select>
-      </div>
+      ${content}
 
     </div>
-
-    <!-- TABS -->
-    <div class="segmented archive-segmented">
-      <button
-        data-action="set-archive-tab"
-        data-tab="weeks"
-        class="${state.ui.archiveTab === "weeks" ? "active" : ""}">
-        Weeks
-      </button>
-
-      <button
-        data-action="set-archive-tab"
-        data-tab="months"
-        class="${state.ui.archiveTab === "months" ? "active" : ""}">
-        Months
-      </button>
-    </div>
-
-    ${content}
-
-  </div>
-`;
+  `;
 }
-
 
 /* ======================================
    RENDER MONTHS TABLE
@@ -403,6 +328,122 @@ function renderWeeksTable(weeks) {
   `;
 }
 
+/* ======================================
+   RENDER WEEKS TABLE FROM PERIODS
+====================================== */
+
+function renderWeeksTableFromPeriods(periods) {
+
+  return `
+    <div class="archive-table-wrapper">
+      <div class="archive-table">
+
+        <div class="archive-row archive-header">
+          <div>Week Period</div>
+          <div class="text-right">Distance</div>
+          <div class="text-right">Loads</div>
+          <div class="text-right">Meals</div>
+          <div class="text-right">Waiting</div>
+          <div class="text-right">Total</div>
+        </div>
+
+        ${periods.map(p => `
+          <div class="archive-row"
+               data-action="archive-open-week"
+               data-id="${p.id}">
+
+            <div>${escapeHtml(p.periodLabel)}</div>
+            <div class="text-right">${Number(p.totals.kilometers ?? 0).toFixed(0)}</div>
+            <div class="text-right">${p.totals.loads ?? 0}</div>
+            <div class="text-right">${p.totals.meals ?? 0}</div>
+            <div class="text-right">${Number(p.totals.waitingHours ?? 0).toFixed(1)}</div>
+            <div class="text-right">
+              ${Number(p.totals.amount ?? 0).toFixed(2)}
+            </div>
+
+          </div>
+        `).join("")}
+
+      </div>
+    </div>
+  `;
+}
+
+/* ======================================
+   RENDER ARCHIVE DETAIL
+====================================== */
+function renderArchiveDetail(period, state) {
+
+  return `
+    <div class="screen">
+
+      <div class="screen-header">
+        <button data-action="archive-back-to-weeks">← Back</button>
+        <h2>${escapeHtml(period.periodLabel)}</h2>
+      </div>
+
+      <div class="archive-table-wrapper">
+        <div class="archive-table">
+
+          <div class="archive-row archive-header">
+            <div>Date</div>
+            <div>Distance</div>
+            <div>Loads</div>
+            <div>Meals</div>
+            <div>Waiting</div>
+            <div>Total</div>
+            <div></div>
+          </div>
+
+          ${period.entries.map(entry => {
+
+            const distance =
+              state.ui.displayUnit === "km"
+                ? Number(entry.kilometers ?? 0).toFixed(1)
+                : Number(entry.miles ?? 0).toFixed(1);
+
+            const meals =
+              entry.meals
+                ? ["breakfast","lunch","dinner"]
+                    .filter(t => entry.meals[t]?.taken).length
+                : 0;
+
+            return `
+              <div class="archive-row">
+
+                <div>${escapeHtml(entry.date)}</div>
+                <div>${distance}</div>
+                <div>${entry.loads ?? 0}</div>
+                <div>${meals}</div>
+                <div>${entry.waitingHours ?? 0}</div>
+                <div>${Number(entry.amount ?? 0).toFixed(2)}</div>
+
+                <div>
+                  <button
+                    data-action="edit-archived-entry"
+                    data-period="${period.id}"
+                    data-entry="${entry.id}">
+                    Edit
+                  </button>
+
+                  <button
+                    data-action="delete-archived-entry"
+                    data-period="${period.id}"
+                    data-entry="${entry.id}">
+                    Delete
+                  </button>
+                </div>
+
+              </div>
+            `;
+          }).join("")}
+
+        </div>
+      </div>
+
+    </div>
+  `;
+}
 /* ======================================
    RENDER ARCHIVE ENTRIES
 ====================================== */
