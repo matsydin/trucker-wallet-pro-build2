@@ -356,7 +356,7 @@ mealTypes.forEach(type => {
       perMile: entry.rateSnapshot.perMile,
       perDrop: entry.rateSnapshot.perDrop,
       perWaiting: entry.rateSnapshot.perWaiting,
-      meals: entry.meals
+      meals: meals
     }
   );
 
