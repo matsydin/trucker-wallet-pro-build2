@@ -5,8 +5,10 @@ function getAvailableYears(state) {
   const years = new Set();
 
   state.archive.forEach(period => {
-    const year = new Date(period.createdAt).getFullYear();
-    years.add(year);
+    if (period.entries?.length) {
+      const year = new Date(period.entries[0].date).getFullYear();
+      years.add(year);
+    }
   });
 
   if (!years.size) {
