@@ -85,7 +85,7 @@ export function renderLogScreen(state) {
         '<p class="entry-amount">' +
   Number(entry.amount ?? 0).toFixed(2) +
   ' ' + state.settings.currency +
-        '</p>'
+        '</p>'+
 
       '</div>'
     );
