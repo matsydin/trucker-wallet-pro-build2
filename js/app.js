@@ -217,7 +217,20 @@ function handleClick(e) {
     render();
     return;
   }
+/* ===== ARCHIVE TAB SWITCH ===== */
 
+if (action === "set-archive-tab") {
+
+  state.ui.archiveTab = actionBtn.dataset.tab;
+
+  state.ui.archiveYear = null;
+  state.ui.archiveMonth = null;
+  state.ui.archiveWeekId = null;
+
+  saveState();
+  render();
+  return;
+}
   /* ===== LOG ENTRY EDIT ===== */
 
   if (action === "edit-log-entry") {
@@ -268,19 +281,14 @@ function handleClick(e) {
     saveArchiveEntryFromModal();
     return;
   }
-if (action === "archive-switch") {
-  state.ui.archiveView = actionBtn.dataset.view;
-  saveState();
-  render();
-  return;
-}
+
   /* ===================================================
      ARCHIVE — NEW HIERARCHY NAVIGATION
   =================================================== */
 
   if (action === "archive-open-year") {
     state.ui.archiveYear = Number(actionBtn.dataset.year);
-    state.ui.archiveView = "months";
+    state.ui.archiveTab = "months";
     saveState();
     render();
     return;
@@ -288,7 +296,7 @@ if (action === "archive-switch") {
 
   if (action === "archive-open-month") {
     state.ui.archiveMonth = Number(actionBtn.dataset.month);
-    state.ui.archiveView = "weeks";
+    state.ui.archiveTab = "weeks";
     saveState();
     render();
     return;
@@ -296,7 +304,7 @@ if (action === "archive-switch") {
 
   if (action === "archive-open-week") {
     state.ui.archiveWeekId = id;
-    state.ui.archiveView = "entries";
+    state.ui.archiveTab = "entries";
     saveState();
     render();
     return;
@@ -304,16 +312,16 @@ if (action === "archive-switch") {
 
   if (action === "archive-back") {
 
-    if (state.ui.archiveView === "entries") {
-      state.ui.archiveView = "weeks";
+    if (state.ui.archiveTab === "entries") {
+      state.ui.archiveTab = "weeks";
       state.ui.archiveWeekId = null;
     }
-    else if (state.ui.archiveView === "weeks") {
-      state.ui.archiveView = "months";
+    else if (state.ui.archiveTab === "weeks") {
+      state.ui.archiveTab = "months";
       state.ui.archiveMonth = null;
     }
-    else if (state.ui.archiveView === "months") {
-      state.ui.archiveView = "years";
+    else if (state.ui.archiveTab === "months") {
+      state.ui.archiveTab = "years";
       state.ui.archiveYear = null;
     }
 
