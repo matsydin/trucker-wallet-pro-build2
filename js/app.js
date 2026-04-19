@@ -864,4 +864,7 @@ function init() {
   render();
 }
 
+window.appState = state;
+window.appRender = render;
 document.addEventListener("DOMContentLoaded", init);
+
