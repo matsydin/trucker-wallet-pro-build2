@@ -75,7 +75,7 @@ export function renderLogScreen(state) {
         '</div>' +
 
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
-        '<p>Loads: '   + Number(entry.loads        ?? 0) + '</p>' +
+        '<p>Loads: '   + Number(entry.loads ?? 0) + '</p>' +
         '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
 
         (mealsCount > 0
@@ -133,7 +133,6 @@ export function renderDataScreen(state) {
   if (active === "customers") renderCustomers(state);
   if (active === "fleet")     renderFleet(state);
 }
-
 /* ======================================
    RENDER ARCHIVE SCREEN
 ====================================== */
@@ -149,10 +148,6 @@ export function renderArchiveScreen(state) {
   if (!archivePage) return;
 
   const { archiveView, archiveYear, archiveMonth, archiveWeekId } = state.ui;
-
-  /* ============================
-     YEARS VIEW
-  ============================ */
 
   if (archiveView === "years") {
 
@@ -170,10 +165,6 @@ export function renderArchiveScreen(state) {
 
     return;
   }
-
-  /* ============================
-     MONTHS VIEW
-  ============================ */
 
   if (archiveView === "months") {
 
@@ -197,10 +188,6 @@ export function renderArchiveScreen(state) {
 
     return;
   }
-
-  /* ============================
-     WEEKS VIEW
-  ============================ */
 
   if (archiveView === "weeks") {
 
@@ -230,10 +217,6 @@ export function renderArchiveScreen(state) {
 
     return;
   }
-
-  /* ============================
-     ENTRIES VIEW
-  ============================ */
 
   if (archiveView === "entries") {
 
@@ -267,7 +250,7 @@ export function renderArchiveScreen(state) {
 function renderYearsTable(years) {
 
   if (!years.length) {
-    return `<div class="empty-state">No archived data</div>`;
+    return '<div class="empty-state">No archived data</div>';
   }
 
   return `
@@ -288,13 +271,13 @@ function renderYearsTable(years) {
              data-year="${y.year}">
 
           <div>${y.year}</div>
-          <div class="text-right">${y.distance.toFixed(0)}</div>
+          <div class="text-right">${Number(y.distance ?? 0).toFixed(0)}</div>
           <div class="text-right">${y.loads}</div>
           <div class="text-right">${y.meals}</div>
-          <div class="text-right">${y.waiting.toFixed(1)}</div>
+          <div class="text-right">${Number(y.waiting ?? 0).toFixed(1)}</div>
           <div class="text-right">
 $$
-{y.total.toFixed(2)}</div>
+{Number(y.total ?? 0).toFixed(2)}</div>
 
         </div>
       `).join("")}
@@ -310,7 +293,7 @@ $$
 function renderMonthsTable(months, year) {
 
   if (!months.length) {
-    return `<div class="empty-state">No data</div>`;
+    return '<div class="empty-state">No data</div>';
   }
 
   return `
@@ -335,13 +318,13 @@ function renderMonthsTable(months, year) {
                data-month="${m.month}">
 
             <div>${name}</div>
-            <div class="text-right">${m.distance.toFixed(0)}</div>
+            <div class="text-right">${Number(m.distance ?? 0).toFixed(0)}</div>
             <div class="text-right">${m.loads}</div>
             <div class="text-right">${m.meals}</div>
-            <div class="text-right">${m.waiting.toFixed(1)}</div>
+            <div class="text-right">${Number(m.waiting ?? 0).toFixed(1)}</div>
             <div class="text-right">
 $$
-{m.total.toFixed(2)}</div>
+{Number(m.total ?? 0).toFixed(2)}</div>
 
           </div>
         `;
@@ -350,7 +333,6 @@ $$
     </div>
   `;
 }
-
 /* ======================================
    RENDER WEEKS TABLE
 ====================================== */
@@ -358,7 +340,7 @@ $$
 function renderWeeksTable(weeks) {
 
   if (!weeks.length) {
-    return `<div class="empty-state">No data</div>`;
+    return '<div class="empty-state">No data</div>';
   }
 
   return `
@@ -379,13 +361,13 @@ function renderWeeksTable(weeks) {
              data-id="${w.id}">
 
           <div>${escapeHtml(w.label)}</div>
-          <div class="text-right">${w.distance.toFixed(0)}</div>
+          <div class="text-right">${Number(w.distance ?? 0).toFixed(0)}</div>
           <div class="text-right">${w.loads}</div>
           <div class="text-right">${w.meals}</div>
-          <div class="text-right">${w.waiting.toFixed(1)}</div>
+          <div class="text-right">${Number(w.waiting ?? 0).toFixed(1)}</div>
           <div class="text-right">
 $$
-{w.total.toFixed(2)}</div>
+{Number(w.total ?? 0).toFixed(2)}</div>
 
         </div>
       `).join("")}
@@ -494,13 +476,13 @@ function renderArchiveYearsTable(state) {
                data-year="${y.year}">
 
             <div>${y.year}</div>
-            <div>${y.distance.toFixed(0)}</div>
+            <div>${Number(y.distance ?? 0).toFixed(0)}</div>
             <div>${y.loads}</div>
             <div>${y.meals}</div>
-            <div>${y.waiting.toFixed(1)}</div>
+            <div>${Number(y.waiting ?? 0).toFixed(1)}</div>
             <div>
 $$
-{y.total.toFixed(2)}</div>
+{Number(y.total ?? 0).toFixed(2)}</div>
 
           </div>
         `).join("")}
@@ -652,9 +634,9 @@ export function renderFleet(state) {
             </div>
           </div>
 
-          ${t.plate   ? `<p>Plate: ${escapeHtml(t.plate)}</p>`       : ""}
-          ${t.maxLoad ? `<p>Max Load: ${escapeHtml(t.maxLoad)}</p>`  : ""}
-          ${t.psi     ? `<p>PSI: ${escapeHtml(t.psi)}</p>`          : ""}
+          ${t.plate   ? `<p>Plate: ${escapeHtml(t.plate)}</p>` : ""}
+          ${t.maxLoad ? `<p>Max Load: ${escapeHtml(t.maxLoad)}</p>` : ""}
+          ${t.psi     ? `<p>PSI: ${escapeHtml(t.psi)}</p>` : ""}
           ${t.notes   ? `<p class="muted">${escapeHtml(t.notes)}</p>` : ""}
         </div>
       `;
