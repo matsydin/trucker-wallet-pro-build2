@@ -64,9 +64,7 @@ function archiveCurrent() {
 function deleteArchive(id) {
   state.archive = state.archive.filter(a => a.id !== id);
 
-  if (state.ui.archiveDetailId === id) {
-    state.ui.archiveDetailId = null;
-  }
+
 
   saveState();
 }
