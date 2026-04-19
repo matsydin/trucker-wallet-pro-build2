@@ -822,8 +822,30 @@ function openArchiveEntryModal(periodId, entryId) {
   document.getElementById("archive-entry-waiting").value = entry.waitingHours ?? 0;
   document.getElementById("archive-entry-rate-mile").value = entry.rateSnapshot?.perMile ?? 0;
   document.getElementById("archive-entry-rate-drop").value = entry.rateSnapshot?.perDrop ?? 0;
-  document.getElementById("archive-entry-rate-waiting").value = entry.rateSnapshot?.perWaiting ?? 0;
-  document.getElementById("archive-entry-modal-error").textContent = "";
+  document.getElementById("archive-entry-rate-waiting").value =
+  entry.rateSnapshot?.perWaiting ?? 0;
+
+// ===== Populate meals =====
+const mealTypes = ["breakfast","lunch","dinner"];
+
+mealTypes.forEach(type => {
+
+  const card = modal.querySelector(`.meal-card[data-meal="${type}"]`);
+  if (!card) return;
+
+  const checkbox = card.querySelector(".meal-checkbox");
+  const select = card.querySelector(".meal-select");
+
+  const taken = entry.meals?.[type]?.taken;
+  const location = entry.meals?.[type]?.location || "";
+
+  if (checkbox) checkbox.checked = !!taken;
+  card.classList.toggle("active", !!taken);
+
+  if (select) select.value = location;
+});
+
+document.getElementById("archive-entry-modal-error").textContent = "";
 
   modal.hidden = false;
 }
@@ -839,7 +861,27 @@ function closeArchiveEntryModal() {
 
 function saveArchiveEntryFromModal() {
   const errorEl = document.getElementById("archive-entry-modal-error");
+// ===== Collect meals =====
+const mealTypes = ["breakfast","lunch","dinner"];
+const meals = {};
 
+mealTypes.forEach(type => {
+
+  const card = document.querySelector(
+    `#archive-entry-modal .meal-card[data-meal="${type}"]`
+  );
+
+  if (!card) return;
+
+  const checkbox = card.querySelector(".meal-checkbox");
+  const select = card.querySelector(".meal-select");
+
+  meals[type] = {
+    taken: !!checkbox?.checked,
+    location: checkbox?.checked ? select?.value : ""
+  };
+});
+  
   const payload = {
     date: document.getElementById("archive-entry-date").value,
     kilometers: document.getElementById("archive-entry-distance").value,
@@ -848,6 +890,7 @@ function saveArchiveEntryFromModal() {
     perMile: document.getElementById("archive-entry-rate-mile").value,
     perDrop: document.getElementById("archive-entry-rate-drop").value,
     perWaiting: document.getElementById("archive-entry-rate-waiting").value
+    meals
   };
 
   const result = ArchiveService.editArchivedEntry(
