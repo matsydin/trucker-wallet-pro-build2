@@ -79,7 +79,12 @@ export const LogbookService = {
     };
 
     state.current.entries.push(entry);
-
+// ✅ reset meals form state
+state.ui.mealDraft = {
+  breakfast: { taken: false, location: "" },
+  lunch: { taken: false, location: "" },
+  dinner: { taken: false, location: "" }
+};
     this.calculateTotals();
     saveState();
   },
