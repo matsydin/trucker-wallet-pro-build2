@@ -277,7 +277,7 @@ export function renderArchiveScreen(state) {
 
   </div>
 `;
-
+}
 /* ======================================
    RENDER YEARS TABLE
 ====================================== */
