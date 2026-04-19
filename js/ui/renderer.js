@@ -378,7 +378,10 @@ function renderArchiveDetail(period, state) {
     <div class="screen">
 
       <div class="screen-header">
-        <button data-action="archive-back-to-weeks">← Back</button>
+        <button class="secondary-btn"
+                data-action="archive-back-to-weeks">
+          ← Back
+        </button>
         <h2>${escapeHtml(period.periodLabel)}</h2>
       </div>
 
@@ -387,22 +390,17 @@ function renderArchiveDetail(period, state) {
 
           <div class="archive-row archive-header">
             <div>Date</div>
-            <div>Distance</div>
+            <div>Km</div>
             <div>Loads</div>
-            <div>Meals</div>
             <div>Waiting</div>
+            <div>Meals</div>
             <div>Total</div>
             <div></div>
           </div>
 
           ${period.entries.map(entry => {
 
-            const distance =
-              state.ui.displayUnit === "km"
-                ? Number(entry.kilometers ?? 0).toFixed(1)
-                : Number(entry.miles ?? 0).toFixed(1);
-
-            const meals =
+            const mealsCount =
               entry.meals
                 ? ["breakfast","lunch","dinner"]
                     .filter(t => entry.meals[t]?.taken).length
@@ -411,27 +409,58 @@ function renderArchiveDetail(period, state) {
             return `
               <div class="archive-row">
 
-                <div>${escapeHtml(entry.date)}</div>
-                <div>${distance}</div>
-                <div>${entry.loads ?? 0}</div>
-                <div>${meals}</div>
-                <div>${entry.waitingHours ?? 0}</div>
-                <div>${Number(entry.amount ?? 0).toFixed(2)}</div>
+                <div>
+                  <input type="date"
+                         value="${entry.date}"
+                         data-field="date"
+                         data-entry="${entry.id}">
+                </div>
 
                 <div>
-                  <button
-                    data-action="edit-archived-entry"
-                    data-period="${period.id}"
-                    data-entry="${entry.id}">
-                    Edit
+                  <input type="number"
+                         step="0.1"
+                         value="${entry.kilometers}"
+                         data-field="kilometers"
+                         data-entry="${entry.id}">
+                </div>
+
+                <div>
+                  <input type="number"
+                         value="${entry.loads}"
+                         data-field="loads"
+                         data-entry="${entry.id}">
+                </div>
+
+                <div>
+                  <input type="number"
+                         step="0.1"
+                         value="${entry.waitingHours}"
+                         data-field="waitingHours"
+                         data-entry="${entry.id}">
+                </div>
+
+                <div>${mealsCount}</div>
+
+                <div>
+                  ${Number(entry.amount ?? 0).toFixed(2)}
+                </div>
+
+                <div class="row-actions">
+
+                  <button class="success-btn"
+                          data-action="save-archived-row"
+                          data-period="${period.id}"
+                          data-entry="${entry.id}">
+                    ✓
                   </button>
 
-                  <button
-                    data-action="delete-archived-entry"
-                    data-period="${period.id}"
-                    data-entry="${entry.id}">
-                    Delete
+                  <button class="danger-btn"
+                          data-action="delete-archived-entry"
+                          data-period="${period.id}"
+                          data-entry="${entry.id}">
+                    ✕
                   </button>
+
                 </div>
 
               </div>
@@ -444,6 +473,7 @@ function renderArchiveDetail(period, state) {
     </div>
   `;
 }
+
 /* ======================================
    RENDER ARCHIVE ENTRIES
 ====================================== */
