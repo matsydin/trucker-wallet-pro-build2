@@ -221,6 +221,15 @@ if (action === "reset-custom-range") {
   const id = actionBtn.dataset.id;
   const periodId = actionBtn.dataset.period || actionBtn.dataset.periodId;
 
+  if (action === "toggle-archive-rates") {
+
+  const section = document.getElementById("archive-rates-section");
+  if (!section) return;
+
+  section.hidden = !section.hidden;
+  return;
+}
+
   /* ===== DATA TAB ===== */
 
   if (action === "set-data-tab") {
