@@ -185,12 +185,11 @@ export function renderArchiveScreen(state) {
 
  if (archiveTab === "months") {
 
-  if (archiveYear == null) {
-    content = '<div class="empty-state">Select a year first</div>';
-  } else {
-    const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
-    content = renderMonthsTable(months, archiveYear);
-  }
+  const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
+
+  content = months.length
+    ? renderMonthsTable(months, archiveYear)
+    : '<div class="empty-state">No data</div>';
 }
 
   /* =========================
@@ -230,12 +229,12 @@ export function renderArchiveScreen(state) {
      LEVEL: ENTRIES
   ========================== */
 
-  if (archiveTab === "entries") {
-    const period = state.archive.find(p => p.id === archiveWeekId);
-    if (period) {
-      content = renderArchiveEntries(period, state);
-    }
-  }
+//if (archiveTab === "entries") {
+  //  const period = state.archive.find(p => p.id === archiveWeekId);
+  //  if (period) {
+   //   content = renderArchiveEntries(period, state);
+ //   }
+// }
 
   /* =========================
      FINAL LAYOUT
