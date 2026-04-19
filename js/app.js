@@ -284,6 +284,17 @@ if (action === "set-archive-tab") {
     return;
   }
 
+  if (action === "archive-open-week") {
+  state.ui.expandedWeekId = e.target.dataset.id;
+  saveState();
+  render();
+}
+
+if (action === "archive-back-to-weeks") {
+  state.ui.expandedWeekId = null;
+  saveState();
+  render();
+}
   /* ===================================================
      ARCHIVE — NEW HIERARCHY NAVIGATION
   =================================================== */
