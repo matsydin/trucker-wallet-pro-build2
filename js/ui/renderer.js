@@ -1,6 +1,29 @@
 // js/ui/renderer.js
 import { ArchiveAggregationService } from "../services/archive-aggregation.service.js";
 
+function getAvailableYears(state) {
+  const years = new Set();
+
+  state.archive.forEach(period => {
+    const year = new Date(period.createdAt).getFullYear();
+    years.add(year);
+  });
+
+  if (!years.size) {
+    years.add(new Date().getFullYear());
+  }
+
+  return Array.from(years).sort((a, b) => b - a);
+}
+
+function getMonthOptions() {
+  return [
+    "January","February","March","April",
+    "May","June","July","August",
+    "September","October","November","December"
+  ];
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -203,36 +226,57 @@ export function renderArchiveScreen(state) {
   ========================== */
 
   archivePage.innerHTML = `
-    <div class="screen">
+  <div class="screen">
 
-      <div class="segmented archive-segmented">
-        <button
-          data-action="set-archive-tab"
-          data-tab="weeks"
-          class="${archiveTab === "weeks" ? "active" : ""}">
-          Weeks
-        </button>
+    <!-- YEAR SELECTOR -->
+    <div class="archive-filters">
 
-        <button
-          data-action="set-archive-tab"
-          data-tab="months"
-          class="${archiveTab === "months" ? "active" : ""}">
-          Months
-        </button>
-
-        <button
-          data-action="set-archive-tab"
-          data-tab="years"
-          class="${archiveTab === "years" ? "active" : ""}">
-          Years
-        </button>
+      <div class="archive-select-group">
+        <label>Year</label>
+        <select data-action="set-archive-year">
+          ${getAvailableYears(state).map(year => `
+            <option value="${year}" ${year === state.ui.archiveYear ? "selected" : ""}>
+              ${year}
+            </option>
+          `).join("")}
+        </select>
       </div>
 
-      ${content}
+      <div class="archive-select-group">
+        <label>Month</label>
+        <select data-action="set-archive-month-filter">
+          <option value="">All</option>
+          ${getMonthOptions().map((name, index) => `
+            <option value="${index}" ${state.ui.archiveMonthFilter === index ? "selected" : ""}>
+              ${name}
+            </option>
+          `).join("")}
+        </select>
+      </div>
 
     </div>
-  `;
-}
+
+    <!-- TABS -->
+    <div class="segmented archive-segmented">
+      <button
+        data-action="set-archive-tab"
+        data-tab="weeks"
+        class="${state.ui.archiveTab === "weeks" ? "active" : ""}">
+        Weeks
+      </button>
+
+      <button
+        data-action="set-archive-tab"
+        data-tab="months"
+        class="${state.ui.archiveTab === "months" ? "active" : ""}">
+        Months
+      </button>
+    </div>
+
+    ${content}
+
+  </div>
+`;
 
 /* ======================================
    RENDER YEARS TABLE
