@@ -251,6 +251,7 @@ function renderYearsTable(years) {
   }
 
   return `
+    <div class="archive-table-wrapper">
     <div class="archive-table">
 
       <div class="archive-row archive-header">
@@ -278,7 +279,7 @@ function renderYearsTable(years) {
 
         </div>
       `).join("")}
-
+      </div>
     </div>
   `;
 }
@@ -294,7 +295,8 @@ function renderMonthsTable(months, year) {
   }
 
   return `
-    <div class="archive-table">
+    <div class="archive-table-wrapper">
+      <div class="archive-table">
 
       <div class="archive-row archive-header">
         <div>Month</div>
@@ -324,7 +326,7 @@ function renderMonthsTable(months, year) {
             </div>
         `;
       }).join("")}
-
+      </div>
     </div>
   `;
 }
@@ -339,7 +341,8 @@ function renderWeeksTable(weeks) {
   }
 
   return `
-    <div class="archive-table">
+    <div class="archive-table-wrapper">
+      <div class="archive-table">
 
       <div class="archive-row archive-header">
         <div>Week Period</div>
@@ -364,7 +367,7 @@ function renderWeeksTable(weeks) {
   ${Number(w.total ?? 0).toFixed(2)}
           </div>
       `).join("")}
-
+      </div>
     </div>
   `;
 }
