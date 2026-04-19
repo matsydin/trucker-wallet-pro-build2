@@ -582,6 +582,7 @@ function closeTrailerModal() {
 ================================ */
 
 function openEntryModal(id = null) {
+
   const modal = document.querySelector(
     ".modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)"
   );
@@ -598,6 +599,7 @@ function openEntryModal(id = null) {
   const mealTypes = ["breakfast", "lunch", "dinner"];
 
   if (id) {
+
     const entry = state.current.entries.find(e => e.id === id);
     if (!entry) return;
 
@@ -608,49 +610,22 @@ function openEntryModal(id = null) {
     pickupsInput.value = entry.loads ?? 0;
     waitingInput.value = entry.waitingHours ?? 0;
 
-    const meals = entry.meals || {};
-
     mealTypes.forEach(type => {
-      mealTypes.forEach(type => {
-  const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
-  const checkbox = card?.querySelector(".meal-checkbox");
-  const select = card?.querySelector(".meal-select");
 
-  const taken = meals[type]?.taken;
-  const location = meals[type]?.location || "";
+      const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
+      const checkbox = card?.querySelector(".meal-checkbox");
+      const select = card?.querySelector(".meal-select");
 
-  if (checkbox) checkbox.checked = !!taken;
-  if (card) card.classList.toggle("active", !!taken);
-  if (select) select.value = location;
-});
-      
-      mealTypes.forEach(type => {
-  const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
-  const checkbox = card?.querySelector(".meal-checkbox");
-  const select = card?.querySelector(".meal-select");
+      const taken = entry.meals?.[type]?.taken;
+      const location = entry.meals?.[type]?.location || "";
 
-  if (checkbox) checkbox.checked = false;
-  if (card) card.classList.remove("active");
-  if (select) select.value = "";
-});
-
-      const taken = meals[type]?.taken;
-      const location = meals[type]?.location || "";
-
-      if (pill) {
-        if (taken) {
-          pill.classList.add("active");
-        } else {
-          pill.classList.remove("active");
-        }
-      }
-
-      if (select) {
-        select.value = location;
-      }
+      if (checkbox) checkbox.checked = !!taken;
+      if (card) card.classList.toggle("active", !!taken);
+      if (select) select.value = location;
     });
 
   } else {
+
     if (title) title.textContent = "New Entry";
 
     const today = new Date().toISOString().split("T")[0];
@@ -660,10 +635,13 @@ function openEntryModal(id = null) {
     waitingInput.value = "";
 
     mealTypes.forEach(type => {
-      const pill = document.querySelector(`.meal-pill[data-meal="${type}"]`);
-      const select = document.getElementById(`meal-${type}-location`);
 
-      if (pill) pill.classList.remove("active");
+      const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
+      const checkbox = card?.querySelector(".meal-checkbox");
+      const select = card?.querySelector(".meal-select");
+
+      if (checkbox) checkbox.checked = false;
+      if (card) card.classList.remove("active");
       if (select) select.value = "";
     });
   }
