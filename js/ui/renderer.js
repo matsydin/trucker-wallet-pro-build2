@@ -140,104 +140,108 @@ export function renderDataScreen(state) {
 
 export function renderArchiveScreen(state) {
 
-
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
 
   const { archiveTab, archiveYear, archiveMonth, archiveWeekId } = state.ui;
 
-if (archiveTab === "years") {
+  let content = "";
 
+  /* =========================
+     LEVEL: YEARS
+  ========================== */
+
+  if (archiveTab === "years") {
     const years = ArchiveAggregationService.getYearsSummary();
-
-    archivePage.innerHTML = `
-      <div class="screen">
-        <div class="screen-header">
-          <h2>Archive</h2>
-        </div>
-
-        ${renderYearsTable(years)}
-      </div>
-    `;
-
-    return;
+    content = renderYearsTable(years);
   }
+
+  /* =========================
+     LEVEL: MONTHS
+  ========================== */
 
   if (archiveTab === "months") {
-
     const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
-
-    archivePage.innerHTML = `
-      <div class="screen">
-
-        <div class="archive-header">
-          <button class="archive-back-btn"
-                  data-action="archive-back">
-            ← Archive
-          </button>
-          <h2>${archiveYear}</h2>
-        </div>
-
-        ${renderMonthsTable(months, archiveYear)}
-
-      </div>
-    `;
-
-    return;
+    content = renderMonthsTable(months, archiveYear);
   }
+
+  /* =========================
+     LEVEL: WEEKS
+  ========================== */
 
   if (archiveTab === "weeks") {
 
-    const weeks = ArchiveAggregationService.getWeeksSummary(
-      archiveYear,
-      archiveMonth
-    );
+    // Якщо немає вибраного року/місяця — показуємо всі тижні
+    if (archiveYear == null || archiveMonth == null) {
+      const allWeeks = state.archive.map(p => ({
+        id: p.id,
+        label: p.periodLabel,
+        distance: p.totals?.kilometers ?? 0,
+        loads: p.totals?.loads ?? 0,
+        meals: p.totals?.meals ?? 0,
+        waiting: p.totals?.waiting ?? 0,
+        total: p.totals?.amount ?? 0
+      }));
 
-    const monthName = new Date(archiveYear, archiveMonth)
-      .toLocaleString("en-US", { month: "long" });
-
-    archivePage.innerHTML = `
-      <div class="screen">
-
-        <div class="archive-header">
-          <button class="archive-back-btn"
-                  data-action="archive-back">
-            ← ${archiveYear}
-          </button>
-          <h2>${monthName} ${archiveYear}</h2>
-        </div>
-
-        ${renderWeeksTable(weeks)}
-
-      </div>
-    `;
-
-    return;
+      content = renderWeeksTable(allWeeks);
+    } else {
+      const weeks = ArchiveAggregationService.getWeeksSummary(
+        archiveYear,
+        archiveMonth
+      );
+      content = renderWeeksTable(weeks);
+    }
   }
+
+  /* =========================
+     LEVEL: ENTRIES
+  ========================== */
 
   if (archiveTab === "entries") {
-
     const period = state.archive.find(p => p.id === archiveWeekId);
-    if (!period) return;
-
-    archivePage.innerHTML = `
-      <div class="screen">
-
-        <div class="archive-header">
-          <button class="archive-back-btn"
-                  data-action="archive-back">
-            ← Back
-          </button>
-          <h2>${period.periodLabel}</h2>
-        </div>
-
-        ${renderArchiveEntries(period, state)}
-
-      </div>
-    `;
-
-    return;
+    if (period) {
+      content = renderArchiveEntries(period, state);
+    }
   }
+
+  /* =========================
+     FINAL LAYOUT
+  ========================== */
+
+  archivePage.innerHTML = `
+    <div class="screen">
+
+      <div class="screen-header">
+        <h2>Archive</h2>
+      </div>
+
+      <div class="segmented archive-segmented">
+        <button
+          data-action="set-archive-tab"
+          data-tab="weeks"
+          class="${archiveTab === "weeks" ? "active" : ""}">
+          Weeks
+        </button>
+
+        <button
+          data-action="set-archive-tab"
+          data-tab="months"
+          class="${archiveTab === "months" ? "active" : ""}">
+          Months
+        </button>
+
+        <button
+          data-action="set-archive-tab"
+          data-tab="years"
+          class="${archiveTab === "years" ? "active" : ""}">
+          Years
+        </button>
+      </div>
+
+      ${content}
+
+    </div>
+  `;
 }
 
 /* ======================================
