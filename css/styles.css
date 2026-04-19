@@ -876,3 +876,40 @@ button:active {
   background: var(--card-elev);
   color: var(--text);
 }
+.archive-table input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  color: inherit;
+  padding: 4px 2px;
+  font-size: 14px;
+}
+
+.archive-table input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--accent-color);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.success-btn {
+  background: #1e8e3e;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.danger-btn {
+  background: #b3261e;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
