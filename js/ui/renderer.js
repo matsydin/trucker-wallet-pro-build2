@@ -140,7 +140,6 @@ export function renderDataScreen(state) {
 
 export function renderArchiveScreen(state) {
 
-  }
 
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
