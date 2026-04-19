@@ -223,7 +223,9 @@ if (action === "set-archive-tab") {
 
   state.ui.archiveTab = actionBtn.dataset.tab;
 
-  state.ui.archiveYear = null;
+  // ❌ НЕ скидаємо archiveYear
+  // state.ui.archiveYear = null;
+
   state.ui.archiveMonth = null;
   state.ui.archiveWeekId = null;
 
