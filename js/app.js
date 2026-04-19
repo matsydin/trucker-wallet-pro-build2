@@ -305,67 +305,7 @@ if (action === "archive-back-to-weeks") {
   render();
 }
 
-  if (action === "save-archived-row") {
-
-  const periodId = actionBtn.dataset.period;
-  const entryId  = actionBtn.dataset.entry;
-
-  const row = actionBtn.closest(".archive-row");
-  if (!row) return;
-
-  const inputs = row.querySelectorAll("input[data-field]");
-
-  const data = {};
-  inputs.forEach(input => {
-    data[input.dataset.field] = input.value;
-  });
-
-  const period = state.archive.find(p => p.id === periodId);
-  if (!period) return;
-
-  const entry = period.entries.find(e => e.id === entryId);
-  if (!entry) return;
-// ===== Collect meals =====
-
-const mealTypes = ["breakfast","lunch","dinner"];
-const meals = {};
-
-mealTypes.forEach(type => {
-
-  const checkbox = row.querySelector(
-    `input[data-meal-type="${type}"][data-entry="${entryId}"]`
-  );
-
-  const select = row.querySelector(
-    `select[data-meal-location="${type}"][data-entry="${entryId}"]`
-  );
-
-  const taken = checkbox?.checked;
-  const location = select?.value;
-
-  meals[type] = {
-    taken: !!taken,
-    location: taken ? location : ""
-  };
-});
-  const result = ArchiveService.editArchivedEntry(
-    periodId,
-    entryId,
-    {
-      ...data,
-      perMile: entry.rateSnapshot.perMile,
-      perDrop: entry.rateSnapshot.perDrop,
-      perWaiting: entry.rateSnapshot.perWaiting,
-      meals: meals
-    }
-  );
-
-  if (result.ok) {
-    render();
-  }
-
-  return;
-}
+  
   /* ===================================================
      ARCHIVE — NEW HIERARCHY NAVIGATION
   =================================================== */
