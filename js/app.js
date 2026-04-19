@@ -268,7 +268,12 @@ function handleClick(e) {
     saveArchiveEntryFromModal();
     return;
   }
-
+if (action === "archive-switch") {
+  state.ui.archiveView = actionBtn.dataset.view;
+  saveState();
+  render();
+  return;
+}
   /* ===================================================
      ARCHIVE — NEW HIERARCHY NAVIGATION
   =================================================== */
