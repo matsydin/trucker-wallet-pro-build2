@@ -16,16 +16,18 @@ const defaultState = {
 
   /* ===== Archive Navigation ===== */
 
-  archiveTab: "years",   // years | months | weeks | entries
+  /* ===== Archive 3.0 ===== */
 
-  archiveYear: null,
-  archiveMonth: null,
-  archiveWeekId: null,
+archiveTab: "weeks", // weeks | months
 
-  archiveFilter: {
-    from: null,
-    to: null
-  }
+archiveYear: new Date().getFullYear(),
+
+archiveMonthFilter: null, // null = All months
+
+archiveRange: {
+  from: null,
+  to: null
+}
 },
 
   settings: {
@@ -70,8 +72,22 @@ function loadState() {
     }
 
     const merged = deepMerge(structuredClone(defaultState), parsed);
+// ✅ Cleanup legacy archive navigation (Archive 2.x → 3.0)
 
-    // ✅ ensure current.totals structure (backward safety)
+delete merged.ui.archiveMonth;
+delete merged.ui.archiveWeekId;
+delete merged.ui.archiveFilter;
+
+// Ensure archiveYear exists
+if (!merged.ui.archiveYear) {
+  merged.ui.archiveYear = new Date().getFullYear();
+}
+
+// Ensure archiveTab valid
+if (!["weeks", "months"].includes(merged.ui.archiveTab)) {
+  merged.ui.archiveTab = "weeks";
+}
+// ✅ ensure current.totals structure (backward safety)
     merged.current.totals = {
       kilometers: merged.current.totals.kilometers ?? 0,
       miles: merged.current.totals.miles ?? 0,
