@@ -82,9 +82,10 @@ export function renderLogScreen(state) {
           ? '<p class="muted">' + mealsSummary + '</p>'
           : '') +
 
-        '<p class="entry-amount">$' +
-          Number(entry.amount ?? 0).toFixed(2) +
-        '</p>' +
+        '<p class="entry-amount">' +
+  Number(entry.amount ?? 0).toFixed(2) +
+  ' ' + state.settings.currency +
+        '</p>'
 
       '</div>'
     );
