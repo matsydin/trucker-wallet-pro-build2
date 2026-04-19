@@ -439,7 +439,9 @@ function renderArchiveDetail(period, state) {
                          data-entry="${entry.id}">
                 </div>
 
-                <div>${mealsCount}</div>
+               <div class="archive-meals">
+                ${renderArchiveMealsEditor(entry)}
+                </div>
 
                 <div>
                   ${Number(entry.amount ?? 0).toFixed(2)}
