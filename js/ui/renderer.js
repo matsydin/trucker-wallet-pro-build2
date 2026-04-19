@@ -436,10 +436,27 @@ function renderArchiveYearsTable(state) {
       <div class="archive-title">Archive</div>
 
       <div class="archive-segmented">
-        <button class="active">Years</button>
-        <button>Months</button>
-        <button>Weeks</button>
-      </div>
+  <button 
+    class="${state.ui.archiveView === "years-table" ? "active" : ""}"
+    data-action="archive-switch"
+    data-view="years-table">
+    Years
+  </button>
+
+  <button 
+    class="${state.ui.archiveView === "months-table" ? "active" : ""}"
+    data-action="archive-switch"
+    data-view="months-table">
+    Months
+  </button>
+
+  <button 
+    class="${state.ui.archiveView === "weeks-table" ? "active" : ""}"
+    data-action="archive-switch"
+    data-view="weeks-table">
+    Weeks
+  </button>
+</div>
 
       <div class="archive-grid">
 
