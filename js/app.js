@@ -912,7 +912,7 @@ mealTypes.forEach(type => {
     waitingHours: document.getElementById("archive-entry-waiting").value,
     perMile: document.getElementById("archive-entry-rate-mile").value,
     perDrop: document.getElementById("archive-entry-rate-drop").value,
-    perWaiting: document.getElementById("archive-entry-rate-waiting").value
+    perWaiting: document.getElementById("archive-entry-rate-waiting").value,
     meals
   };
 
