@@ -11,6 +11,7 @@ import { LogbookService } from "./services/logbook.service.js";
 import { ArchiveService } from "./services/archive.service.js";
 import { CustomerService } from "./services/customer.service.js";
 import { TrailerService } from "./services/trailer.service.js";
+import { ArchiveAggregationService } from "./services/archive-aggregation.service.js";
 
 let editingCustomerId = null;
 let editingTrailerId = null;
@@ -240,7 +241,87 @@ if (action === "set-archive-tab") {
     openEntryModal(id);
     return;
   }
+if (action === "export-custom-range") {
 
+  const { from, to } = state.ui.archiveRange;
+
+  if (!from || !to) {
+    alert("Select date range first.");
+    return;
+  }
+
+  const entries =
+    ArchiveAggregationService.getEntriesForRange(from, to);
+
+  if (!entries.length) {
+    alert("No data in selected range.");
+    return;
+  }
+
+  let totalKm = 0;
+  let totalLoads = 0;
+  let totalWaiting = 0;
+  let totalMeals = 0;
+  let totalAmount = 0;
+
+  entries.forEach(e => {
+    totalKm += Number(e.kilometers || 0);
+    totalLoads += Number(e.loads || 0);
+    totalWaiting += Number(e.waitingHours || 0);
+    totalAmount += Number(e.amount || 0);
+
+    if (e.meals) {
+      Object.values(e.meals).forEach(m => {
+        if (m?.taken) totalMeals++;
+      });
+    }
+  });
+
+  const lines = [];
+
+  lines.push("TRUCKER WALLET PRO");
+  lines.push(`Period: ${from} → ${to}`);
+  lines.push("");
+  lines.push("DATE | KM | LOADS | WAIT | MEALS | TOTAL");
+
+  entries.forEach(e => {
+
+    const meals =
+      e.meals
+        ? Object.entries(e.meals)
+            .filter(([_, m]) => m.taken)
+            .map(([t, m]) => `${t[0].toUpperCase()}(${m.location})`)
+            .join(", ")
+        : "";
+
+    lines.push(
+      `${e.date} | ${e.kilometers} | ${e.loads} | ${e.waitingHours} | ${meals} | ${Number(e.amount).toFixed(2)}`
+    );
+  });
+
+  lines.push("");
+  lines.push("TOTALS:");
+  lines.push(`Distance: ${totalKm.toFixed(1)} km`);
+  lines.push(`Loads: ${totalLoads}`);
+  lines.push(`Waiting: ${totalWaiting.toFixed(1)} h`);
+  lines.push(`Meals: ${totalMeals}`);
+  lines.push(`Amount: ${totalAmount.toFixed(2)} ${state.settings.currency}`);
+
+  const blob = new Blob([lines.join("\n")], {
+    type: "text/plain"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = `archive-${from}-to-${to}.txt`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  return;
+}
   /* ===================================================
      ARCHIVE — CORE ACTIONS
   =================================================== */
