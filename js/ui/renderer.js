@@ -230,6 +230,47 @@ export function renderArchiveScreen(state) {
       </div>
 
       ${content}
+${renderCustomRangeSection(state)}
+    </div>
+  `;
+}
+/* ======================================
+   RENDER Custom Range Section
+====================================== */
+function renderCustomRangeSection(state) {
+
+  const from = state.ui.archiveRange?.from || "";
+  const to   = state.ui.archiveRange?.to || "";
+
+  return `
+    <div class="archive-summary">
+
+      <div class="archive-summary-top">
+        <h3>Custom Range</h3>
+      </div>
+
+      <div class="archive-filters">
+
+        <div class="archive-select-group">
+          <label>From</label>
+          <input type="date"
+                 data-action="set-range-from"
+                 value="${from}">
+        </div>
+
+        <div class="archive-select-group">
+          <label>To</label>
+          <input type="date"
+                 data-action="set-range-to"
+                 value="${to}">
+        </div>
+
+      </div>
+
+      <button class="export-btn archive-export-btn"
+              data-action="export-custom-range">
+        Export TXT
+      </button>
 
     </div>
   `;
