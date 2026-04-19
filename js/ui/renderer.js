@@ -166,7 +166,7 @@ export function renderArchiveScreen(state) {
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
 
-  const { archiveTab, archiveYear, archiveMonth, archiveWeekId } = state.ui;
+  const { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
 
   let content = "";
 
