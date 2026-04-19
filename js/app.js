@@ -325,7 +325,29 @@ if (action === "archive-back-to-weeks") {
 
   const entry = period.entries.find(e => e.id === entryId);
   if (!entry) return;
+// ===== Collect meals =====
 
+const mealTypes = ["breakfast","lunch","dinner"];
+const meals = {};
+
+mealTypes.forEach(type => {
+
+  const checkbox = row.querySelector(
+    `input[data-meal-type="${type}"][data-entry="${entryId}"]`
+  );
+
+  const select = row.querySelector(
+    `select[data-meal-location="${type}"][data-entry="${entryId}"]`
+  );
+
+  const taken = checkbox?.checked;
+  const location = select?.value;
+
+  meals[type] = {
+    taken: !!taken,
+    location: taken ? location : ""
+  };
+});
   const result = ArchiveService.editArchivedEntry(
     periodId,
     entryId,
