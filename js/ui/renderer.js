@@ -363,7 +363,6 @@ function renderYearsTable(years) {
 /* ======================================
    RENDER MONTHS TABLE
 ====================================== */
-
 function renderMonthsTable(months, year) {
 
   if (!months.length) {
@@ -374,38 +373,42 @@ function renderMonthsTable(months, year) {
     <div class="archive-table-wrapper">
       <div class="archive-table">
 
-      <div class="archive-row archive-header">
-        <div>Month</div>
-        <div class="text-right">Distance</div>
-        <div class="text-right">Loads</div>
-        <div class="text-right">Meals</div>
-        <div class="text-right">Waiting</div>
-        <div class="text-right">Total</div>
-      </div>
+        <div class="archive-row archive-header">
+          <div>Month</div>
+          <div class="text-right">Distance</div>
+          <div class="text-right">Loads</div>
+          <div class="text-right">Meals</div>
+          <div class="text-right">Waiting</div>
+          <div class="text-right">Total</div>
+        </div>
 
-      ${months.map(m => {
-        const name = new Date(year, m.month)
-          .toLocaleString("en-US", { month: "long" });
+        ${months.map(m => {
+          const name = new Date(year, m.month)
+            .toLocaleString("en-US", { month: "long" });
 
-        return `
-          <div class="archive-row"
-               data-action="archive-open-month"
-               data-month="${m.month}">
+          return `
+            <div class="archive-row"
+                 data-action="archive-open-month"
+                 data-month="${m.month}">
 
-            <div>${name}</div>
-            <div class="text-right">${Number(m.distance ?? 0).toFixed(0)}</div>
-            <div class="text-right">${m.loads}</div>
-            <div class="text-right">${m.meals}</div>
-            <div class="text-right">${Number(m.waiting ?? 0).toFixed(1)}</div>
-            <div class="text-right">
-  ${Number(m.total ?? 0).toFixed(2)}
+              <div>${name}</div>
+              <div class="text-right">${Number(m.distance ?? 0).toFixed(0)}</div>
+              <div class="text-right">${m.loads}</div>
+              <div class="text-right">${m.meals}</div>
+              <div class="text-right">${Number(m.waiting ?? 0).toFixed(1)}</div>
+              <div class="text-right">
+                ${Number(m.total ?? 0).toFixed(2)}
+              </div>
+
             </div>
-        `;
-      }).join("")}
+          `;
+        }).join("")}
+
       </div>
     </div>
   `;
 }
+
 /* ======================================
    RENDER WEEKS TABLE
 ====================================== */
