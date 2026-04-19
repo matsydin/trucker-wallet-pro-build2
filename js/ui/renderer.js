@@ -475,7 +475,49 @@ function renderArchiveDetail(period, state) {
     </div>
   `;
 }
+/* ======================================
+   RENDER ARCHIVE MEALS EDITOR
+====================================== */
+function renderArchiveMealsEditor(entry) {
 
+  const locations = [
+    "AB","BC","MB","NB","NL","NS","NT","NU",
+    "ON","PE","QC","SK","YT","US"
+  ];
+
+  const types = ["breakfast","lunch","dinner"];
+
+  return types.map(type => {
+
+    const taken = entry.meals?.[type]?.taken;
+    const location = entry.meals?.[type]?.location || "";
+
+    return `
+      <div class="archive-meal-row">
+
+        <label>
+          <input type="checkbox"
+                 data-meal-type="${type}"
+                 data-entry="${entry.id}"
+                 ${taken ? "checked" : ""}>
+          ${type.charAt(0).toUpperCase()}
+        </label>
+
+        <select data-meal-location="${type}"
+                data-entry="${entry.id}">
+          <option value="">--</option>
+          ${locations.map(loc => `
+            <option value="${loc}"
+              ${location === loc ? "selected" : ""}>
+              ${loc}
+            </option>
+          `).join("")}
+        </select>
+
+      </div>
+    `;
+  }).join("");
+}
 /* ======================================
    RENDER ARCHIVE ENTRIES
 ====================================== */
