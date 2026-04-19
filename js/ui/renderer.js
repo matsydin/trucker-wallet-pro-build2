@@ -164,6 +164,7 @@ export function renderDataScreen(state) {
 ====================================== */
 
 export function renderArchiveScreen(state) {
+  console.log("ArchiveTab:", archiveTab);
 
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
