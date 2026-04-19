@@ -44,7 +44,7 @@ export function renderLogScreen(state) {
   const totalAmount = totals.amount ?? 0;
 
   totalEl.textContent =
-    "$" + Number(totalAmount).toFixed(2) + " " + state.settings.currency;
+    Number(totalAmount).toFixed(2) + " " + state.settings.currency;
 
   const entries = state.current?.entries || [];
 
