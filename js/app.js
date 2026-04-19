@@ -302,13 +302,13 @@ if (action === "set-archive-tab") {
     return;
   }
 
-  if (action === "archive-open-week") {
-    state.ui.archiveWeekId = id;
-    state.ui.archiveTab = "entries";
-    saveState();
-    render();
-    return;
-  }
+  //if (action === "archive-open-week") {
+   // state.ui.archiveWeekId = id;
+   // state.ui.archiveTab = "entries";
+   // saveState();
+  //  render();
+  //  return;
+//  }
 
   if (action === "archive-back") {
 
