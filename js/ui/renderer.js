@@ -239,7 +239,7 @@ export function renderArchiveScreen(state) {
   /* =========================
      FINAL LAYOUT
   ========================== */
-
+console.log("CONTENT:", content);
   archivePage.innerHTML = `
   <div class="screen">
 
@@ -289,7 +289,7 @@ export function renderArchiveScreen(state) {
     </div>
 
     ${content}
-console.log("CONTENT:", content);
+
   </div>
 `;
 }
