@@ -813,7 +813,17 @@ if (e.target.dataset.action === "set-archive-month-filter") {
   render();
   return;
 }
-  
+  if (e.target.dataset.action === "set-range-from") {
+  state.ui.archiveRange.from = e.target.value || null;
+  saveState();
+  return;
+}
+
+if (e.target.dataset.action === "set-range-to") {
+  state.ui.archiveRange.to = e.target.value || null;
+  saveState();
+  return;
+}
   if (e.target.dataset.action === "customer-search") {
     CustomerService.setSearch(e.target.value);
     render();
@@ -835,6 +845,7 @@ if (e.target.dataset.action === "set-archive-month-filter") {
     normalizeTrailerPlateLive();
     return;
   }
+  
 });
 /* ===============================
    Archive Export
