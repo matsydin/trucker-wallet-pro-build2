@@ -183,12 +183,14 @@ export function renderArchiveScreen(state) {
      LEVEL: MONTHS
   ========================== */
 
- if (archiveTab === "months") {
+ if (state.ui.archiveTab === "months") {
 
-  const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
+  const months = ArchiveAggregationService.getMonthsSummary(
+    Number(state.ui.archiveYear)
+  );
 
   content = months.length
-    ? renderMonthsTable(months, archiveYear)
+    ? renderMonthsTable(months, state.ui.archiveYear)
     : '<div class="empty-state">No data</div>';
 }
 
