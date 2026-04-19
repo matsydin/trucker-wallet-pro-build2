@@ -199,15 +199,31 @@ export function renderArchiveScreen(state) {
 
   if (archiveTab === "weeks") {
 
-  if (archiveYear == null || archiveMonth == null) {
-    content = '<div class="empty-state">Select year and month first</div>';
+  let weeks = [];
+
+  if (archiveMonthFilter == null) {
+    // Всі тижні року
+    const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
+
+    months.forEach(m => {
+      const monthWeeks = ArchiveAggregationService.getWeeksSummary(
+        archiveYear,
+        m.month
+      );
+      weeks.push(...monthWeeks);
+    });
+
   } else {
-    const weeks = ArchiveAggregationService.getWeeksSummary(
+    // Тільки конкретний місяць
+    weeks = ArchiveAggregationService.getWeeksSummary(
       archiveYear,
-      archiveMonth
+      archiveMonthFilter
     );
-    content = renderWeeksTable(weeks);
   }
+
+  content = weeks.length
+    ? renderWeeksTable(weeks)
+    : '<div class="empty-state">No data</div>';
 }
 
   /* =========================
