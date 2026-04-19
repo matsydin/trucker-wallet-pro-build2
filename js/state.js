@@ -16,7 +16,7 @@ const defaultState = {
 
   /* ===== Archive Navigation ===== */
 
-  archiveView: "years",   // years | months | weeks | entries
+  archiveTab: "years",   // years | months | weeks | entries
 
   archiveYear: null,
   archiveMonth: null,
