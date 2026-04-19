@@ -812,6 +812,25 @@ function saveArchiveEntryFromModal() {
 ================================ */
 
 document.addEventListener("change", function(e) {
+/* ===== ARCHIVE YEAR SELECT ===== */
+
+if (e.target.dataset.action === "set-archive-year") {
+  state.ui.archiveYear = Number(e.target.value);
+  saveState();
+  render();
+  return;
+}
+
+/* ===== ARCHIVE MONTH FILTER ===== */
+
+if (e.target.dataset.action === "set-archive-month-filter") {
+  state.ui.archiveMonthFilter =
+    e.target.value === "" ? null : Number(e.target.value);
+  saveState();
+  render();
+  return;
+}
+  
   if (e.target.dataset.action === "customer-search") {
     CustomerService.setSearch(e.target.value);
     render();
