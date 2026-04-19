@@ -916,3 +916,11 @@ button:active {
 .archive-row.clickable {
   cursor: pointer;
 }
+.archive-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.archive-row {
+  white-space: nowrap;
+}
