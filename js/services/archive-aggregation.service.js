@@ -139,3 +139,4 @@ export const ArchiveAggregationService = {
   }
 
 };
+window.ArchiveAggregationService = ArchiveAggregationService;
