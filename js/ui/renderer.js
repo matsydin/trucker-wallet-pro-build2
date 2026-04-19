@@ -165,12 +165,9 @@ export function renderDataScreen(state) {
 
 export function renderArchiveScreen(state) {
   console.log("ArchiveTab:", archiveTab);
-
+  const { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
-
-  const { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
-
   let content = "";
 
   /* =========================
