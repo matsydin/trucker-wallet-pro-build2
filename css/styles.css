@@ -849,7 +849,7 @@ button:active {
 }
 
 .archive-table {
-  min-width: 620px; /* гарантуємо нормальну ширину */
+  width: 100%;
 }
 .archive-filters {
   display: flex;
