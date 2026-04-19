@@ -101,7 +101,28 @@ export const ArchiveAggregationService = {
 
     return summary;
   },
+getEntriesForRange(from, to) {
 
+  if (!from || !to) return [];
+
+  const start = new Date(from);
+  const end   = new Date(to);
+
+  const result = [];
+
+  state.archive.forEach(period => {
+    period.entries.forEach(entry => {
+      const d = new Date(entry.date);
+      if (d >= start && d <= end) {
+        result.push(entry);
+      }
+    });
+  });
+
+  return result.sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+},
   /* ===============================
      INTERNAL HELPERS
   ============================== */
