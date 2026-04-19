@@ -298,6 +298,46 @@ if (action === "archive-back-to-weeks") {
   saveState();
   render();
 }
+
+  if (action === "save-archived-row") {
+
+  const periodId = actionBtn.dataset.period;
+  const entryId  = actionBtn.dataset.entry;
+
+  const row = actionBtn.closest(".archive-row");
+  if (!row) return;
+
+  const inputs = row.querySelectorAll("input[data-field]");
+
+  const data = {};
+  inputs.forEach(input => {
+    data[input.dataset.field] = input.value;
+  });
+
+  const period = state.archive.find(p => p.id === periodId);
+  if (!period) return;
+
+  const entry = period.entries.find(e => e.id === entryId);
+  if (!entry) return;
+
+  const result = ArchiveService.editArchivedEntry(
+    periodId,
+    entryId,
+    {
+      ...data,
+      perMile: entry.rateSnapshot.perMile,
+      perDrop: entry.rateSnapshot.perDrop,
+      perWaiting: entry.rateSnapshot.perWaiting,
+      meals: entry.meals
+    }
+  );
+
+  if (result.ok) {
+    render();
+  }
+
+  return;
+}
   /* ===================================================
      ARCHIVE — NEW HIERARCHY NAVIGATION
   =================================================== */
