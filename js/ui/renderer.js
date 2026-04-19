@@ -160,10 +160,15 @@ export function renderArchiveScreen(state) {
      LEVEL: MONTHS
   ========================== */
 
-  if (archiveTab === "months") {
+ if (archiveTab === "months") {
+
+  if (archiveYear == null) {
+    content = '<div class="empty-state">Select a year first</div>';
+  } else {
     const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
     content = renderMonthsTable(months, archiveYear);
   }
+}
 
   /* =========================
      LEVEL: WEEKS
@@ -171,27 +176,16 @@ export function renderArchiveScreen(state) {
 
   if (archiveTab === "weeks") {
 
-    // Якщо немає вибраного року/місяця — показуємо всі тижні
-    if (archiveYear == null || archiveMonth == null) {
-      const allWeeks = state.archive.map(p => ({
-        id: p.id,
-        label: p.periodLabel,
-        distance: p.totals?.kilometers ?? 0,
-        loads: p.totals?.loads ?? 0,
-        meals: p.totals?.meals ?? 0,
-        waiting: p.totals?.waiting ?? 0,
-        total: p.totals?.amount ?? 0
-      }));
-
-      content = renderWeeksTable(allWeeks);
-    } else {
-      const weeks = ArchiveAggregationService.getWeeksSummary(
-        archiveYear,
-        archiveMonth
-      );
-      content = renderWeeksTable(weeks);
-    }
+  if (archiveYear == null || archiveMonth == null) {
+    content = '<div class="empty-state">Select year and month first</div>';
+  } else {
+    const weeks = ArchiveAggregationService.getWeeksSummary(
+      archiveYear,
+      archiveMonth
+    );
+    content = renderWeeksTable(weeks);
   }
+}
 
   /* =========================
      LEVEL: ENTRIES
