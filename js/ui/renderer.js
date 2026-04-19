@@ -1,21 +1,16 @@
 // js/ui/renderer.js
 import { ArchiveAggregationService } from "../services/archive-aggregation.service.js";
 
-function getAvailableYears(state) {
-  const years = new Set();
+function getAvailableYears() {
+  const years = ArchiveAggregationService.getYearsSummary();
 
-  state.archive.forEach(period => {
-    if (period.entries?.length) {
-      const year = new Date(period.entries[0].date).getFullYear();
-      years.add(year);
-    }
-  });
-
-  if (!years.size) {
-    years.add(new Date().getFullYear());
+  if (!years.length) {
+    return [new Date().getFullYear()];
   }
 
-  return Array.from(years).sort((a, b) => b - a);
+  return years
+    .map(y => y.year)
+    .sort((a, b) => b - a);
 }
 
 function getMonthOptions() {
@@ -168,9 +163,6 @@ export function renderArchiveScreen(state) {
   const { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
   console.log("ArchiveTab:", archiveTab);
   const archivePage = document.querySelector('[data-page="archive"]');
-console.log("STATE ARCHIVE:", state.archive);
-console.log("SERVICE YEARS:", ArchiveAggregationService.getYearsSummary());
-console.log("UI YEAR:", state.ui.archiveYear);
   if (!archivePage) return;
   let content = "";
 
@@ -261,7 +253,7 @@ console.log("CONTENT:", content);
       <div class="archive-select-group">
         <label>Year</label>
         <select data-action="set-archive-year">
-          ${getAvailableYears(state).map(year => `
+          ${getAvailableYears().map(year => `
             <option value="${year}" ${year === state.ui.archiveYear ? "selected" : ""}>
               ${year}
             </option>
