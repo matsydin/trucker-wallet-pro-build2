@@ -140,9 +140,6 @@ export function renderDataScreen(state) {
 
 export function renderArchiveScreen(state) {
 
-  if (state.ui.archiveView === "years-table") {
-    renderArchiveYearsTable(state);
-    return;
   }
 
   const archivePage = document.querySelector('[data-page="archive"]');
@@ -277,8 +274,8 @@ function renderYearsTable(years) {
           <div class="text-right">${y.meals}</div>
           <div class="text-right">${Number(y.waiting ?? 0).toFixed(1)}</div>
           <div class="text-right">
-$$
-{Number(y.total ?? 0).toFixed(2)}</div>
+  ${Number(y.total ?? 0).toFixed(2)}
+          </div>
 
         </div>
       `).join("")}
@@ -324,10 +321,8 @@ function renderMonthsTable(months, year) {
             <div class="text-right">${m.meals}</div>
             <div class="text-right">${Number(m.waiting ?? 0).toFixed(1)}</div>
             <div class="text-right">
-$$
-{Number(m.total ?? 0).toFixed(2)}</div>
-
-          </div>
+  ${Number(m.total ?? 0).toFixed(2)}
+            </div>
         `;
       }).join("")}
 
@@ -367,10 +362,8 @@ function renderWeeksTable(weeks) {
           <div class="text-right">${w.meals}</div>
           <div class="text-right">${Number(w.waiting ?? 0).toFixed(1)}</div>
           <div class="text-right">
-$$
-{Number(w.total ?? 0).toFixed(2)}</div>
-
-        </div>
+  ${Number(w.total ?? 0).toFixed(2)}
+          </div>
       `).join("")}
 
     </div>
@@ -400,9 +393,8 @@ function renderArchiveEntries(period, state) {
             <div class="entry-top">
               <div>${escapeHtml(entry.date)}</div>
               <div>
-$$
-{Number(entry.amount ?? 0).toFixed(2)}</div>
-            </div>
+  ${Number(entry.amount ?? 0).toFixed(2)}
+              </div>
 
             <div class="entry-meta">
               ${distance} ${state.ui.displayUnit}
@@ -421,78 +413,7 @@ $$
   `;
 }
 
-/* ======================================
-   RENDER ARCHIVE YEARS TABLE
-====================================== */
 
-function renderArchiveYearsTable(state) {
-
-  const container = document.querySelector('[data-page="archive"]');
-  if (!container) return;
-
-  const years = ArchiveAggregationService.getYearsSummary();
-
-  container.innerHTML = `
-    <div class="archive-table-screen">
-
-      <div class="archive-title">Archive</div>
-
-      <div class="archive-segmented">
-        <button
-          class="${state.ui.archiveView === "years-table" ? "active" : ""}"
-          data-action="archive-switch"
-          data-view="years-table">
-          Years
-        </button>
-
-        <button
-          class="${state.ui.archiveView === "months-table" ? "active" : ""}"
-          data-action="archive-switch"
-          data-view="months-table">
-          Months
-        </button>
-
-        <button
-          class="${state.ui.archiveView === "weeks-table" ? "active" : ""}"
-          data-action="archive-switch"
-          data-view="weeks-table">
-          Weeks
-        </button>
-      </div>
-
-      <div class="archive-grid">
-
-        <div class="archive-grid-header">
-          <div>YEAR</div>
-          <div>DISTANCE</div>
-          <div>LOADS</div>
-          <div>MEALS</div>
-          <div>WAITING</div>
-          <div>TOTAL</div>
-        </div>
-
-        ${years.map(y => `
-          <div class="archive-grid-row"
-               data-action="archive-open-year"
-               data-year="${y.year}">
-
-            <div>${y.year}</div>
-            <div>${Number(y.distance ?? 0).toFixed(0)}</div>
-            <div>${y.loads}</div>
-            <div>${y.meals}</div>
-            <div>${Number(y.waiting ?? 0).toFixed(1)}</div>
-            <div>
-$$
-{Number(y.total ?? 0).toFixed(2)}</div>
-
-          </div>
-        `).join("")}
-
-      </div>
-
-    </div>
-  `;
-}
 
 /* ======================================
    RENDER CUSTOMERS
