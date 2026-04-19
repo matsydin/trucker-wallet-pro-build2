@@ -428,21 +428,23 @@ function renderWeeksTable(weeks) {
         <div class="text-right">Waiting</div>
         <div class="text-right">Total</div>
       </div>
+        ${weeks.map(w => `
+  <div class="archive-row"
+       data-action="archive-open-week"
+       data-id="${w.id}">
 
-      ${weeks.map(w => `
-        <div class="archive-row"
-             data-action="archive-open-week"
-             data-id="${w.id}">
+    <div>${escapeHtml(w.label)}</div>
+    <div class="text-right">${Number(w.distance ?? 0).toFixed(0)}</div>
+    <div class="text-right">${w.loads}</div>
+    <div class="text-right">${w.meals}</div>
+    <div class="text-right">${Number(w.waiting ?? 0).toFixed(1)}</div>
+    <div class="text-right">
+      ${Number(w.total ?? 0).toFixed(2)}
+    </div>
 
-          <div>${escapeHtml(w.label)}</div>
-          <div class="text-right">${Number(w.distance ?? 0).toFixed(0)}</div>
-          <div class="text-right">${w.loads}</div>
-          <div class="text-right">${w.meals}</div>
-          <div class="text-right">${Number(w.waiting ?? 0).toFixed(1)}</div>
-          <div class="text-right">
-  ${Number(w.total ?? 0).toFixed(2)}
-          </div>
-      `).join("")}
+  </div>
+`).join("")}
+      
       </div>
     </div>
   `;
