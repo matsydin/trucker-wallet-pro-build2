@@ -328,26 +328,7 @@ if (action === "set-archive-tab") {
     saveState();
     render();
     return;
-  }
-/* ===== ARCHIVE YEAR SELECT ===== */
-
-if (action === "set-archive-year") {
-  state.ui.archiveYear = Number(actionBtn.value);
-  saveState();
-  render();
-  return;
-}
-
-/* ===== ARCHIVE MONTH FILTER ===== */
-
-if (action === "set-archive-month-filter") {
-  state.ui.archiveMonthFilter =
-    actionBtn.value === "" ? null : Number(actionBtn.value);
-  saveState();
-  render();
-  return;
-}
-  
+  }  
   /* ===================================================
      CUSTOMERS
   =================================================== */
