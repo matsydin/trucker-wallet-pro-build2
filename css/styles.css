@@ -500,7 +500,14 @@ button:active {
 
 .archive-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 80px;
+  grid-template-columns:
+    1.6fr   /* Period / Year */
+    0.9fr   /* Distance */
+    0.6fr   /* Loads */
+    0.6fr   /* Meals */
+    0.8fr   /* Waiting */
+    0.9fr;  /* Total */
+   
   gap: 12px;
   align-items: center;
   padding: 14px 0;
@@ -518,6 +525,11 @@ button:active {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
+}
+
+.archive-row.archive-header {
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .archive-row div {
@@ -827,73 +839,7 @@ button:active {
 .switch input:checked + .slider:before {
   transform: translateX(20px);
 }
-/* ======================================
-   ARCHIVE TABLE STYLE (Financial Mode)
-====================================== */
 
-.archive-table-screen {
-  padding: 20px;
-}
-
-.archive-title {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.archive-segmented {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.archive-segmented button {
-  background: var(--card-elev);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 10px;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.archive-segmented button.active {
-  background: var(--accent);
-  color: #000;
-}
-
-.archive-grid {
-  display: flex;
-  flex-direction: column;
-}
-
-.archive-grid-header,
-.archive-grid-row {
-  display: grid;
-  grid-template-columns:
-    1fr     /* Year */
-    1fr     /* Distance */
-    1fr     /* Loads */
-    1fr     /* Meals */
-    1fr     /* Waiting */
-    1.2fr;  /* Total */
-  padding: 14px 0;
-  align-items: center;
-}
-
-.archive-grid-header {
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-}
-
-.archive-grid-row {
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.archive-grid-row:hover {
-  background: rgba(255,255,255,0.04);
+.archive-row div:not(:first-child) {
+  text-align: right;
 }
