@@ -196,28 +196,31 @@ export function renderArchiveScreen(state) {
      LEVEL: WEEKS
   ========================== */
 
-  if (archiveTab === "weeks") {
+  if (state.ui.archiveTab === "weeks") {
 
   let weeks = [];
 
-  if (archiveMonthFilter == null) {
-    // Всі тижні року
-    const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
+  if (state.ui.archiveMonthFilter == null) {
+
+    const months = ArchiveAggregationService.getMonthsSummary(
+      Number(state.ui.archiveYear)
+    );
 
     months.forEach(m => {
       const monthWeeks = ArchiveAggregationService.getWeeksSummary(
-        archiveYear,
-        m.month
+        Number(state.ui.archiveYear),
+        Number(m.month)
       );
       weeks.push(...monthWeeks);
     });
 
   } else {
-    // Тільки конкретний місяць
+
     weeks = ArchiveAggregationService.getWeeksSummary(
-      archiveYear,
-      archiveMonthFilter
+      Number(state.ui.archiveYear),
+      Number(state.ui.archiveMonthFilter)
     );
+
   }
 
   content = weeks.length
