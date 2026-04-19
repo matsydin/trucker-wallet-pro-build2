@@ -159,8 +159,17 @@ export function renderDataScreen(state) {
 ====================================== */
 
 export function renderArchiveScreen(state) {
+  let { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
 
-  const { archiveTab, archiveYear, archiveMonthFilter } = state.ui;
+  // ✅ AUTO-SET DEFAULT YEAR
+  if (!archiveYear) {
+    const years = ArchiveAggregationService.getYearsSummary();
+
+    if (years.length) {
+      archiveYear = years[0].year;
+      state.ui.archiveYear = archiveYear;
+    }
+  }
   console.log("ArchiveTab:", archiveTab);
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
