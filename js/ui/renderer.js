@@ -175,14 +175,6 @@ export function renderArchiveScreen(state) {
   if (!archivePage) return;
   let content = "";
 
-  /* =========================
-     LEVEL: YEARS
-  ========================== */
-
-  if (archiveTab === "years") {
-    const years = ArchiveAggregationService.getYearsSummary();
-    content = renderYearsTable(years);
-  }
 
   /* =========================
      LEVEL: MONTHS
@@ -316,49 +308,7 @@ export function renderArchiveScreen(state) {
   </div>
 `;
 }
-/* ======================================
-   RENDER YEARS TABLE
-====================================== */
 
-function renderYearsTable(years) {
-
-  if (!years.length) {
-    return '<div class="empty-state">No archived data</div>';
-  }
-
-  return `
-    <div class="archive-table-wrapper">
-    <div class="archive-table">
-
-      <div class="archive-row archive-header">
-        <div>Year</div>
-        <div class="text-right">Distance</div>
-        <div class="text-right">Loads</div>
-        <div class="text-right">Meals</div>
-        <div class="text-right">Waiting</div>
-        <div class="text-right">Total</div>
-      </div>
-
-      ${years.map(y => `
-        <div class="archive-row"
-             data-action="archive-open-year"
-             data-year="${y.year}">
-
-          <div>${y.year}</div>
-          <div class="text-right">${Number(y.distance ?? 0).toFixed(0)}</div>
-          <div class="text-right">${y.loads}</div>
-          <div class="text-right">${y.meals}</div>
-          <div class="text-right">${Number(y.waiting ?? 0).toFixed(1)}</div>
-          <div class="text-right">
-  ${Number(y.total ?? 0).toFixed(2)}
-          </div>
-
-        </div>
-      `).join("")}
-      </div>
-    </div>
-  `;
-}
 
 /* ======================================
    RENDER MONTHS TABLE
