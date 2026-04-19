@@ -285,7 +285,10 @@ if (action === "set-archive-tab") {
   }
 
   if (action === "archive-open-week") {
-  state.ui.expandedWeekId = e.target.dataset.id;
+  const row = e.target.closest("[data-id]");
+  if (!row) return;
+
+  state.ui.expandedWeekId = row.dataset.id;
   saveState();
   render();
 }
