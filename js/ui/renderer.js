@@ -145,9 +145,9 @@ export function renderArchiveScreen(state) {
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
 
-  const { archiveView, archiveYear, archiveMonth, archiveWeekId } = state.ui;
+  const { archiveTab, archiveYear, archiveMonth, archiveWeekId } = state.ui;
 
-  if (archiveView === "years") {
+if (archiveTab === "years") {
 
     const years = ArchiveAggregationService.getYearsSummary();
 
@@ -164,7 +164,7 @@ export function renderArchiveScreen(state) {
     return;
   }
 
-  if (archiveView === "months") {
+  if (archiveTab === "months") {
 
     const months = ArchiveAggregationService.getMonthsSummary(archiveYear);
 
@@ -187,7 +187,7 @@ export function renderArchiveScreen(state) {
     return;
   }
 
-  if (archiveView === "weeks") {
+  if (archiveTab === "weeks") {
 
     const weeks = ArchiveAggregationService.getWeeksSummary(
       archiveYear,
@@ -216,7 +216,7 @@ export function renderArchiveScreen(state) {
     return;
   }
 
-  if (archiveView === "entries") {
+  if (archiveTab === "entries") {
 
     const period = state.archive.find(p => p.id === archiveWeekId);
     if (!period) return;
