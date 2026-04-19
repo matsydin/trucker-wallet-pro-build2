@@ -1,6 +1,4 @@
 // js/ui/renderer.js
-import { getYearTotal } from "../services/timeline.service.js";
-import { ArchiveService } from "../services/archive.service.js";
 import { ArchiveAggregationService } from "../services/archive-aggregation.service.js";
 
 function escapeHtml(value) {
@@ -11,6 +9,7 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
 function getMealsCount(meals) {
   if (!meals) return 0;
 
@@ -25,8 +24,8 @@ function formatMealsSummary(meals) {
   const parts = [];
 
   if (meals.breakfast?.taken) parts.push("B(" + meals.breakfast.location + ")");
-  if (meals.lunch?.taken) parts.push("L(" + meals.lunch.location + ")");
-  if (meals.dinner?.taken) parts.push("D(" + meals.dinner.location + ")");
+  if (meals.lunch?.taken)     parts.push("L(" + meals.lunch.location + ")");
+  if (meals.dinner?.taken)    parts.push("D(" + meals.dinner.location + ")");
 
   return parts.length ? "Meals: " + parts.join(", ") : "";
 }
@@ -37,11 +36,11 @@ function formatMealsSummary(meals) {
 
 export function renderLogScreen(state) {
   const totalEl = document.querySelector(".summary-amount");
-  const listEl = document.querySelector(".logbook-list");
+  const listEl  = document.querySelector(".logbook-list");
 
   if (!totalEl || !listEl) return;
 
-  const totals = state.current?.totals || {};
+  const totals      = state.current?.totals || {};
   const totalAmount = totals.amount ?? 0;
 
   totalEl.textContent =
@@ -61,7 +60,7 @@ export function renderLogScreen(state) {
         ? Number(entry.kilometers ?? 0).toFixed(1)
         : Number(entry.miles ?? 0).toFixed(1);
 
-    const mealsCount = getMealsCount(entry.meals);
+    const mealsCount   = getMealsCount(entry.meals);
     const mealsSummary = formatMealsSummary(entry.meals);
 
     return (
@@ -76,7 +75,7 @@ export function renderLogScreen(state) {
         '</div>' +
 
         '<p>' + distance + " " + state.ui.displayUnit + '</p>' +
-        '<p>Loads: ' + Number(entry.loads ?? 0) + '</p>' +
+        '<p>Loads: '   + Number(entry.loads        ?? 0) + '</p>' +
         '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
 
         (mealsCount > 0
@@ -103,7 +102,7 @@ export function renderDataScreen(state) {
 
   const active = state.ui.dataTab;
 
-  let html = `
+  const html = `
     <div class="screen">
       <div class="screen-header">
         <h2>Data</h2>
@@ -131,23 +130,21 @@ export function renderDataScreen(state) {
 
   container.innerHTML = html;
 
-  if (active === "customers") {
-    renderCustomers(state);
-  }
-
-  if (active === "fleet") {
-    renderFleet(state);
-  }
+  if (active === "customers") renderCustomers(state);
+  if (active === "fleet")     renderFleet(state);
 }
 
 /* ======================================
    RENDER ARCHIVE SCREEN
 ====================================== */
+
 export function renderArchiveScreen(state) {
-if (state.ui.archiveView === "years-table") {
-  renderArchiveYearsTable(state);
-  return;
-}
+
+  if (state.ui.archiveView === "years-table") {
+    renderArchiveYearsTable(state);
+    return;
+  }
+
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
 
@@ -262,6 +259,11 @@ if (state.ui.archiveView === "years-table") {
     return;
   }
 }
+
+/* ======================================
+   RENDER YEARS TABLE
+====================================== */
+
 function renderYearsTable(years) {
 
   if (!years.length) {
@@ -293,12 +295,17 @@ function renderYearsTable(years) {
           <div class="text-right">
 $$
 {y.total.toFixed(2)}</div>
+
         </div>
       `).join("")}
 
     </div>
   `;
 }
+
+/* ======================================
+   RENDER MONTHS TABLE
+====================================== */
 
 function renderMonthsTable(months, year) {
 
@@ -344,6 +351,10 @@ $$
   `;
 }
 
+/* ======================================
+   RENDER WEEKS TABLE
+====================================== */
+
 function renderWeeksTable(weeks) {
 
   if (!weeks.length) {
@@ -382,6 +393,10 @@ $$
     </div>
   `;
 }
+
+/* ======================================
+   RENDER ARCHIVE ENTRIES
+====================================== */
 
 function renderArchiveEntries(period, state) {
 
@@ -422,6 +437,11 @@ $$
     </div>
   `;
 }
+
+/* ======================================
+   RENDER ARCHIVE YEARS TABLE
+====================================== */
+
 function renderArchiveYearsTable(state) {
 
   const container = document.querySelector('[data-page="archive"]');
@@ -435,27 +455,27 @@ function renderArchiveYearsTable(state) {
       <div class="archive-title">Archive</div>
 
       <div class="archive-segmented">
-  <button 
-    class="${state.ui.archiveView === "years-table" ? "active" : ""}"
-    data-action="archive-switch"
-    data-view="years-table">
-    Years
-  </button>
+        <button
+          class="${state.ui.archiveView === "years-table" ? "active" : ""}"
+          data-action="archive-switch"
+          data-view="years-table">
+          Years
+        </button>
 
-  <button 
-    class="${state.ui.archiveView === "months-table" ? "active" : ""}"
-    data-action="archive-switch"
-    data-view="months-table">
-    Months
-  </button>
+        <button
+          class="${state.ui.archiveView === "months-table" ? "active" : ""}"
+          data-action="archive-switch"
+          data-view="months-table">
+          Months
+        </button>
 
-  <button 
-    class="${state.ui.archiveView === "weeks-table" ? "active" : ""}"
-    data-action="archive-switch"
-    data-view="weeks-table">
-    Weeks
-  </button>
-</div>
+        <button
+          class="${state.ui.archiveView === "weeks-table" ? "active" : ""}"
+          data-action="archive-switch"
+          data-view="weeks-table">
+          Weeks
+        </button>
+      </div>
 
       <div class="archive-grid">
 
@@ -478,7 +498,9 @@ function renderArchiveYearsTable(state) {
             <div>${y.loads}</div>
             <div>${y.meals}</div>
             <div>${y.waiting.toFixed(1)}</div>
-            <div>$${y.total.toFixed(2)}</div>
+            <div>
+$$
+{y.total.toFixed(2)}</div>
 
           </div>
         `).join("")}
@@ -488,8 +510,9 @@ function renderArchiveYearsTable(state) {
     </div>
   `;
 }
+
 /* ======================================
-   RENDER CUSTOMERS SCREEN
+   RENDER CUSTOMERS
 ====================================== */
 
 export function renderCustomers(state) {
@@ -497,7 +520,7 @@ export function renderCustomers(state) {
   if (!container) return;
 
   const customers = state.customers;
-  const search = state.ui.customerSearch || "";
+  const search    = state.ui.customerSearch || "";
 
   const filtered = search
     ? customers.filter(c =>
@@ -579,17 +602,11 @@ export function renderFleet(state) {
   if (!container) return;
 
   const search = state.ui.trailerSearch || "";
-  const query = search.trim().toLowerCase();
+  const query  = search.trim().toLowerCase();
 
   const trailers = query
     ? state.trailers.filter(t =>
-        [
-          t.unitNumber,
-          t.plate,
-          t.maxLoad,
-          t.psi,
-          t.notes
-        ]
+        [t.unitNumber, t.plate, t.maxLoad, t.psi, t.notes]
           .join(" ")
           .toLowerCase()
           .includes(query)
@@ -635,10 +652,10 @@ export function renderFleet(state) {
             </div>
           </div>
 
-          ${t.plate ? `<p>Plate: ${escapeHtml(t.plate)}</p>` : ""}
-          ${t.maxLoad ? `<p>Max Load: ${escapeHtml(t.maxLoad)}</p>` : ""}
-          ${t.psi ? `<p>PSI: ${escapeHtml(t.psi)}</p>` : ""}
-          ${t.notes ? `<p class="muted">${escapeHtml(t.notes)}</p>` : ""}
+          ${t.plate   ? `<p>Plate: ${escapeHtml(t.plate)}</p>`       : ""}
+          ${t.maxLoad ? `<p>Max Load: ${escapeHtml(t.maxLoad)}</p>`  : ""}
+          ${t.psi     ? `<p>PSI: ${escapeHtml(t.psi)}</p>`          : ""}
+          ${t.notes   ? `<p class="muted">${escapeHtml(t.notes)}</p>` : ""}
         </div>
       `;
     });
