@@ -390,79 +390,53 @@ function renderArchiveDetail(period, state) {
 
           <div class="archive-row archive-header">
             <div>Date</div>
-            <div>Km</div>
-            <div>Loads</div>
-            <div>Waiting</div>
-            <div>Meals</div>
-            <div>Total</div>
+            <div class="text-right">Km</div>
+            <div class="text-right">Loads</div>
+            <div class="text-right">Waiting</div>
+            <div class="text-right">Meals</div>
+            <div class="text-right">Total</div>
             <div></div>
           </div>
 
           ${period.entries.map(entry => {
 
-            const mealsCount =
-              entry.meals
-                ? ["breakfast","lunch","dinner"]
-                    .filter(t => entry.meals[t]?.taken).length
-                : 0;
+            const mealsSummary = formatMealsSummary(entry.meals);
 
             return `
-              <div class="archive-row">
+              <div class="archive-row clickable"
+                   data-action="edit-archive-entry"
+                   data-period="${period.id}"
+                   data-id="${entry.id}">
 
-                <div>
-                  <input type="date"
-                         value="${entry.date}"
-                         data-field="date"
-                         data-entry="${entry.id}">
+                <div>${escapeHtml(entry.date)}</div>
+
+                <div class="text-right">
+                  ${Number(entry.kilometers ?? 0).toFixed(1)}
                 </div>
 
-                <div>
-                  <input type="number"
-                         step="0.1"
-                         value="${entry.kilometers}"
-                         data-field="kilometers"
-                         data-entry="${entry.id}">
+                <div class="text-right">
+                  ${entry.loads ?? 0}
                 </div>
 
-                <div>
-                  <input type="number"
-                         value="${entry.loads}"
-                         data-field="loads"
-                         data-entry="${entry.id}">
+                <div class="text-right">
+                  ${entry.waitingHours ?? 0}
                 </div>
 
-                <div>
-                  <input type="number"
-                         step="0.1"
-                         value="${entry.waitingHours}"
-                         data-field="waitingHours"
-                         data-entry="${entry.id}">
+                <div class="text-right">
+                  ${mealsSummary || "-"}
                 </div>
 
-               <div class="archive-meals">
-                ${renderArchiveMealsEditor(entry)}
-                </div>
-
-                <div>
+                <div class="text-right">
                   ${Number(entry.amount ?? 0).toFixed(2)}
                 </div>
 
-                <div class="row-actions">
-
-                  <button class="success-btn"
-                          data-action="save-archived-row"
-                          data-period="${period.id}"
-                          data-entry="${entry.id}">
-                    ✓
-                  </button>
-
+                <div>
                   <button class="danger-btn"
                           data-action="delete-archived-entry"
                           data-period="${period.id}"
                           data-entry="${entry.id}">
                     ✕
                   </button>
-
                 </div>
 
               </div>
@@ -475,6 +449,7 @@ function renderArchiveDetail(period, state) {
     </div>
   `;
 }
+
 /* ======================================
    RENDER ARCHIVE MEALS EDITOR
 ====================================== */
