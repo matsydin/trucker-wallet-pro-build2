@@ -293,7 +293,6 @@ function renderYearsTable(years) {
           <div class="text-right">
 $$
 {y.total.toFixed(2)}</div>
-
         </div>
       `).join("")}
 
