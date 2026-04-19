@@ -160,10 +160,7 @@ function handleClick(e) {
     toggleTheme();
     return;
   }
-if (action === "filter-custom-range") {
-  render();
-  return;
-}
+
 
 if (action === "reset-custom-range") {
   state.ui.archiveRange = { from: null, to: null };
@@ -218,6 +215,18 @@ if (action === "reset-custom-range") {
   if (!actionBtn) return;
 
   const action = actionBtn.dataset.action;
+if (action === "filter-custom-range") {
+  render();
+  return;
+}
+
+if (action === "reset-custom-range") {
+  state.ui.archiveRange = { from: null, to: null };
+  saveState();
+  render();
+  return;
+}
+  
   const id = actionBtn.dataset.id;
   const periodId = actionBtn.dataset.period || actionBtn.dataset.periodId;
 
