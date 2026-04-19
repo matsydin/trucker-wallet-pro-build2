@@ -913,3 +913,6 @@ button:active {
   border-radius: 6px;
   cursor: pointer;
 }
+.archive-row.clickable {
+  cursor: pointer;
+}
