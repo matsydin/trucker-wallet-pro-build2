@@ -265,14 +265,20 @@ if (action === "set-archive-tab") {
     return;
   }
 
-  if (action === "delete-archive-entry") {
-    if (confirm("Delete this archived entry?")) {
-      ArchiveService.deleteArchivedEntry(periodId, id);
-      closeArchiveEntryModal();
-      render();
-    }
-    return;
+ if (action === "delete-archived-entry") {
+
+  const periodId = actionBtn.dataset.period;
+  const entryId  = actionBtn.dataset.entry;
+
+  if (!periodId || !entryId) return;
+
+  if (confirm("Delete this day?")) {
+    ArchiveService.deleteArchivedEntry(periodId, entryId);
+    render();
   }
+
+  return;
+}
 
   if (action === "close-archive-entry-modal") {
     closeArchiveEntryModal();
