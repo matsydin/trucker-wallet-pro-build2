@@ -211,10 +211,6 @@ export function renderArchiveScreen(state) {
   archivePage.innerHTML = `
     <div class="screen">
 
-      <div class="screen-header">
-        <h2>Archive</h2>
-      </div>
-
       <div class="segmented archive-segmented">
         <button
           data-action="set-archive-tab"
