@@ -836,6 +836,9 @@ function openArchiveEntryModal(periodId, entryId) {
   const entry = period.entries.find(e => e.id === entryId);
   if (!entry) return;
 
+  const ratesSection = document.getElementById("archive-rates-section");
+  if (ratesSection) ratesSection.hidden = true;
+
   document.getElementById("archive-entry-date").value = entry.date || "";
   document.getElementById("archive-entry-distance").value = entry.kilometers ?? "";
   document.getElementById("archive-entry-pickups").value = entry.loads ?? 0;
