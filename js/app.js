@@ -161,14 +161,6 @@ function handleClick(e) {
     return;
   }
 
-
-if (action === "reset-custom-range") {
-  state.ui.archiveRange = { from: null, to: null };
-  saveState();
-  render();
-  return;
-}
-  
   /* ===== LOG ===== */
 
   if (target.closest(".fab") && state.ui.activeTab === "log") {
