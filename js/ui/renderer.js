@@ -213,7 +213,8 @@ export function renderArchiveScreen(state) {
         Number(state.ui.archiveYear),
         Number(m.month)
       );
-      weeks.push(...monthWeeks);
+
+      weeks = weeks.concat(monthWeeks);
     });
 
   } else {
@@ -224,6 +225,8 @@ export function renderArchiveScreen(state) {
     );
 
   }
+
+  console.log("FINAL WEEKS:", weeks);
 
   content = weeks.length
     ? renderWeeksTable(weeks)
