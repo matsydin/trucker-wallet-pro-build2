@@ -289,7 +289,7 @@ export function renderArchiveScreen(state) {
     </div>
 
     ${content}
-
+console.log("CONTENT:", content);
   </div>
 `;
 }
