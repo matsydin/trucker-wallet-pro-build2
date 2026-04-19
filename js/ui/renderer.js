@@ -267,10 +267,24 @@ function renderCustomRangeSection(state) {
 
       </div>
 
-      <button class="export-btn archive-export-btn"
-              data-action="export-custom-range">
-        Export TXT
-      </button>
+     <div style="display:flex; gap:10px; margin-top:12px;">
+
+  <button class="archive-action-btn"
+          data-action="filter-custom-range">
+    Filter
+  </button>
+
+  <button class="archive-delete-btn"
+          data-action="reset-custom-range">
+    Reset
+  </button>
+
+  <button class="export-btn archive-export-btn"
+          data-action="export-custom-range">
+    Export TXT
+  </button>
+
+</div>
 
     </div>
   `;
