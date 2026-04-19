@@ -375,48 +375,57 @@ function renderWeeksTable(weeks) {
 /* ======================================
    RENDER ARCHIVE ENTRIES
 ====================================== */
-
 function renderArchiveEntries(period, state) {
 
+  if (!period.entries?.length) {
+    return '<div class="empty-state">No entries</div>';
+  }
+
   return `
-    <div class="archive-entries">
-      ${(period.entries || []).map(entry => {
+    <div class="archive-table-wrapper">
+      <div class="archive-table">
 
-        const distance =
-          state.ui.displayUnit === "km"
-            ? Number(entry.kilometers ?? 0).toFixed(1)
-            : Number(entry.miles ?? 0).toFixed(1);
+        <div class="archive-row archive-header">
+          <div>Date</div>
+          <div>Distance</div>
+          <div>Loads</div>
+          <div>Meals</div>
+          <div>Waiting</div>
+          <div>Total</div>
+        </div>
 
-        const mealsSummary = formatMealsSummary(entry.meals);
+        ${period.entries.map(entry => {
 
-        return `
-          <div class="archive-entry-card">
+          const distance =
+            state.ui.displayUnit === "km"
+              ? Number(entry.kilometers ?? 0).toFixed(1)
+              : Number(entry.miles ?? 0).toFixed(1);
 
-            <div class="entry-top">
+          const mealsCount =
+            entry.meals
+              ? ["breakfast","lunch","dinner"]
+                  .filter(t => entry.meals[t]?.taken).length
+              : 0;
+
+          return `
+            <div class="archive-row">
+
               <div>${escapeHtml(entry.date)}</div>
-              <div>
-  ${Number(entry.amount ?? 0).toFixed(2)}
-              </div>
+              <div>${distance}</div>
+              <div>${entry.loads ?? 0}</div>
+              <div>${mealsCount}</div>
+              <div>${entry.waitingHours ?? 0}</div>
+              <div>${Number(entry.amount ?? 0).toFixed(2)}</div>
 
-            <div class="entry-meta">
-              ${distance} ${state.ui.displayUnit}
-              • Loads: ${entry.loads ?? 0}
-              • Waiting: ${entry.waitingHours ?? 0}h
             </div>
+          `;
 
-            ${mealsSummary
-              ? `<div class="muted">${mealsSummary}</div>`
-              : ""}
+        }).join("")}
 
-          </div>
-        `;
-      }).join("")}
+      </div>
     </div>
   `;
 }
-
-
-
 /* ======================================
    RENDER CUSTOMERS
 ====================================== */
