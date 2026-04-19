@@ -170,7 +170,7 @@ export function renderArchiveScreen(state) {
       state.ui.archiveYear = archiveYear;
     }
   }
-  console.log("ArchiveTab:", archiveTab);
+  
   const archivePage = document.querySelector('[data-page="archive"]');
   if (!archivePage) return;
   let content = "";
@@ -205,18 +205,17 @@ export function renderArchiveScreen(state) {
 
   if (state.ui.archiveTab === "weeks") {
 
-  console.log("UI YEAR RAW:", state.ui.archiveYear);
-  console.log("UI MONTH FILTER RAW:", state.ui.archiveMonthFilter);
+  
 
   const selectedYear = Number(state.ui.archiveYear);
 
-  console.log("YEAR USED:", selectedYear);
+  
 
   let weeks = [];
 
   const months = ArchiveAggregationService.getMonthsSummary(selectedYear);
 
-  console.log("MONTHS FROM SERVICE:", months);
+  
 
   if (state.ui.archiveMonthFilter == null) {
 
@@ -227,7 +226,7 @@ export function renderArchiveScreen(state) {
         Number(m.month)
       );
 
-      console.log("WEEKS FOR MONTH", m.month, monthWeeks);
+      
 
       weeks = weeks.concat(monthWeeks);
     });
@@ -239,10 +238,10 @@ export function renderArchiveScreen(state) {
       Number(state.ui.archiveMonthFilter)
     );
 
-    console.log("FILTERED WEEKS:", weeks);
+    
   }
 
-  console.log("FINAL WEEKS:", weeks);
+  
 
   content = weeks.length
     ? renderWeeksTable(weeks)
@@ -263,7 +262,7 @@ export function renderArchiveScreen(state) {
   /* =========================
      FINAL LAYOUT
   ========================== */
-console.log("CONTENT:", content);
+
   archivePage.innerHTML = `
   <div class="screen">
 
