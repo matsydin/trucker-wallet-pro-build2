@@ -171,10 +171,25 @@ function handleClick(e) {
     return;
   }
 
-  if (target.closest(".modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal) .modal-close")) {
-    closeEntryModal();
+  if (target.closest(".modal-close")) {
+
+  // Week note modal
+  if (target.closest("#week-note-modal")) {
+    document.getElementById("week-note-modal").hidden = true;
+    editingWeekNoteId = null;
     return;
   }
+
+  // Archive entry modal
+  if (target.closest("#archive-entry-modal")) {
+    closeArchiveEntryModal();
+    return;
+  }
+
+  // Log entry modal
+  closeEntryModal();
+  return;
+}
 
   if (target.classList.contains("modal-backdrop")) {
     const entryModal = target.closest('.modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)');
