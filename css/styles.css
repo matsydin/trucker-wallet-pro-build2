@@ -36,7 +36,7 @@ font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 --danger: #dc2626;
 }
 
-{
+* {
 box-sizing: border-box;
 }
 body {
@@ -246,9 +246,9 @@ padding-bottom: calc(20px + var(--safe-bottom));
 box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
 
 /* ===== СКРОЛ ===== /
-max-height: 85vh; / ← максимум 85% екрану /
-overflow-y: auto; / ← скрол якщо контент більший /
--webkit-overflow-scrolling: touch; / ← плавний скрол на iOS */
+max-height: 85vh;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
 }
 
 .modal-header {
@@ -492,34 +492,14 @@ transform: scale(0.99);
 ARCHIVE TABLE
 ====================================== */
 
-.archive-table {
-width: 100%;
-margin-top: 16px;
-}
 
-.archive-row {
-display: grid;
-grid-template-columns:
-140px /* date /
-90px / km /
-90px / loads /
-90px / waiting /
-200px / meals /
-110px / total /
-220px / notes /
-40px; / delete */
-gap: 12px;
-align-items: center;
-padding: 14px 0;
-border-bottom: 1px solid rgba(255,255,255,0.05);
-}
 .archive-table-wrapper {
 overflow-x: auto;
 -webkit-overflow-scrolling: touch;
 }
 
 .archive-table {
-min-width: 780px;
+min-width: 800px;
 }
 
 .archive-row.archive-header {
@@ -544,9 +524,6 @@ color: var(--text-secondary);
 min-width: 0;
 }
 
-.archive-row div:last-child {
-text-align: right;
-}
 
 .archive-row div:nth-child(2) {
 text-align: right;
@@ -848,17 +825,6 @@ background-color: var(--accent);
 transform: translateX(20px);
 }
 
-.archive-row div:not(:first-child) {
-text-align: right;
-}
-.archive-table-wrapper {
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-}
-
-.archive-table {
-width: 100%;
-}
 .archive-filters {
 display: flex;
 gap: 12px;
@@ -929,9 +895,7 @@ overflow-x: auto;
 -webkit-overflow-scrolling: touch;
 }
 
-.archive-row {
-white-space: nowrap;
-}
+
 .archive-btn {
 border: 1px solid var(--accent);
 background: transparent;
@@ -970,4 +934,10 @@ grid-template-columns:
 120px
 60px;
 gap: 12px;
+}
+.archive-row div:nth-child(2),
+.archive-row div:nth-child(3),
+.archive-row div:nth-child(4),
+.archive-row div:nth-child(6) {
+  text-align: right;
 }
