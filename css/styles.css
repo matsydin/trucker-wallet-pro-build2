@@ -501,17 +501,24 @@ button:active {
 .archive-row {
   display: grid;
   grid-template-columns:
-    1.6fr   /* Period / Year */
-    0.9fr   /* Distance */
-    0.6fr   /* Loads */
-    0.6fr   /* Meals */
-    0.8fr   /* Waiting */
-    0.9fr;  /* Total */
-   
-  gap: 12px;
+    180px   /* period */
+    100px   /* distance */
+    80px    /* loads */
+    220px   /* meals */
+    100px   /* waiting */
+    120px;  /* total */
+  gap: 16px;
   align-items: center;
   padding: 14px 0;
   border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.archive-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.archive-table {
+  min-width: 780px;
 }
 
 .archive-row.archive-header {
@@ -938,4 +945,11 @@ button:active {
 .archive-btn:hover {
   background: var(--accent);
   color: #000;
+}
+.archive-row div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.archive-row div:nth-child(4) {
+  white-space: nowrap;
 }
