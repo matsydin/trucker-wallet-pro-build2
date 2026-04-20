@@ -295,7 +295,10 @@ function generatePeriodData(entries) {
     return { start: "", end: "", label: "Empty Period" };
   }
 
-  const dates = entries.map(e => new Date(e.date));
+ const dates = entries.map(e => {
+  const [y, m, d] = e.date.split("-");
+  return new Date(Number(y), Number(m) - 1, Number(d));
+});
 
   const minDate = new Date(Math.min(...dates));
   const maxDate = new Date(Math.max(...dates));
