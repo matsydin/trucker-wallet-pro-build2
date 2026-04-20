@@ -681,7 +681,7 @@ function closeTrailerModal() {
 ================================ */
 
 function openEntryModal(id = null) {
-
+  const notesInput = document.getElementById("entry-notes");
   const modal = document.querySelector(
     ".modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)"
   );
@@ -708,6 +708,7 @@ function openEntryModal(id = null) {
     distanceInput.value = entry.kilometers ?? "";
     pickupsInput.value = entry.loads ?? 0;
     waitingInput.value = entry.waitingHours ?? 0;
+    notesInput.value = entry.notes || "";
 
     mealTypes.forEach(type => {
 
@@ -732,7 +733,7 @@ function openEntryModal(id = null) {
     distanceInput.value = "";
     pickupsInput.value = "";
     waitingInput.value = "";
-
+    notesInput.value = "";
     mealTypes.forEach(type => {
 
       const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
