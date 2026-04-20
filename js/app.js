@@ -69,6 +69,14 @@ if (unitToggle) {
     state.ui.activeTab === "log" ? "flex" : "none";
 }
 
+  /* ===== Update Distance Label ===== */
+
+const distanceLabel = document.getElementById("entry-distance-label");
+if (distanceLabel) {
+  const unit = state.ui.inputUnit === "mi" ? "MI" : "KM";
+  distanceLabel.textContent = `Distance (${unit})`;
+}
+
 const exportBtn = document.getElementById("export-btn");
 if (exportBtn) {
   exportBtn.remove();
