@@ -28,6 +28,7 @@ archiveRange: {
   from: null,
   to: null
 }
+     settingsDirty: false
 },
 
   settings: {
