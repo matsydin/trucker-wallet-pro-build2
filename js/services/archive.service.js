@@ -25,7 +25,7 @@ function archiveCurrent() {
     createdAt: new Date().toISOString(),
 
     entries: structuredClone(entries),
-
+    notes: "",
    totals: {
      kilometers: state.current.totals.kilometers ?? 0,
      miles: state.current.totals.miles ?? 0,
