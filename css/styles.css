@@ -955,3 +955,8 @@ button:active {
 .archive-row div:nth-child(4) {
   white-space: nowrap;
 }
+.archive-notes-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
