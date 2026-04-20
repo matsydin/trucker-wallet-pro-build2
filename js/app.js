@@ -185,26 +185,36 @@ function handleClick(e) {
     return;
   }
 
-  if (target.closest(".modal-close")) {
+ if (target.closest(".modal-close")) {
 
-  // Week note modal
-  if (target.closest("#week-note-modal")) {
-    document.getElementById("week-note-modal").hidden = true;
-    editingWeekNoteId = null;
+  const modal = target.closest(".modal");
+  if (!modal) return;
+
+  if (modal.id === "customer-modal") {
+    closeCustomerModal();
     return;
   }
 
-  // Archive entry modal
-  if (target.closest("#archive-entry-modal")) {
+  if (modal.id === "trailer-modal") {
+    closeTrailerModal();
+    return;
+  }
+
+  if (modal.id === "archive-entry-modal") {
     closeArchiveEntryModal();
     return;
   }
 
-  // Log entry modal
+  if (modal.id === "week-note-modal") {
+    modal.hidden = true;
+    editingWeekNoteId = null;
+    return;
+  }
+
+  // Default (log entry modal)
   closeEntryModal();
   return;
 }
-
   if (target.classList.contains("modal-backdrop")) {
     const entryModal = target.closest('.modal:not(#customer-modal):not(#trailer-modal):not(#archive-entry-modal)');
     if (entryModal) {
