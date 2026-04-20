@@ -252,6 +252,9 @@ function editArchivedEntry(periodId, entryId, newData) {
   };
 
   entry.amount = calculateArchivedAmount(entry);
+   if (typeof newData.notes === "string") {
+  entry.notes = newData.notes;
+}
 // ✅ Update meals if provided
 if (newData.meals) {
   entry.meals = newData.meals;
