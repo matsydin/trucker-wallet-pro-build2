@@ -219,6 +219,7 @@ display: flex;
 align-items: flex-end;
 justify-content: center;
 z-index: 9999;
+will-change: transform;
 }
 
 .modal[hidden] {
@@ -249,6 +250,7 @@ box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
 max-height: 85vh;
 overflow-y: auto;
 -webkit-overflow-scrolling: touch;
+transform: translateZ(0);
 }
 
 .modal-header {
