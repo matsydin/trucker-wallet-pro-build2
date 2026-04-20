@@ -501,13 +501,15 @@ button:active {
 .archive-row {
   display: grid;
   grid-template-columns:
-    180px   /* period */
-    100px   /* distance */
-    80px    /* loads */
-    220px   /* meals */
-    100px   /* waiting */
-    120px;  /* total */
-  gap: 16px;
+    140px   /* date */
+    90px    /* km */
+    90px    /* loads */
+    90px    /* waiting */
+    200px   /* meals */
+    110px   /* total */
+    220px   /* notes */
+    40px;   /* delete */
+  gap: 12px;
   align-items: center;
   padding: 14px 0;
   border-bottom: 1px solid rgba(255,255,255,0.05);
