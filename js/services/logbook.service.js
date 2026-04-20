@@ -75,7 +75,7 @@ export const LogbookService = {
       waitingHours: data.waitingHours,
       rateSnapshot,
       amount,
-      meals: data.meals || createDefaultMeals()
+      meals: data.meals || createDefaultMeals(),
       notes: data.notes || ""
     };
 
