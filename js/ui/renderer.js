@@ -435,7 +435,7 @@ function renderWeeksTableFromPeriods(periods) {
     </div>
 
     <div class="archive-notes-cell">
-      ${p.notes ? "📝" : ""}
+      ${p.notes ? escapeHtml(p.notes) : ""}
     </div>
 
   </div>
