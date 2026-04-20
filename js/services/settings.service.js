@@ -10,11 +10,16 @@ export const SettingsService = {
   },
 
   updateRates({ perMile, perDrop, perWaiting }) {
-    state.settings.ratePerMile = Number(perMile) || 0;
-    state.settings.ratePerDrop = Number(perDrop) || 0;
-    state.settings.ratePerWaitingHour = Number(perWaiting) || 0;
+  state.settings.ratePerMile = Number(perMile) || 0;
+  state.settings.ratePerDrop = Number(perDrop) || 0;
+  state.settings.ratePerWaitingHour = Number(perWaiting) || 0;
+
+  // перерахунок тільки current period
+  import("../services/logbook.service.js").then(module => {
+    module.LogbookService.calculateTotals();
     saveState();
-  },
+  });
+},
 
   updateInputUnit(unit) {
     if (!["km", "mi"].includes(unit)) return;
