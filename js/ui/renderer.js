@@ -274,7 +274,7 @@ function renderCustomRangeSection(state) {
     Filter
   </button>
 
-  <button class="archive-delete-btn"
+  <button class="archive-btn"
           data-action="reset-custom-range">
     Reset
   </button>
@@ -433,7 +433,7 @@ function renderArchiveDetail(period, state) {
     <div class="screen">
 
       <div class="screen-header">
-        <button class="secondary-btn"
+        <button class="archive-btn"
                 data-action="archive-back-to-weeks">
           ← Back
         </button>
