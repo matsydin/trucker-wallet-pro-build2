@@ -671,6 +671,18 @@ if (action === "save-week-note") {
   render();
   return;
 }
+
+  /* ===== SETTINGS ===== */
+
+if (action === "export-backup") {
+  SettingsService.exportBackup();
+  return;
+}
+
+if (action === "reset-all") {
+  SettingsService.resetAll();
+  return;
+}
   
 }
 
@@ -1056,6 +1068,41 @@ const notes = document.getElementById("archive-entry-notes")?.value || "";
 ================================ */
 
 document.addEventListener("change", function(e) {
+
+  /* ===== SETTINGS INPUTS ===== */
+
+if (e.target.id === "settings-driver-name") {
+  SettingsService.updateDriverName(e.target.value);
+  return;
+}
+
+if (
+  e.target.id === "settings-rate-mile" ||
+  e.target.id === "settings-rate-drop" ||
+  e.target.id === "settings-rate-waiting"
+) {
+  SettingsService.updateRates({
+    perMile: document.getElementById("settings-rate-mile")?.value,
+    perDrop: document.getElementById("settings-rate-drop")?.value,
+    perWaiting: document.getElementById("settings-rate-waiting")?.value
+  });
+  return;
+}
+
+if (e.target.id === "settings-input-unit") {
+  SettingsService.updateInputUnit(e.target.value);
+  render();
+  return;
+}
+
+if (e.target.id === "settings-restore-file") {
+  const file = e.target.files?.[0];
+  if (file) {
+    SettingsService.restoreBackup(file);
+  }
+  return;
+}
+  
 /* ===== ARCHIVE YEAR SELECT ===== */
 
 if (e.target.dataset.action === "set-archive-year") {
