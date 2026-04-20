@@ -867,10 +867,11 @@ export function renderSettingsScreen(state) {
           Changes affect only new entries.
         </p>
 
-        <button class="primary-btn"
-        data-action="save-settings">
-          Save Settings
-        </button>
+       <button class="primary-btn"
+        data-action="save-settings"
+        ${state.ui.settingsDirty ? "" : "disabled"}>
+  Save Settings
+</button>
 
       </div>
 
