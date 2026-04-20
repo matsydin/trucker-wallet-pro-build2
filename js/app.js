@@ -731,7 +731,7 @@ if (action === "save-settings") {
   return;
 }
 
-
+}
 
 /* ===============================
    CUSTOMER MODAL
