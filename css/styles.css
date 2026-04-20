@@ -924,3 +924,18 @@ button:active {
 .archive-row {
   white-space: nowrap;
 }
+.archive-btn {
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.archive-btn:hover {
+  background: var(--accent);
+  color: #000;
+}
