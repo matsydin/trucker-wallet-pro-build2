@@ -791,3 +791,110 @@ export function renderFleet(state) {
 
   container.innerHTML = html;
 }
+/* ======================================
+   RENDER SETTINGS SCREEN
+====================================== */
+
+export function renderSettingsScreen(state) {
+
+  const container = document.querySelector('[data-page="settings"]');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="screen">
+
+      <div class="screen-header">
+        <h2>Settings</h2>
+      </div>
+
+      <!-- DRIVER -->
+      <div class="card">
+        <h3>Driver</h3>
+
+        <div class="form-group">
+          <label>Driver Name</label>
+          <input
+            type="text"
+            id="settings-driver-name"
+            value="${state.settings.driverName || ""}"
+          />
+        </div>
+      </div>
+
+      <!-- RATES -->
+      <div class="card">
+        <h3>Rates</h3>
+
+        <div class="form-group">
+          <label>Rate per Mile</label>
+          <input
+            type="number"
+            step="0.01"
+            id="settings-rate-mile"
+            value="${state.settings.ratePerMile}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Rate per Drop</label>
+          <input
+            type="number"
+            step="0.01"
+            id="settings-rate-drop"
+            value="${state.settings.ratePerDrop}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Rate per Waiting Hour</label>
+          <input
+            type="number"
+            step="0.01"
+            id="settings-rate-waiting"
+            value="${state.settings.ratePerWaitingHour}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Input Unit</label>
+          <select id="settings-input-unit">
+            <option value="km" ${state.ui.inputUnit === "km" ? "selected" : ""}>Kilometers (KM)</option>
+            <option value="mi" ${state.ui.inputUnit === "mi" ? "selected" : ""}>Miles (MI)</option>
+          </select>
+        </div>
+
+        <p class="muted" style="font-size:13px;">
+          Changes affect only new entries.
+        </p>
+
+      </div>
+
+      <!-- BACKUP -->
+      <div class="card">
+        <h3>Backup & Restore</h3>
+
+        <button class="archive-btn"
+                data-action="export-backup">
+          Export Backup
+        </button>
+
+        <div class="form-group" style="margin-top:12px;">
+          <input type="file"
+                 id="settings-restore-file"
+                 accept="application/json" />
+        </div>
+      </div>
+
+      <!-- DANGER -->
+      <div class="card">
+        <h3 style="color:var(--danger);">Danger Zone</h3>
+
+        <button class="danger-btn"
+                data-action="reset-all">
+          Reset All Data
+        </button>
+      </div>
+
+    </div>
+  `;
+}
