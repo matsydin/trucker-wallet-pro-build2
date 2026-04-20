@@ -946,13 +946,13 @@ mealTypes.forEach(type => {
 
   const checkbox = card.querySelector(".meal-checkbox");
   const select = card.querySelector(".meal-select");
-  const notes = document.getElementById("archive-entry-notes").value;
+  
   meals[type] = {
     taken: !!checkbox?.checked,
     location: checkbox?.checked ? select?.value : ""
   };
 });
-  
+const notes = document.getElementById("archive-entry-notes")?.value || "";
   const payload = {
     date: document.getElementById("archive-entry-date").value,
     kilometers: document.getElementById("archive-entry-distance").value,
