@@ -836,7 +836,7 @@ export function renderSettingsScreen(state) {
         </div>
 
         <div class="form-group">
-          <label>Rate per Drop</label>
+          <label>Rate per Load</label>
           <input
             type="number"
             step="0.01"
