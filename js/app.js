@@ -839,7 +839,8 @@ function openArchiveEntryModal(periodId, entryId) {
   const ratesSection = document.getElementById("archive-rates-section");
   if (ratesSection) ratesSection.hidden = true;
 
-  document.getElementById("archive-entry-date").value = entry.date || "";
+  document.getElementById("archive-entry-notes").value = entry.notes || "";
+    document.getElementById("archive-entry-date").value = entry.date || "";
   document.getElementById("archive-entry-distance").value = entry.kilometers ?? "";
   document.getElementById("archive-entry-pickups").value = entry.loads ?? 0;
   document.getElementById("archive-entry-waiting").value = entry.waitingHours ?? 0;
