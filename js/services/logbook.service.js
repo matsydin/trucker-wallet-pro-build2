@@ -76,6 +76,7 @@ export const LogbookService = {
       rateSnapshot,
       amount,
       meals: data.meals || createDefaultMeals()
+      notes: data.notes || ""
     };
 
     state.current.entries.push(entry);
