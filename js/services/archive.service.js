@@ -196,7 +196,7 @@ function recalculateArchiveTotals(periodId) {
     miles += Number(entry.miles || 0);
     loads += Number(entry.loads || 0);
     waitingHours += Number(entry.waitingHours || 0);
-    amount += Number(entry.amount || 0);
+    amount += +entry.amount || 0;
     meals += ["breakfast","lunch","dinner"]
   .filter(type => entry.meals?.[type]?.taken).length;
   });
@@ -252,6 +252,7 @@ function editArchivedEntry(periodId, entryId, newData) {
   };
 
   entry.amount = calculateArchivedAmount(entry);
+   entry.amount = +entry.amount.toFixed(2);
    if (typeof newData.notes === "string") {
   entry.notes = newData.notes;
 }
@@ -263,7 +264,11 @@ if (newData.meals) {
    if (newData.meals) {
      entry.meals = newData.meals;
       }
-  period.entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+  period.entries.sort((a, b) => {
+  const [y1, m1, d1] = a.date.split("-");
+  const [y2, m2, d2] = b.date.split("-");
+  return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+});
 
   recalculateArchiveTotals(periodId);
   saveState();
