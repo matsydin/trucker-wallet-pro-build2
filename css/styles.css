@@ -845,12 +845,16 @@ font-size: 12px;
 color: var(--text-secondary);
 }
 
-.archive-select-group select {
-padding: 8px 10px;
-border-radius: 10px;
-border: none;
-background: var(--card-elev);
-color: var(--text);
+.archive-select-group select,
+.archive-summary input[type="date"],
+#settings-restore-file {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--card-elev);
+  color: var(--text);
+  font-size: 16px;
 }
 .archive-table input {
 width: 100%;
@@ -971,4 +975,11 @@ text-overflow: ellipsis;
 .archive-row div:nth-child(4),
 .archive-row div:nth-child(6) {
   text-align: right;
+}
+.primary-btn:disabled {
+  background: #888 !important;
+  color: #222 !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
 }
