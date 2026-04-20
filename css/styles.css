@@ -960,3 +960,15 @@ button:active {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.archive-row {
+  display: grid;
+  grid-template-columns:
+    180px
+    100px
+    80px
+    100px
+    100px
+    120px
+    60px;
+  gap: 12px;
+}
