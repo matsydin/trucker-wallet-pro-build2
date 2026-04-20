@@ -720,6 +720,26 @@ if (action === "save-settings") {
     document.getElementById("settings-input-unit")?.value
   );
 
+  state.ui.settingsDirty = false;
+  saveState();
+  render();
+  return;
+}
+
+  SettingsService.updateDriverName(
+    document.getElementById("settings-driver-name")?.value
+  );
+
+  SettingsService.updateRates({
+    perMile: document.getElementById("settings-rate-mile")?.value,
+    perDrop: document.getElementById("settings-rate-drop")?.value,
+    perWaiting: document.getElementById("settings-rate-waiting")?.value
+  });
+
+  SettingsService.updateInputUnit(
+    document.getElementById("settings-input-unit")?.value
+  );
+
   render();
   return;
 }
