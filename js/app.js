@@ -18,7 +18,7 @@ let editingTrailerId = null;
 let editingEntryId = null;
 let editingArchivePeriodId = null;
 let editingArchiveEntryId = null;
-
+let editingWeekNoteId = null;
 /* ===============================
    RENDER APP STATE
 ================================ */
@@ -204,6 +204,51 @@ function handleClick(e) {
   if (!actionBtn) return;
 
   const action = actionBtn.dataset.action;
+
+  /* ===== WEEK NOTES ===== */
+
+if (action === "edit-week-note") {
+
+  const periodId = actionBtn.dataset.period;
+  const period = state.archive.find(p => p.id === periodId);
+  if (!period) return;
+
+  editingWeekNoteId = periodId;
+
+  document.getElementById("week-note-text").value =
+    period.notes || "";
+
+  document.getElementById("week-note-modal").hidden = false;
+  return;
+}
+
+if (action === "close-week-note") {
+  const modal = document.getElementById("week-note-modal");
+  if (modal) modal.hidden = true;
+  editingWeekNoteId = null;
+  return;
+}
+
+if (action === "save-week-note") {
+
+  const text = document.getElementById("week-note-text").value;
+
+  const period = state.archive.find(
+    p => p.id === editingWeekNoteId
+  );
+
+  if (period) {
+    period.notes = text;
+  }
+
+  saveState();
+
+  document.getElementById("week-note-modal").hidden = true;
+  editingWeekNoteId = null;
+  render();
+  return;
+}
+  
 if (action === "filter-custom-range") {
   render();
   return;
@@ -424,15 +469,6 @@ if (action === "archive-back-to-weeks") {
     render();
     return;
   }
-
-  //if (action === "archive-open-week") {
-   // state.ui.archiveWeekId = id;
-   // state.ui.archiveTab = "entries";
-   // saveState();
-  //  render();
-  //  return;
-//  }
-
   if (action === "archive-back") {
 
     if (state.ui.archiveTab === "entries") {
@@ -572,7 +608,7 @@ if (action === "archive-back-to-weeks") {
 /* ===============================
    EDIT WEEK NOTES
 ================================ */
-let editingWeekNoteId = null;
+
 
 if (action === "edit-week-note") {
 
