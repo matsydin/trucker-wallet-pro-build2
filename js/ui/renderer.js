@@ -433,6 +433,12 @@ function renderArchiveDetail(period, state) {
     <div class="screen">
 
       <div class="screen-header">
+<button class="archive-btn"
+        data-action="edit-week-note"
+        data-period="${period.id}">
+  Week Note
+</button>
+      
         <button class="archive-btn"
                 data-action="archive-back-to-weeks">
           ← Back
