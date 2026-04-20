@@ -886,7 +886,12 @@ function saveEntryFromModal() {
   const waitingInput = document.getElementById("entry-waiting");
   const notesInput = document.getElementById("entry-notes");
 
-  const kilometers = parseFloat(distanceInput.value);
+let kilometers = parseFloat(distanceInput.value);
+
+if (state.ui.inputUnit === "mi") {
+  kilometers = kilometers / 0.621371;
+}
+  
   const date = dateInput.value;
   const loads = parseInt(pickupsInput.value || "0", 10);
   const waitingHours = parseFloat(waitingInput.value || "0");
