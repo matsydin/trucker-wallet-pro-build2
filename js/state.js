@@ -27,7 +27,7 @@ archiveMonthFilter: null, // null = All months
 archiveRange: {
   from: null,
   to: null
-}
+},
      settingsDirty: false
 },
 
