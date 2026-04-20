@@ -450,14 +450,15 @@ function renderArchiveDetail(period, state) {
         <div class="archive-table">
 
           <div class="archive-row archive-header">
-            <div>Date</div>
-            <div class="text-right">Km</div>
-            <div class="text-right">Loads</div>
-            <div class="text-right">Waiting</div>
-            <div class="text-right">Meals</div>
-            <div class="text-right">Total</div>
-            <div></div>
-          </div>
+  <div>Date</div>
+  <div class="text-right">Km</div>
+  <div class="text-right">Loads</div>
+  <div class="text-right">Waiting</div>
+  <div>Meals</div>
+  <div class="text-right">Total</div>
+  <div>Notes</div>
+  <div></div>
+</div>
 
           ${period.entries.map(entry => {
 
@@ -487,9 +488,13 @@ function renderArchiveDetail(period, state) {
                   ${mealsSummary || "-"}
                 </div>
 
-                <div class="text-right">
+               <div class="text-right">
                   ${Number(entry.amount ?? 0).toFixed(2)}
-                </div>
+               </div>
+
+<div class="archive-notes-cell">
+  ${entry.notes ? entry.notes : ""}
+</div>
 
                 <div>
                   <button class="danger-btn"
