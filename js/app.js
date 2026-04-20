@@ -701,6 +701,28 @@ if (action === "reset-all") {
   SettingsService.resetAll();
   return;
 }
+
+  /* ===== SAVE SETTINGS ===== */
+
+if (action === "save-settings") {
+
+  SettingsService.updateDriverName(
+    document.getElementById("settings-driver-name")?.value
+  );
+
+  SettingsService.updateRates({
+    perMile: document.getElementById("settings-rate-mile")?.value,
+    perDrop: document.getElementById("settings-rate-drop")?.value,
+    perWaiting: document.getElementById("settings-rate-waiting")?.value
+  });
+
+  SettingsService.updateInputUnit(
+    document.getElementById("settings-input-unit")?.value
+  );
+
+  render();
+  return;
+}
   
 }
 
