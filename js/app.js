@@ -69,10 +69,7 @@ if (unitToggle) {
 
 const exportBtn = document.getElementById("export-btn");
 if (exportBtn) {
-  exportBtn.style.display =
-    state.ui.activeTab === "archive" && state.ui.archiveDetailId
-      ? "block"
-      : "none";
+  exportBtn.remove();
 }
 
   if (state.ui.activeTab === "log") {
