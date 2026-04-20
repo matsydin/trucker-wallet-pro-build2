@@ -3,7 +3,8 @@
 import {
   renderLogScreen,
   renderArchiveScreen,
-  renderDataScreen
+  renderDataScreen,
+  renderSettingsScreen
 } from "./ui/renderer.js";
 
 import { state, saveState } from "./state.js";
@@ -12,6 +13,7 @@ import { ArchiveService } from "./services/archive.service.js";
 import { CustomerService } from "./services/customer.service.js";
 import { TrailerService } from "./services/trailer.service.js";
 import { ArchiveAggregationService } from "./services/archive-aggregation.service.js";
+import { SettingsService } from "./services/settings.service.js";
 
 let editingCustomerId = null;
 let editingTrailerId = null;
@@ -86,6 +88,10 @@ if (exportBtn) {
     renderDataScreen(state);
     return;
   }
+  if (state.ui.activeTab === "settings") {
+  renderSettingsScreen(state);
+  return;
+}
 }
 
 /* ===============================
