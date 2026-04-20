@@ -786,7 +786,7 @@ for (let type of mealTypes) {
   const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
   const checkbox = card?.querySelector(".meal-checkbox");
   const select = card?.querySelector(".meal-select");
-
+  const notes = document.getElementById("entry-notes").value;
   const taken = checkbox?.checked;
   const location = select?.value;
 
@@ -806,7 +806,8 @@ for (let type of mealTypes) {
     date,
     loads,
     waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours,
-    meals
+    meals,
+    notes
   };
 
   if (editingEntryId) {
