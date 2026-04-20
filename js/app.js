@@ -1113,6 +1113,20 @@ const notes = document.getElementById("archive-entry-notes")?.value || "";
 ================================ */
 
 document.addEventListener("change", function(e) {
+  /* ===== SETTINGS DIRTY TRACK ===== */
+
+if (
+  e.target.id === "settings-driver-name" ||
+  e.target.id === "settings-rate-mile" ||
+  e.target.id === "settings-rate-drop" ||
+  e.target.id === "settings-rate-waiting" ||
+  e.target.id === "settings-input-unit"
+) {
+  state.ui.settingsDirty = true;
+  saveState();
+  render();
+  return;
+}
 
   /* ===== SETTINGS INPUTS ===== */
 
