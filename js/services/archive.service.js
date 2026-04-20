@@ -252,6 +252,11 @@ function editArchivedEntry(periodId, entryId, newData) {
   };
 
   entry.amount = calculateArchivedAmount(entry);
+// ✅ Update meals if provided
+if (newData.meals) {
+  entry.meals = newData.meals;
+}
+   
    if (newData.meals) {
      entry.meals = newData.meals;
       }
