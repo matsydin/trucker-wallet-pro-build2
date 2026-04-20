@@ -900,7 +900,7 @@ mealTypes.forEach(type => {
 
   const checkbox = card.querySelector(".meal-checkbox");
   const select = card.querySelector(".meal-select");
-
+  const notes = document.getElementById("archive-entry-notes").value;
   meals[type] = {
     taken: !!checkbox?.checked,
     location: checkbox?.checked ? select?.value : ""
@@ -915,7 +915,8 @@ mealTypes.forEach(type => {
     perMile: document.getElementById("archive-entry-rate-mile").value,
     perDrop: document.getElementById("archive-entry-rate-drop").value,
     perWaiting: document.getElementById("archive-entry-rate-waiting").value,
-    meals
+    meals,
+    notes
   };
 
   const result = ArchiveService.editArchivedEntry(
