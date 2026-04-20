@@ -13,7 +13,7 @@ const defaultState = {
   displayUnit: "km",
   inputUnit: "km",
   language: "EN",
-
+  firstLaunch: true,
   /* ===== Archive Navigation ===== */
 
   /* ===== Archive 3.0 ===== */
