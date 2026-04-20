@@ -1256,6 +1256,14 @@ function init() {
   LogbookService.calculateTotals();
   document.addEventListener("click", handleClick);
   initMealsAccordion();
+
+  if (state.ui.firstLaunch) {
+    state.ui.activeTab = "settings";
+    state.ui.settingsDirty = true;
+    state.ui.firstLaunch = false;
+    saveState();
+  }
+
   render();
 }
 
