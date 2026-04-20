@@ -872,6 +872,7 @@ mealTypes.forEach(type => {
 document.getElementById("archive-entry-modal-error").textContent = "";
 
   modal.hidden = false;
+  initMealsAccordion();
 }
 
 function closeArchiveEntryModal() {
