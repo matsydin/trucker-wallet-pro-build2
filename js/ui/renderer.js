@@ -99,16 +99,17 @@ export function renderLogScreen(state) {
         '<p>Waiting: ' + Number(entry.waitingHours ?? 0) + ' h</p>' +
 
         (mealsCount > 0
-          ? '<p class="muted">' + mealsSummary + '</p>'
-          : '') +
+  ? '<p class="muted">' + mealsSummary + '</p>'
+  : '') +
 
-        (entry.notes
+(entry.notes
   ? '<p class="muted">' + escapeHtml(entry.notes) + '</p>'
-  : '')
-      '<p class="entry-amount">' +
+  : '') +
+
+'<p class="entry-amount">' +
   Number(entry.amount ?? 0).toFixed(2) +
   ' ' + state.settings.currency +
-        '</p>'+
+'</p>' +
 
       '</div>'
     );
