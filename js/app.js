@@ -381,8 +381,13 @@ if (action === "export-custom-range") {
 
   const lines = [];
 
-  lines.push("TRUCKER WALLET PRO");
-  lines.push(`Period: ${from} → ${to}`);
+lines.push("TRUCKER WALLET PRO");
+
+if (state.settings.driverName) {
+  lines.push("Driver: " + state.settings.driverName);
+}
+
+lines.push(`Period: ${from} → ${to}`);
   lines.push("");
   lines.push("DATE | KM | LOADS | WAIT | MEALS | TOTAL");
 
