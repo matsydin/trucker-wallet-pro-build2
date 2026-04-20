@@ -810,7 +810,7 @@ function saveEntryFromModal() {
 
   const kilometers = parseFloat(distanceInput.value);
   const date = dateInput.value;
-  const loads = parseInt(pickupsInput.value || "0", 10);
+ 
   const waitingHours = parseFloat(waitingInput.value || "0");
 
   if (!date) {
@@ -846,7 +846,7 @@ for (let type of mealTypes) {
     location: taken ? location : ""
   };
 }
-
+ const loads = parseInt(pickupsInput.value || "0", 10);
   const payload = {
     kilometers,
     date,
