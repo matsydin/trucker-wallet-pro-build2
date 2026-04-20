@@ -400,24 +400,42 @@ function renderWeeksTableFromPeriods(periods) {
           <div class="text-right">Meals</div>
           <div class="text-right">Waiting</div>
           <div class="text-right">Total</div>
+          <div>Note</div>
         </div>
 
-        ${periods.map(p => `
-          <div class="archive-row"
-               data-action="archive-open-week"
-               data-id="${p.id}">
+       ${periods.map(p => `
+  <div class="archive-row"
+       data-action="archive-open-week"
+       data-id="${p.id}">
 
-            <div>${escapeHtml(p.periodLabel)}</div>
-            <div class="text-right">${Number(p.totals.kilometers ?? 0).toFixed(0)}</div>
-            <div class="text-right">${p.totals.loads ?? 0}</div>
-            <div class="text-right">${p.totals.meals ?? 0}</div>
-            <div class="text-right">${Number(p.totals.waitingHours ?? 0).toFixed(1)}</div>
-            <div class="text-right">
-              ${Number(p.totals.amount ?? 0).toFixed(2)}
-            </div>
+    <div>${escapeHtml(p.periodLabel)}</div>
 
-          </div>
-        `).join("")}
+    <div class="text-right">
+      ${Number(p.totals.kilometers ?? 0).toFixed(0)}
+    </div>
+
+    <div class="text-right">
+      ${p.totals.loads ?? 0}
+    </div>
+
+    <div class="text-right">
+      ${p.totals.meals ?? 0}
+    </div>
+
+    <div class="text-right">
+      ${Number(p.totals.waitingHours ?? 0).toFixed(1)}
+    </div>
+
+    <div class="text-right">
+      ${Number(p.totals.amount ?? 0).toFixed(2)}
+    </div>
+
+    <div class="archive-notes-cell">
+      ${p.notes ? "📝" : ""}
+    </div>
+
+  </div>
+`).join("")}
 
       </div>
     </div>
