@@ -807,18 +807,22 @@ function saveEntryFromModal() {
   const dateInput = document.getElementById("entry-date");
   const pickupsInput = document.getElementById("entry-pickups");
   const waitingInput = document.getElementById("entry-waiting");
+  const notesInput = document.getElementById("entry-notes");
 
   const kilometers = parseFloat(distanceInput.value);
   const date = dateInput.value;
- 
+  const loads = parseInt(pickupsInput.value || "0", 10);
   const waitingHours = parseFloat(waitingInput.value || "0");
+  const notes = notesInput ? notesInput.value : "";
+
+  /* ===== VALIDATION ===== */
 
   if (!date) {
     alert("Date required");
     return;
   }
 
-  if (!kilometers || kilometers <= 0) {
+  if (Number.isNaN(kilometers) || kilometers <= 0) {
     alert("Distance must be greater than 0");
     return;
   }
@@ -826,35 +830,39 @@ function saveEntryFromModal() {
   /* ===== MEALS ===== */
 
   const mealTypes = ["breakfast", "lunch", "dinner"];
-const meals = {};
+  const meals = {};
 
-for (let type of mealTypes) {
-  const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
-  const checkbox = card?.querySelector(".meal-checkbox");
-  const select = card?.querySelector(".meal-select");
-  const notes = document.getElementById("entry-notes").value;
-  const taken = checkbox?.checked;
-  const location = select?.value;
+  for (let type of mealTypes) {
+    const card = document.querySelector(`.meal-card[data-meal="${type}"]`);
+    const checkbox = card?.querySelector(".meal-checkbox");
+    const select = card?.querySelector(".meal-select");
 
-  if (taken && !location) {
-    alert(`${type} location required`);
-    return;
+    const taken = checkbox?.checked || false;
+    const location = select?.value || "";
+
+    if (taken && !location) {
+      alert(`${type} location required`);
+      return;
+    }
+
+    meals[type] = {
+      taken,
+      location: taken ? location : ""
+    };
   }
 
-  meals[type] = {
-    taken: !!taken,
-    location: taken ? location : ""
-  };
-}
- const loads = parseInt(pickupsInput.value || "0", 10);
+  /* ===== PAYLOAD ===== */
+
   const payload = {
     kilometers,
     date,
-    loads,
+    loads: Number.isNaN(loads) ? 0 : loads,
     waitingHours: Number.isNaN(waitingHours) ? 0 : waitingHours,
     meals,
     notes
   };
+
+  /* ===== SAVE ===== */
 
   if (editingEntryId) {
     LogbookService.editEntry(editingEntryId, payload);
