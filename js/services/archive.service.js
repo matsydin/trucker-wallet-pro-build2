@@ -175,9 +175,9 @@ function convertKmToMiles(km) {
 
 function calculateArchivedAmount(entry) {
   return +(
-   toNumber(entry.miles) * Number(entry.rateSnapshot?.perMile || 0)) +
-    (Number(entry.loads || 0) * Number(entry.rateSnapshot?.perDrop || 0)) +
-    (Number(entry.waitingHours || 0) * Number(entry.rateSnapshot?.perWaiting || 0))
+    (toNumber(entry.miles) * toNumber(entry.rateSnapshot?.perMile)) +
+    (toNumber(entry.loads) * toNumber(entry.rateSnapshot?.perDrop)) +
+    (toNumber(entry.waitingHours) * toNumber(entry.rateSnapshot?.perWaiting))
   ).toFixed(2);
 }
 
@@ -193,11 +193,11 @@ function recalculateArchiveTotals(periodId) {
   let meals = 0;
 
   period.entries.forEach(entry => {
-    kilometers += Number(entry.kilometers || 0);
-    miles += Number(entry.miles || 0);
-    loads += Number(entry.loads || 0);
-    waitingHours += Number(entry.waitingHours || 0);
-    amount += +entry.amount || 0;
+      kilometers += toNumber(entry.kilometers);
+      miles += toNumber(entry.miles);
+      loads += toNumber(entry.loads);
+      waitingHours += toNumber(entry.waitingHours);
+      amount += toNumber(entry.amount);
     meals += ["breakfast","lunch","dinner"]
   .filter(type => entry.meals?.[type]?.taken).length;
   });
@@ -224,7 +224,7 @@ function editArchivedEntry(periodId, entryId, newData) {
   const entry = period.entries.find(e => e.id === entryId);
   if (!entry) return { ok: false };
 
- const kilometers = toNumber(newData.kilometers);
+const kilometers = toNumber(newData.kilometers);
 const loads = toNumber(newData.loads);
 const waitingHours = toNumber(newData.waitingHours);
 const perMile = toNumber(newData.perMile);
