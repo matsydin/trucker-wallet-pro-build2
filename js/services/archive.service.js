@@ -224,12 +224,12 @@ function editArchivedEntry(periodId, entryId, newData) {
   const entry = period.entries.find(e => e.id === entryId);
   if (!entry) return { ok: false };
 
-  const kilometers = Number(newData.kilometers);
-  const loads = Number(newData.loads || 0);
-  const waitingHours = Number(newData.waitingHours || 0);
-  const perMile = Number(newData.perMile || 0);
-  const perDrop = Number(newData.perDrop || 0);
-  const perWaiting = Number(newData.perWaiting || 0);
+ const kilometers = toNumber(newData.kilometers);
+const loads = toNumber(newData.loads);
+const waitingHours = toNumber(newData.waitingHours);
+const perMile = toNumber(newData.perMile);
+const perDrop = toNumber(newData.perDrop);
+const perWaiting = toNumber(newData.perWaiting);
 
   if (!newData.date || Number.isNaN(kilometers) || kilometers <= 0) {
     return { ok: false };
