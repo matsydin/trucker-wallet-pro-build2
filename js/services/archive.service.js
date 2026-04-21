@@ -175,7 +175,7 @@ function convertKmToMiles(km) {
 
 function calculateArchivedAmount(entry) {
   return +(
-    (Number(entry.miles || 0) * Number(entry.rateSnapshot?.perMile || 0)) +
+   toNumber(entry.miles) * Number(entry.rateSnapshot?.perMile || 0)) +
     (Number(entry.loads || 0) * Number(entry.rateSnapshot?.perDrop || 0)) +
     (Number(entry.waitingHours || 0) * Number(entry.rateSnapshot?.perWaiting || 0))
   ).toFixed(2);
