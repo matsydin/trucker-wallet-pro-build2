@@ -14,6 +14,7 @@ import { CustomerService } from "./services/customer.service.js";
 import { TrailerService } from "./services/trailer.service.js";
 import { ArchiveAggregationService } from "./services/archive-aggregation.service.js";
 import { SettingsService } from "./services/settings.service.js";
+import { toNumber } from "./js/utils.js";
 
 let editingCustomerId = null;
 let editingTrailerId = null;
