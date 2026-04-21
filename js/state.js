@@ -184,7 +184,11 @@ function deepMerge(target, source) {
 ====================================== */
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.warn("Storage blocked:", e);
+  }
 }
 
 export { state, saveState, loadState };
