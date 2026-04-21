@@ -21,38 +21,42 @@ export const LogbookService = {
 
   calculateAmount({ miles, loads, waitingHours, rate }) {
     return +(
-      (miles * rate.perMile) +
-      (loads * rate.perDrop) +
-      (waitingHours * rate.perWaiting)
+(miles * toNumber(rate.perMile))
+(loads * toNumber(rate.perDrop))
+(waitingHours * toNumber(rate.perWaiting))
     ).toFixed(2);
   },
 
-  calculateTotals() {
-    let kilometers = 0;
-    let miles = 0;
-    let loads = 0;
-    let waitingHours = 0;
-    let amount = 0;
+calculateTotals() {
+  let kilometers = 0;
+  let miles = 0;
+  let loads = 0;
+  let waitingHours = 0;
+  let amount = 0;
 
-    state.current.entries.forEach(entry => {
-      kilometers += Number(entry.kilometers || 0);
-      miles += Number(entry.miles || 0);
-      loads += Number(entry.loads || 0);
-      waitingHours += Number(entry.waitingHours || 0);
-      amount += Number(entry.amount || 0);
-    });
+  state.current.entries.forEach(entry => {
+    kilometers += toNumber(entry.kilometers);
+    miles += toNumber(entry.miles);
+    loads += toNumber(entry.loads);
+    waitingHours += toNumber(entry.waitingHours);
+    amount += toNumber(entry.amount);
+  });
 
-    state.current.totals = {
-      kilometers: +kilometers.toFixed(1),
-      miles: +miles.toFixed(1),
-      loads: +loads.toFixed(0),
-      waitingHours: +waitingHours.toFixed(1),
-      amount: +amount.toFixed(2)
-    };
-  },
+  state.current.totals = {
+    kilometers: +kilometers.toFixed(1),
+    miles: +miles.toFixed(1),
+    loads: +loads.toFixed(0),
+    waitingHours: +waitingHours.toFixed(1),
+    amount: +amount.toFixed(2)
+  };
+},
 
   addEntry(data) {
-    const miles = this.convertKmToMiles(data.kilometers);
+    const kilometers = toNumber(data.kilometers);
+    const loads = toNumber(data.loads);
+    const waitingHours = toNumber(data.waitingHours);
+
+const miles = this.convertKmToMiles(kilometers);
 
     const rateSnapshot = {
       perMile: state.settings.ratePerMile,
@@ -96,9 +100,9 @@ state.ui.mealDraft = {
     if (!entry) return;
 
     entry.date = newData.date;
-    entry.kilometers = newData.kilometers;
-    entry.loads = newData.loads;
-    entry.waitingHours = newData.waitingHours;
+    entry.kilometers = toNumber(newData.kilometers);
+    entry.loads = toNumber(newData.loads);
+    entry.waitingHours = toNumber(newData.waitingHours);
 
     entry.miles = this.convertKmToMiles(newData.kilometers);
 
