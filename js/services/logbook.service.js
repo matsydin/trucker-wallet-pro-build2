@@ -19,13 +19,13 @@ export const LogbookService = {
     return +(km * KM_TO_MI).toFixed(1);
   },
 
-  calculateAmount({ miles, loads, waitingHours, rate }) {
-    return +(
-(miles * toNumber(rate.perMile))
-(loads * toNumber(rate.perDrop))
-(waitingHours * toNumber(rate.perWaiting))
-    ).toFixed(2);
-  },
+calculateAmount({ miles, loads, waitingHours, rate }) {
+  return +(
+    (miles * toNumber(rate.perMile)) +
+    (loads * toNumber(rate.perDrop)) +
+    (waitingHours * toNumber(rate.perWaiting))
+  ).toFixed(2);
+},
 
 calculateTotals() {
   let kilometers = 0;
