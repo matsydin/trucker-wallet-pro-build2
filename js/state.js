@@ -58,11 +58,21 @@ archiveRange: {
 let state = loadState();
 
 /* ======================================
-   LOAD WITH SAFE MERGE
+   LOAD WITH SAFE MERGE (Safari Safe)
 ====================================== */
 
 function loadState() {
-  const raw = localStorage.getItem(STORAGE_KEY);
+
+  let raw = null;
+
+  // ✅ Safe localStorage access (iOS Private Mode protection)
+  try {
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch (e) {
+    console.warn("localStorage blocked:", e);
+    return structuredClone(defaultState);
+  }
+
   if (!raw) return structuredClone(defaultState);
 
   try {
@@ -73,22 +83,23 @@ function loadState() {
     }
 
     const merged = deepMerge(structuredClone(defaultState), parsed);
-// ✅ Cleanup legacy archive navigation (Archive 2.x → 3.0)
 
-delete merged.ui.archiveMonth;
-delete merged.ui.archiveWeekId;
-delete merged.ui.archiveFilter;
+    // ✅ Cleanup legacy archive navigation (Archive 2.x → 3.0)
+    delete merged.ui.archiveMonth;
+    delete merged.ui.archiveWeekId;
+    delete merged.ui.archiveFilter;
 
-// Ensure archiveYear exists
-if (!merged.ui.archiveYear) {
-  merged.ui.archiveYear = new Date().getFullYear();
-}
+    // ✅ Ensure archiveYear exists
+    if (!merged.ui.archiveYear) {
+      merged.ui.archiveYear = new Date().getFullYear();
+    }
 
-// Ensure archiveTab valid
-if (!["weeks", "months"].includes(merged.ui.archiveTab)) {
-  merged.ui.archiveTab = "weeks";
-}
-// ✅ ensure current.totals structure (backward safety)
+    // ✅ Ensure archiveTab valid
+    if (!["weeks", "months"].includes(merged.ui.archiveTab)) {
+      merged.ui.archiveTab = "weeks";
+    }
+
+    // ✅ Ensure current.totals structure (backward safety)
     merged.current.totals = {
       kilometers: merged.current.totals.kilometers ?? 0,
       miles: merged.current.totals.miles ?? 0,
@@ -96,35 +107,36 @@ if (!["weeks", "months"].includes(merged.ui.archiveTab)) {
       waitingHours: merged.current.totals.waitingHours ?? 0,
       amount: merged.current.totals.amount ?? 0
     };
-// ✅ Ensure meals exist (backward compatibility)
 
-merged.current.entries.forEach(entry => {
-  if (!entry.meals) {
-    entry.meals = {
-      breakfast: { taken: false, location: "" },
-      lunch: { taken: false, location: "" },
-      dinner: { taken: false, location: "" }
-    };
-  }
-});
+    // ✅ Ensure meals exist (backward compatibility)
+    merged.current.entries.forEach(entry => {
+      if (!entry.meals) {
+        entry.meals = {
+          breakfast: { taken: false, location: "" },
+          lunch: { taken: false, location: "" },
+          dinner: { taken: false, location: "" }
+        };
+      }
+    });
 
-merged.archive.forEach(period => {
-  (period.entries || []).forEach(entry => {
-    if (!entry.meals) {
-      entry.meals = {
-        breakfast: { taken: false, location: "" },
-        lunch: { taken: false, location: "" },
-        dinner: { taken: false, location: "" }
-      };
-    }
-  });
-});
+    merged.archive.forEach(period => {
+      (period.entries || []).forEach(entry => {
+        if (!entry.meals) {
+          entry.meals = {
+            breakfast: { taken: false, location: "" },
+            lunch: { taken: false, location: "" },
+            dinner: { taken: false, location: "" }
+          };
+        }
+      });
+    });
+
     return merged;
 
-  } catch {
+  } catch (e) {
+    console.warn("State parse error:", e);
     return structuredClone(defaultState);
   }
-   
 }
 
 /* ======================================
